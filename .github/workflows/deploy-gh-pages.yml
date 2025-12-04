@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Use Node.js
         uses: actions/setup-node@v4
@@ -25,9 +27,21 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Show build output (debug)
+        run: |
+          echo "Contents of ./dist:"
+          ls -la ./dist || echo "dist not found"
+
+      - name: Configure git for deploy
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           publish_branch: gh-pages
+          user_name: github-actions
+          user_email: actions@github.com
