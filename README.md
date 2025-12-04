@@ -1,24 +1,44 @@
 # Chromatique
 
-Minimal modern color palette generator built with Vite + React + Tailwind CSS.
+A modern color palette web app - generate HSL palettes, lock colors, save favorites, extract colors from images, and export palettes for designers and developers.
 
-Features
-- Generate random palettes (2–12 colors)
-- Lock colors to keep them when regenerating
-- Copy hex values to clipboard
-- Save favorite palettes to `localStorage`
-- Export current palette as JSON
+Live demo
+---------
+- Deployed to GitHub Pages: https://scmlewis.github.io/Chromatique/
 
-Quick start (PowerShell)
+How it's deployed
+------------------
+- The repository contains a GitHub Actions workflow at `.github/workflows/deploy-gh-pages.yml` that builds the app with `npm run build` (Vite) and deploys the `dist` output to the `gh-pages` branch using `peaceiris/actions-gh-pages`.
+- The workflow runs automatically on pushes to `main`.
+
+Quick local development
+-----------------------
+1. Install dependencies:
 
 ```powershell
-cd "C:\Users\Lewis\OneDrive\文件\Github\color_palette"
 npm install
+```
+
+2. Run the dev server:
+
+```powershell
 npm run dev
 ```
 
-Open the provided local URL (usually http://localhost:5173) in your browser.
+3. Build for production:
 
-Notes
-- This is a local-first app that stores favorites in your browser's `localStorage`.
-- Tailwind is used for styling; feel free to tweak `src/index.css`.
+```powershell
+npm run build
+```
+
+Notes & troubleshooting
+----------------------
+- If the site shows `404` after a deploy, wait a few minutes for GitHub Pages to provision the site the first time, then refresh (or open in an incognito window).
+- Verify Pages settings at: `Settings → Pages` and ensure the source is set to the `gh-pages` branch (folder: `/`).
+- Asset base path: the Vite config uses `base: '/Chromatique/'` so the site is served correctly under the repository path.
+- CI logs: check the Actions page for build and deploy logs: https://github.com/scmlewis/Chromatique/actions
+
+Contact / Next steps
+--------------------
+- If you want a custom domain, add a `CNAME` file or set the domain under Pages settings and update DNS accordingly.
+- I can add caching to the workflow (actions/cache) to speed up installs, or enable automatic release notes.
