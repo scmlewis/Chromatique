@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import { hexToHsl, rgbString, rgbToCmykFromHex, wcagLevel } from '../utils/colors'
+import { getClosestColorName, getSimilarityDescription } from '../utils/colorNames'
 
 export default function ColorInfo({ color, h, s, l, primary, showCMYK = true }) {
   const [copied, setCopied] = useState(null)
   const hsl = (h !== undefined && s !== undefined && l !== undefined) ? { h, s, l } : hexToHsl(color)
   const rgb = rgbString(color)
   const cmyk = rgbToCmykFromHex(color)
+  const colorName = getClosestColorName(color)
 
   async function doCopy(type) {
     try {
@@ -27,6 +29,29 @@ export default function ColorInfo({ color, h, s, l, primary, showCMYK = true }) 
 
   return (
     <div className="p-3 bg-slate-900/80">
+      {/* Color name */}
+      {colorName && (
+        <div className="mb-2 pb-2 border-b border-slate-700/50">
+          <div className="flex items-center justify-between gap-2">
+            <div>
+              <div className="font-semibold text-sm text-slate-100 capitalize">{colorName.name}</div>
+              {!colorName.isExactMatch && (
+                <div className="text-xs text-slate-400 mt-0.5">
+                  {getSimilarityDescription(colorName.distance)} to {colorName.name}
+                </div>
+              )}
+            </div>
+            {!colorName.isExactMatch && (
+              <div 
+                className="w-8 h-8 rounded border border-slate-600 flex-shrink-0" 
+                style={{ background: colorName.hex }}
+                title={`Exact ${colorName.name}: ${colorName.hex}`}
+              />
+            )}
+          </div>
+        </div>
+      )}
+      
       <div className="font-mono text-sm text-slate-100 break-words">{color}</div>
       <div className="text-xs text-slate-300 mt-1">{rgb}</div>
       <div className="text-xs text-slate-300 mt-1">HSL: {Math.round(hsl.h)}° · {Math.round(hsl.s)}% · {Math.round(hsl.l)}%</div>

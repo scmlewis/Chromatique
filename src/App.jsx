@@ -1,8 +1,15 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useReducer } from 'react'
 import TabContents from './components/TabContents'
 import HelpModal from './components/HelpModal'
+import SettingsModal from './components/SettingsModal'
 import { randomHex } from './utils/colors'
 import Toast from './components/Toast'
+import { safeCopyToClipboard } from './utils/storage'
+import { 
+  TOAST_DURATION, 
+  DEFAULT_PALETTE_COUNT, 
+  STORAGE_KEYS 
+} from './constants'
 
 function useLocalStorage(key, initial) {
   const [state, setState] = useState(() => {
@@ -10,17 +17,22 @@ function useLocalStorage(key, initial) {
       const raw = localStorage.getItem(key)
       return raw ? JSON.parse(raw) : initial
     } catch (e) {
+      console.warn(`Failed to read localStorage for key "${key}":`, e)
       return initial
     }
   })
   useEffect(() => {
-    try { localStorage.setItem(key, JSON.stringify(state)) } catch (e) {}
+    try { 
+      localStorage.setItem(key, JSON.stringify(state)) 
+    } catch (e) {
+      console.warn(`Failed to write localStorage for key "${key}":`, e)
+    }
   }, [key, state])
   return [state, setState]
 }
 
 export default function App() {
-  const defaultCount = 5
+  const defaultCount = DEFAULT_PALETTE_COUNT
   const [count, setCount] = useState(defaultCount)
   const [palette, setPalette] = useLocalStorage('palette:current', [])
   const [locks, setLocks] = useLocalStorage('palette:locks', [])
@@ -31,6 +43,7 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false)
     const [showHelp, setShowHelp] = useState(false)
   const [settings, setSettings] = useLocalStorage('palette:settings', { showCMYK: true, defaultCopy: 'hex', reducedMotion: false })
+  const [isGenerating, setIsGenerating] = useState(false)
 
   useEffect(() => {
     if (!palette || palette.length === 0) {
@@ -45,16 +58,21 @@ export default function App() {
   }, [count])
 
   function generatePalette(forceCount) {
-    const n = forceCount ?? count
-    const next = Array.from({ length: n }, (_, i) => {
-      if (locks && locks[i]) return palette[i] || randomHex()
-      return randomHex()
-    })
-    setPalette(next)
-    setLocks(l => {
-      const nextLocks = Array.from({ length: n }, (_, i) => !!(l && l[i]))
-      return nextLocks
-    })
+    setIsGenerating(true)
+    // Use setTimeout to allow UI to update with loading state
+    setTimeout(() => {
+      const n = forceCount ?? count
+      const next = Array.from({ length: n }, (_, i) => {
+        if (locks && locks[i]) return palette[i] || randomHex()
+        return randomHex()
+      })
+      setPalette(next)
+      setLocks(l => {
+        const nextLocks = Array.from({ length: n }, (_, i) => !!(l && l[i]))
+        return nextLocks
+      })
+      setIsGenerating(false)
+    }, 100)
   }
 
   function toggleLock(index) {
@@ -65,26 +83,68 @@ export default function App() {
     })
   }
 
-  function copyHex(hex) {
-    navigator.clipboard.writeText(hex)
+  function updateColor(index, newColor) {
+    setPalette(prev => {
+      const copy = [...prev]
+      copy[index] = newColor
+      return copy
+    })
   }
 
-  function saveFavorite(colors, name) {
+  function reorderPalette(fromIndex, toIndex) {
+    setPalette(prev => {
+      const newPalette = [...prev]
+      const [moved] = newPalette.splice(fromIndex, 1)
+      newPalette.splice(toIndex, 0, moved)
+      return newPalette
+    })
+    
+    setLocks(prev => {
+      const newLocks = prev ? [...prev] : []
+      const [moved] = newLocks.splice(fromIndex, 1)
+      newLocks.splice(toIndex, 0, moved)
+      return newLocks
+    })
+  }
+
+  async function copyHex(hex) {
+    const result = await safeCopyToClipboard(hex)
+    if (!result.success) {
+      console.error('Failed to copy:', result.error)
+      if (toastTimerRef.current) {
+        clearTimeout(toastTimerRef.current)
+        toastTimerRef.current = null
+      }
+      setToast({ message: 'Failed to copy to clipboard', type: 'error' })
+      toastTimerRef.current = setTimeout(() => {
+        setToast(null)
+        toastTimerRef.current = null
+      }, TOAST_DURATION)
+    }
+  }
+
+  function saveFavorite(colors, name, tags = []) {
     const toSave = Array.isArray(colors) && colors.length > 0 ? colors : palette
     if (!toSave || toSave.length === 0) return
     const id = Date.now()
-    const item = { id, name: name || `Palette ${new Date(id).toLocaleString()}`, colors: toSave, createdAt: id }
+    const item = { 
+      id, 
+      name: name || `Palette ${new Date(id).toLocaleString()}`, 
+      colors: toSave, 
+      createdAt: id,
+      tags: Array.isArray(tags) ? tags : []
+    }
     setFavorites(prev => [item, ...(prev || [])])
     // show snackbar with preview and undo
     if (toastTimerRef.current) {
       clearTimeout(toastTimerRef.current)
       toastTimerRef.current = null
     }
-    setToast({ id, message: `Saved: ${item.name}`, actionLabel: 'Undo', previewColors: toSave })
+    setToast({ id, message: `Saved: ${item.name}`, actionLabel: 'Undo', previewColors: toSave, type: 'success' })
     toastTimerRef.current = setTimeout(() => {
       setToast(null)
       toastTimerRef.current = null
-    }, 4500)
+    }, TOAST_DURATION)
   }
 
   function handleUndoSave(id) {
@@ -123,7 +183,12 @@ export default function App() {
   function onClickImport() {
     try {
       fileInputRef.current?.click()
-    } catch (e) {}
+    } catch (e) {
+      console.error('Failed to open file picker:', e)
+      if (toastTimerRef.current) { clearTimeout(toastTimerRef.current); toastTimerRef.current = null }
+      setToast({ message: 'Failed to open file picker', type: 'error' })
+      toastTimerRef.current = setTimeout(() => { setToast(null); toastTimerRef.current = null }, TOAST_DURATION)
+    }
   }
 
   async function handleFilePicked(e) {
@@ -141,12 +206,12 @@ export default function App() {
       setPalette(trimmed)
       setLocks(Array.from({ length: trimmed.length }, () => false))
       if (toastTimerRef.current) { clearTimeout(toastTimerRef.current); toastTimerRef.current = null }
-      setToast({ message: `Imported ${trimmed.length} colors`, previewColors: trimmed })
-      toastTimerRef.current = setTimeout(() => { setToast(null); toastTimerRef.current = null }, 4500)
+      setToast({ message: `Imported ${trimmed.length} colors`, previewColors: trimmed, type: 'success' })
+      toastTimerRef.current = setTimeout(() => { setToast(null); toastTimerRef.current = null }, TOAST_DURATION)
     } catch (err) {
       if (toastTimerRef.current) { clearTimeout(toastTimerRef.current); toastTimerRef.current = null }
-      setToast({ message: 'Import failed: ' + (err.message || 'invalid file') })
-      toastTimerRef.current = setTimeout(() => { setToast(null); toastTimerRef.current = null }, 4500)
+      setToast({ message: 'Import failed: ' + (err.message || 'invalid file'), type: 'error' })
+      toastTimerRef.current = setTimeout(() => { setToast(null); toastTimerRef.current = null }, TOAST_DURATION)
     } finally {
       e.target.value = null
     }
@@ -192,6 +257,8 @@ export default function App() {
               locks={locks}
               favorites={favorites}
               onToggleLock={toggleLock}
+              onUpdateColor={updateColor}
+              onReorderPalette={reorderPalette}
               onCopyHex={copyHex}
               onSaveFavorite={saveFavorite}
               onExportJSON={exportJSON}
@@ -206,42 +273,17 @@ export default function App() {
             setSettings={setSettings}
             onApplyPalette={setPalette}
             onApplyAndLock={(colors) => { setPalette(colors); setLocks(Array.from({ length: colors.length }, () => false)) }}
+            isGenerating={isGenerating}
           />
         </main>
 
         {/* Settings modal */}
-        {showSettings && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="absolute inset-0 bg-black/50" onClick={() => setShowSettings(false)} />
-            <div className="relative z-60 w-full max-w-lg p-6 bg-slate-900 rounded-md shadow-lg text-slate-100">
-              <h3 className="text-lg font-semibold mb-2">Settings</h3>
-              <div className="flex flex-col gap-3">
-                <label className="flex items-center justify-between">
-                  <span className="text-sm text-slate-200">Show CMYK in cards</span>
-                  <input type="checkbox" checked={!!settings.showCMYK} onChange={e => setSettings(prev => ({ ...(prev||{}), showCMYK: e.target.checked }))} />
-                </label>
-
-                <label className="flex items-center justify-between">
-                  <span className="text-sm text-slate-200">Default copy format</span>
-                  <select value={settings.defaultCopy} onChange={e => setSettings(prev => ({ ...(prev||{}), defaultCopy: e.target.value }))} className="bg-slate-800/50 p-1 rounded">
-                    <option value="hex">HEX</option>
-                    <option value="rgb">RGB</option>
-                    <option value="hsl">HSL</option>
-                  </select>
-                </label>
-
-                <label className="flex items-center justify-between">
-                  <span className="text-sm text-slate-200">Reduce motion</span>
-                  <input type="checkbox" checked={!!settings.reducedMotion} onChange={e => setSettings(prev => ({ ...(prev||{}), reducedMotion: e.target.checked }))} />
-                </label>
-              </div>
-
-              <div className="flex justify-end gap-3 mt-4">
-                <button className="btn btn-ghost" onClick={() => setShowSettings(false)}>Close</button>
-              </div>
-            </div>
-          </div>
-        )}
+        <SettingsModal 
+          isOpen={showSettings}
+          onClose={() => setShowSettings(false)}
+          settings={settings}
+          onSettingsChange={setSettings}
+        />
 
         {showHelp && (
           <HelpModal onClose={() => setShowHelp(false)} settings={settings} setSettings={setSettings} />
@@ -252,6 +294,7 @@ export default function App() {
             message={toast.message}
             actionLabel={toast.actionLabel}
             previewColors={toast.previewColors}
+            type={toast.type || 'info'}
             onAction={() => handleUndoSave(toast.id)}
             onClose={closeToast}
           />
