@@ -1,35 +1,90 @@
 # Chromatique
 
-A modern color palette web app - generate HSL palettes, lock colors, save favorites, extract colors from images, and export palettes for designers and developers.
+A modern color palette web app built with React and Vite. Generate HSL palettes, lock colors, save favorites, extract colors from images, and export palettes for designers and developers.
 
-Live demo
----------
-- Deployed to GitHub Pages: https://scmlewis.github.io/Chromatique/
+## Features
 
-How it's deployed
-------------------
-- The repository contains a GitHub Actions workflow at `.github/workflows/deploy-gh-pages.yml` that builds the app with `npm run build` (Vite) and deploys the `dist` output to the `gh-pages` branch using `peaceiris/actions-gh-pages`.
-- The workflow runs automatically on pushes to `main`.
+- **Palette Generation**: Generate random HSL color palettes
+- **Color Locking**: Lock specific colors to keep them while regenerating
+- **Favorites Management**: Save and manage favorite palettes
+- **Image Color Extraction**: Extract dominant colors from uploaded images
+- **Palette Export**: Export palettes in multiple formats for design tools
+- **Local Storage**: Persistent favorite palettes across sessions
+- **Responsive Design**: Works seamlessly on desktop and mobile
 
-Quick local development
------------------------
+## Live Demo
+
+Deployed to GitHub Pages: https://scmlewis.github.io/Chromatique/
+
+## Tech Stack
+
+- **Frontend**: React 18 with Vite
+- **Styling**: Tailwind CSS + Custom CSS
+- **Color Picker**: react-colorful
+- **Testing**: Jest + React Testing Library
+- **Build**: Vite with GitHub Pages deployment
+
+## Quick Start
+
+### Development
+
 1. Install dependencies:
-
-```powershell
-npm install
-```
+   ```bash
+   npm install
+   ```
 
 2. Run the dev server:
-
-```powershell
-npm run dev
-```
+   ```bash
+   npm run dev
+   ```
+   The app will be available at `http://localhost:5173`
 
 3. Build for production:
+   ```bash
+## Troubleshooting
 
-```powershell
-npm run build
+### Deployment Issues
+- **404 after deploy**: Wait a few minutes for GitHub Pages to provision the site on first deploy, then refresh or open in an incognito window
+- **Page settings**: Verify at `Settings → Pages` that the source is set to the `gh-pages` branch (folder: `/`)
+- **Asset paths**: Vite config uses `base: '/Chromatique/'` for correct serving under the repository path
+- **Build logs**: Check GitHub Actions page for build and deploy logs: https://github.com/scmlewis/Chromatique/actions
+
+### Local Development
+- Ensure Node.js 16+ is installed
+- Clear `node_modules` and reinstall if dependencies have issues: `rm -r node_modules && npm install`
+- For test failures, check the console output and coverage reports in `coverage/`
+
+## Project Structure
+
 ```
+src/
+├── components/      # React components
+├── hooks/          # Custom React hooks
+├── utils/          # Utility functions
+├── styles/         # CSS files (design tokens, components, themes)
+├── __tests__/      # Test files
+└── main.jsx        # Entry point
+```
+
+## Contributing
+
+Feel free to fork, submit issues, or create pull requests. The test suite should pass before submitting PRs.
+
+## Future Improvements
+
+See [CODE_IMPROVEMENTS.md](CODE_IMPROVEMENTS.md) for completed optimizations and potential future enhancement
+
+Test files are located in:
+- `src/__tests__/` - Test files organized by module
+- Tests use Jest + React Testing Library for comprehensive coverage
+
+## Deployment
+
+The repository uses GitHub Actions for continuous deployment:
+- **Workflow**: `.github/workflows/deploy-gh-pages.yml`
+- **Trigger**: Automatically runs on pushes to `main` branch
+- **Build**: `npm run build` (Vite)
+- **Deploy**: Output deployed to `gh-pages` branch via `peaceiris/actions-gh-pages`
 
 Notes & troubleshooting
 ----------------------
