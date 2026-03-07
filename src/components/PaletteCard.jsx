@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { HexColorPicker } from 'react-colorful'
 import { readableTextColor, hexToHsl, rgbString } from '../utils/colors'
 import { addRipple } from '../utils/ui'
@@ -103,28 +104,58 @@ export default function PaletteCard({ color, locked, onToggleLock, onCopy, onCol
   }
 
   return (
-    <div className="rounded-lg overflow-hidden shadow-md animate-card-pop card-hover" style={animStyle}>
-      {/* Color head with controls */}
-      <div className="relative h-36 color-swatch" style={{ background: color }} role="img" aria-label={`Color ${color}`} onClick={async (e) => {
-        // clicking head copies user's default format
-        if (isEditing) return // Don't copy while editing
-        try {
-          const def = settings.defaultCopy || 'hex'
-          let text = color
-          if (def === 'rgb') text = rgbString(color)
-          else if (def === 'hsl') { const hh = Math.round(hexToHsl(color).h); const ss = Math.round(hexToHsl(color).s); const ll = Math.round(hexToHsl(color).l); text = `hsl(${hh}, ${ss}%, ${ll}%)` }
-          await navigator.clipboard.writeText(text)
-          setCopiedType(def)
-          setTimeout(() => setCopiedType(null), 1200)
-        } catch (err) {}
-      }}>
-        <div className="absolute top-2 right-2 flex items-center gap-2">
+    <div 
+      className="surface-card overflow-hidden animate-card-pop card-hover" 
+      style={{ 
+        ...animStyle,
+        borderRadius: 'var(--radius-lg)'
+      }}
+    >
+      {/* Color swatch head with controls */}
+      <div 
+        className="relative h-36 color-swatch transition-all duration-300" 
+        style={{ background: color }} 
+        role="img" 
+        aria-label={`Color swatch ${color}`} 
+        onClick={async (e) => {
+          // clicking head copies user's default format
+          if (isEditing) return
+          try {
+            const def = settings.defaultCopy || 'hex'
+            let text = color
+            if (def === 'rgb') text = rgbString(color)
+            else if (def === 'hsl') { 
+              const hh = Math.round(hexToHsl(color).h)
+              const ss = Math.round(hexToHsl(color).s)
+              const ll = Math.round(hexToHsl(color).l)
+              text = `hsl(${hh}, ${ss}%, ${ll}%)` 
+            }
+            await navigator.clipboard.writeText(text)
+            setCopiedType(def)
+            setTimeout(() => setCopiedType(null), 1200)
+          } catch (err) {}
+        }}
+      >
+        {/* Lock/Unlock button - top right */}
+        <div className="absolute top-3 right-3 flex items-center gap-2">
           <button
             aria-label={locked ? 'Unlock color' : 'Lock color'}
-            onClick={(e) => { e.stopPropagation(); addRipple(e); onToggleLock && onToggleLock() }}
-            className="p-2 rounded-md bg-black/25 backdrop-blur-sm"
+            onClick={(e) => { 
+              e.stopPropagation()
+              addRipple(e)
+              onToggleLock && onToggleLock() 
+            }}
+            className="inline-flex items-center justify-center"
+            style={{
+              width: 'var(--space-10)',
+              height: 'var(--space-10)',
+              borderRadius: 'var(--radius-md)',
+              background: 'rgba(0, 0, 0, 0.3)',
+              backdropFilter: 'blur(8px)',
+              color: textColor,
+              transition: 'all var(--duration-normal) ease',
+            }}
             title={locked ? 'Unlock' : 'Lock'}
-            style={{ color: textColor }}
           >
             {locked ? (
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -138,22 +169,42 @@ export default function PaletteCard({ color, locked, onToggleLock, onCopy, onCol
           </button>
         </div>
 
-        {/* Color editing controls - centered bottom */}
+        {/* Color controls - centered bottom */}
         <div className="absolute bottom-2 left-0 right-0 flex justify-center px-2">
           {isEditing ? (
-            <div className="flex items-center gap-1 bg-black/40 backdrop-blur-sm rounded-md px-2 py-1" onClick={(e) => e.stopPropagation()}>
+            <div 
+              className="flex items-center gap-2 px-3 py-2" 
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                background: 'rgba(0, 0, 0, 0.5)',
+                backdropFilter: 'blur(8px)',
+                borderRadius: 'var(--radius-md)',
+              }}
+            >
               <input
                 type="text"
                 value={editValue}
                 onChange={(e) => setEditValue(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="w-24 px-2 py-1 text-sm bg-white/90 text-slate-900 rounded border-2 border-transparent focus:border-indigo-500 outline-none font-mono"
+                className="font-mono text-sm outline-none"
                 placeholder="#FF5733"
                 autoFocus
+                style={{
+                  width: '100px',
+                  padding: 'var(--space-2)',
+                  background: 'var(--color-surface-bg)',
+                  color: 'var(--color-text-primary)',
+                  border: '2px solid transparent',
+                  borderRadius: 'var(--radius-sm)',
+                  transition: 'border-color var(--duration-normal) ease',
+                }}
+                onFocus={(e) => e.target.style.borderColor = 'var(--color-brand-primary)'}
+                onBlur={(e) => e.target.style.borderColor = 'transparent'}
               />
               <button
                 onClick={handleEditSave}
-                className="p-1 text-white hover:text-green-400 transition-colors"
+                style={{ color: textColor }}
+                className="transition-colors"
                 title="Save"
                 aria-label="Save color"
               >
@@ -163,7 +214,8 @@ export default function PaletteCard({ color, locked, onToggleLock, onCopy, onCol
               </button>
               <button
                 onClick={handleEditCancel}
-                className="p-1 text-white hover:text-red-400 transition-colors"
+                style={{ color: textColor }}
+                className="transition-colors"
                 title="Cancel"
                 aria-label="Cancel edit"
               >
@@ -175,9 +227,17 @@ export default function PaletteCard({ color, locked, onToggleLock, onCopy, onCol
           ) : (
             <div className="flex items-center gap-2">
               <button
-                onClick={(e) => { e.stopPropagation(); handleEditStart() }}
-                className="flex items-center gap-1 px-2 py-1 bg-black/30 backdrop-blur-sm rounded-md hover:bg-black/40 transition-colors"
-                style={{ color: textColor }}
+                onClick={(e) => { 
+                  e.stopPropagation()
+                  handleEditStart() 
+                }}
+                className="flex items-center gap-2 px-3 py-1 transition-all"
+                style={{
+                  color: textColor,
+                  background: 'rgba(0, 0, 0, 0.3)',
+                  backdropFilter: 'blur(8px)',
+                  borderRadius: 'var(--radius-md)',
+                }}
                 title="Edit hex code"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -186,9 +246,19 @@ export default function PaletteCard({ color, locked, onToggleLock, onCopy, onCol
                 <span className="text-xs font-mono">{color}</span>
               </button>
               <button
-                onClick={(e) => { e.stopPropagation(); handlePickerStart() }}
-                className="p-1.5 bg-black/30 backdrop-blur-sm rounded-md hover:bg-black/40 transition-colors"
-                style={{ color: textColor }}
+                onClick={(e) => { 
+                  e.stopPropagation()
+                  handlePickerStart() 
+                }}
+                className="inline-flex items-center justify-center transition-all"
+                style={{
+                  width: 'var(--space-10)',
+                  height: 'var(--space-10)',
+                  color: textColor,
+                  background: 'rgba(0, 0, 0, 0.3)',
+                  backdropFilter: 'blur(8px)',
+                  borderRadius: 'var(--radius-md)',
+                }}
                 title="Color picker"
                 aria-label="Open color picker"
               >
@@ -206,17 +276,25 @@ export default function PaletteCard({ color, locked, onToggleLock, onCopy, onCol
             ref={pickerRef}
             className="absolute bottom-14 left-1/2 -translate-x-1/2 z-50 animate-pop"
             onClick={(e) => e.stopPropagation()}
+            style={{
+              background: 'var(--color-surface-elevated)',
+              border: '1px solid var(--color-border-subtle)',
+              borderRadius: 'var(--radius-lg)',
+              padding: 'var(--space-4)',
+              boxShadow: 'var(--shadow-lg)',
+            }}
           >
-            <div className="bg-slate-800 p-3 rounded-lg shadow-xl border border-slate-700">
-              <HexColorPicker color={pickerColor} onChange={handlePickerChange} />
-              <div className="mt-2 text-center">
-                <button
-                  onClick={(e) => { e.stopPropagation(); setShowPicker(false) }}
-                  className="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 rounded text-xs text-white transition-colors"
-                >
-                  Done
-                </button>
-              </div>
+            <HexColorPicker color={pickerColor} onChange={handlePickerChange} />
+            <div className="mt-4 text-center">
+              <button
+                onClick={(e) => { 
+                  e.stopPropagation()
+                  setShowPicker(false) 
+                }}
+                className="btn btn-primary btn-sm"
+              >
+                Done
+              </button>
             </div>
           </div>
         )}
@@ -224,7 +302,15 @@ export default function PaletteCard({ color, locked, onToggleLock, onCopy, onCol
         {/* Error message */}
         {error && (
           <div className="absolute top-1/2 left-0 right-0 -translate-y-1/2 text-center">
-            <span className="bg-red-500 text-white px-3 py-1 rounded-md text-xs font-medium shadow-lg">
+            <span 
+              className="text-xs font-semibold text-white shadow-lg animate-pop"
+              style={{
+                display: 'inline-block',
+                padding: 'var(--space-2) var(--space-3)',
+                background: 'var(--color-error)',
+                borderRadius: 'var(--radius-md)',
+              }}
+            >
               {error}
             </span>
           </div>
@@ -233,14 +319,43 @@ export default function PaletteCard({ color, locked, onToggleLock, onCopy, onCol
         {/* Copy feedback */}
         {copiedType && (
           <div className="absolute top-1/2 left-0 right-0 -translate-y-1/2 text-center pointer-events-none">
-            <span className="bg-green-500 text-white px-3 py-1 rounded-md text-xs font-medium shadow-lg animate-pop">
+            <span 
+              className="text-xs font-semibold text-white shadow-lg animate-pop"
+              style={{
+                display: 'inline-block',
+                padding: 'var(--space-2) var(--space-3)',
+                background: 'var(--color-success)',
+                borderRadius: 'var(--radius-md)',
+              }}
+            >
               Copied {copiedType.toUpperCase()}!
             </span>
           </div>
         )}
       </div>
 
+      {/* Color info footer */}
       <ColorInfo color={color} primary={false} />
     </div>
   )
+}
+
+PaletteCard.propTypes = {
+  color: PropTypes.string.isRequired,
+  locked: PropTypes.bool,
+  onToggleLock: PropTypes.func.isRequired,
+  onCopy: PropTypes.func.isRequired,
+  onColorChange: PropTypes.func.isRequired,
+  delay: PropTypes.number,
+  settings: PropTypes.shape({
+    showCMYK: PropTypes.bool,
+    defaultCopy: PropTypes.oneOf(['hex', 'rgb', 'hsl', 'cmyk']),
+    reducedMotion: PropTypes.bool,
+  }),
+}
+
+PaletteCard.defaultProps = {
+  locked: false,
+  delay: 0,
+  settings: {},
 }

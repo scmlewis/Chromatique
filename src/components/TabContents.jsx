@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
+import TabNav from './TabNav'
 import HSLPanel from './HSLPanel'
 import ImageUploader from './ImageUploader'
 import PaletteCard from './PaletteCard'
 import Toast from './Toast'
+import { PALETTE_CARD_ANIMATION_DELAY_MS } from '../constants'
 
 export default function TabContents(props) {
   const { palette, locks, favorites, toast, onToggleLock, onUpdateColor, onReorderPalette, onCopy, onSaveFavorite, onExportJSON, onLoadFavorite, onRemoveFavorite, onCloseToast, onUndoSave, onGeneratePalette, count, setCount, settings, onApplyPalette, onApplyAndLock, isGenerating } = props
@@ -168,13 +171,17 @@ export default function TabContents(props) {
   return (
     <div className="mt-6">
       <div className="mb-4">
-          <div className="flex gap-3">
-          <button className={`px-3 py-1 rounded-md ${tab==='hsl' ? 'tab-active' : 'tab-inactive'}`} onClick={() => setTab('hsl')}>HSL</button>
-          <button className={`px-3 py-1 rounded-md ${tab==='palette' ? 'tab-active' : 'tab-inactive'}`} onClick={() => setTab('palette')}>Swatches</button>
-          <button className={`px-3 py-1 rounded-md ${tab==='favorites' ? 'tab-active' : 'tab-inactive'}`} onClick={() => setTab('favorites')}>Favorites</button>
-          <button className={`px-3 py-1 rounded-md ${tab==='export' ? 'tab-active' : 'tab-inactive'}`} onClick={() => setTab('export')}>Export</button>
-          <button className={`px-3 py-1 rounded-md ${tab==='image' ? 'tab-active' : 'tab-inactive'}`} onClick={() => setTab('image')}>Image</button>
-        </div>
+        <TabNav 
+          tabs={[
+            { key: 'hsl', label: 'HSL' },
+            { key: 'palette', label: 'Swatches' },
+            { key: 'favorites', label: 'Favorites' },
+            { key: 'export', label: 'Export' },
+            { key: 'image', label: 'Image' },
+          ]}
+          current={tab}
+          onChange={setTab}
+        />
       </div>
 
       {/* Tab header + description */}
@@ -255,7 +262,7 @@ export default function TabContents(props) {
                       onToggleLock={() => onToggleLock(i)}
                       onColorChange={(newColor) => onUpdateColor && onUpdateColor(i, newColor)}
                       onCopy={() => onCopy(c)}
-                      delay={i * 60}
+                      delay={i * PALETTE_CARD_ANIMATION_DELAY_MS}
                       settings={settings}
                     />
                   </div>
@@ -581,4 +588,34 @@ export default function TabContents(props) {
       )}
     </div>
   )
+}
+
+TabContents.propTypes = {
+  palette: PropTypes.arrayOf(PropTypes.string),
+  locks: PropTypes.arrayOf(PropTypes.bool),
+  favorites: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+  })),
+  toast: PropTypes.shape({
+    message: PropTypes.string.isRequired,
+    actionLabel: PropTypes.string,
+  }),
+  onToggleLock: PropTypes.func.isRequired,
+  onUpdateColor: PropTypes.func.isRequired,
+  onCopy: PropTypes.func.isRequired,
+  onSaveFavorite: PropTypes.func.isRequired,
+  onExportJSON: PropTypes.func.isRequired,
+  onLoadFavorite: PropTypes.func.isRequired,
+  onRemoveFavorite: PropTypes.func.isRequired,
+  onCloseToast: PropTypes.func.isRequired,
+  onUndoSave: PropTypes.func.isRequired,
+  onGeneratePalette: PropTypes.func.isRequired,
+  count: PropTypes.number.isRequired,
+  setCount: PropTypes.func.isRequired,
+  settings: PropTypes.object,
+  onApplyPalette: PropTypes.func.isRequired,
+  onApplyAndLock: PropTypes.func.isRequired,
+  isGenerating: PropTypes.bool,
 }

@@ -108,118 +108,171 @@ export default function HSLPanel({ onRequestSave, onRequestExport, onCopyHex, se
 
   return (
     <section className="mb-10">
-      <div className="p-6 rounded-lg glass mb-6">
-        <div className="grid gap-4">
+      {/* ========== CONTROL PANEL ========== */}
+      <div className="surface-glass p-6 mb-6">
+        <div className="grid gap-6">
+          {/* Scheme Selection */}
           <div>
-            <label className="text-sm text-slate-300">Select Palette Scheme:</label>
-            <div className="mt-2">
-              <select value={scheme} onChange={e => setScheme(e.target.value)} className="w-full bg-slate-800/60 p-2 rounded-md">
-                <option value="analogous">Analogous</option>
-                <option value="complementary">Complementary</option>
-                <option value="split-complementary">Split Complementary</option>
-                <option value="triadic">Triadic</option>
-                <option value="tetradic">Tetradic (4 Hues)</option>
-                <option value="monochromatic">Monochromatic</option>
-              </select>
-            </div>
+            <label className="text-label block mb-2">Palette Scheme</label>
+            <select 
+              value={scheme} 
+              onChange={e => setScheme(e.target.value)} 
+              className="input-field w-full"
+            >
+              <option value="analogous">Analogous</option>
+              <option value="complementary">Complementary</option>
+              <option value="split-complementary">Split Complementary</option>
+              <option value="triadic">Triadic</option>
+              <option value="tetradic">Tetradic (4 Hues)</option>
+              <option value="monochromatic">Monochromatic</option>
+            </select>
           </div>
+
+          {/* Hue Slider */}
           <div>
-            <label className="text-sm text-rose-400">Hue (H):</label>
-            <div className="mt-2 flex items-center gap-4">
-              <input type="range" min={0} max={360} value={h} onChange={e => setH(Number(e.target.value))}
-                className="hsl-range" style={{ background: hueGradient, flex: 1 }} />
-              <div className="w-12 text-right font-medium">{Math.round(h)}°</div>
+            <label className="text-label block mb-2 flex items-center gap-2">
+              <span className="inline-block w-3 h-3 rounded-full" style={{ background: hueGradient }}></span>
+              Hue (H)
+            </label>
+            <div className="flex items-center gap-4">
+              <input 
+                type="range" 
+                min={0} 
+                max={360} 
+                value={h} 
+                onChange={e => setH(Number(e.target.value))}
+                className="hsl-range flex-1" 
+                style={{ background: hueGradient }}
+                aria-label="Hue slider"
+              />
+              <div className="text-label w-16 text-right font-mono">{Math.round(h)}°</div>
             </div>
           </div>
 
+          {/* Saturation Slider */}
           <div>
-            <label className="text-sm text-emerald-400">Saturation (S):</label>
-            <div className="mt-2 flex items-center gap-4">
-              <input type="range" min={0} max={100} value={s} onChange={e => setS(Number(e.target.value))}
-                className="hsl-range" style={{ background: `linear-gradient(90deg, hsl(${h},0%,50%) 0%, hsl(${h},100%,50%) 100%)`, flex: 1 }} />
-              <div className="w-12 text-right font-medium">{Math.round(s)}%</div>
+            <label className="text-label block mb-2 flex items-center gap-2">
+              <span className="inline-block w-3 h-3 rounded-full" style={{ background: `linear-gradient(90deg, hsl(${h},0%,50%) 0%, hsl(${h},100%,50%) 100%)` }}></span>
+              Saturation (S)
+            </label>
+            <div className="flex items-center gap-4">
+              <input 
+                type="range" 
+                min={0} 
+                max={100} 
+                value={s} 
+                onChange={e => setS(Number(e.target.value))}
+                className="hsl-range flex-1" 
+                style={{ background: `linear-gradient(90deg, hsl(${h},0%,50%) 0%, hsl(${h},100%,50%) 100%)` }}
+                aria-label="Saturation slider"
+              />
+              <div className="text-label w-16 text-right font-mono">{Math.round(s)}%</div>
             </div>
           </div>
 
+          {/* Lightness Slider */}
           <div>
-            <label className="text-sm text-sky-400">Lightness (L):</label>
-            <div className="mt-2 flex items-center gap-4">
-              <input type="range" min={0} max={100} value={l} onChange={e => setL(Number(e.target.value))}
-                className="hsl-range" style={{ background: `linear-gradient(90deg, hsl(${h}, ${s}%, 0%) 0%, hsl(${h}, ${s}%, 50%) 50%, hsl(${h}, ${s}%, 100%) 100%)`, flex: 1 }} />
-              <div className="w-12 text-right font-medium">{Math.round(l)}%</div>
+            <label className="text-label block mb-2 flex items-center gap-2">
+              <span className="inline-block w-3 h-3 rounded-full" style={{ background: `linear-gradient(90deg, hsl(${h}, ${s}%, 0%) 0%, hsl(${h}, ${s}%, 50%) 50%, hsl(${h}, ${s}%, 100%) 100%)` }}></span>
+              Lightness (L)
+            </label>
+            <div className="flex items-center gap-4">
+              <input 
+                type="range" 
+                min={0} 
+                max={100} 
+                value={l} 
+                onChange={e => setL(Number(e.target.value))}
+                className="hsl-range flex-1" 
+                style={{ background: `linear-gradient(90deg, hsl(${h}, ${s}%, 0%) 0%, hsl(${h}, ${s}%, 50%) 50%, hsl(${h}, ${s}%, 100%) 100%)` }}
+                aria-label="Lightness slider"
+              />
+              <div className="text-label w-16 text-right font-mono">{Math.round(l)}%</div>
             </div>
           </div>
-          <div>
-            <div className="flex flex-col gap-3">
+
+          {/* Action Buttons */}
+          <div className="space-y-3 pt-2">
+            {/* Generate Random Button */}
+            <button
+              onClick={() => {
+                const randH = Math.floor(Math.random() * 360)
+                const randS = Math.floor(40 + Math.random() * 40)
+                const randL = Math.floor(30 + Math.random() * 40)
+                setH(randH)
+                setS(randS)
+                setL(randL)
+              }}
+              className="btn btn-primary w-full"
+              aria-label="Generate random palette"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M3 3v6h6M21 21v-6h-6"/>
+              </svg>
+              Generate Random
+            </button>
+
+            {/* Palette Controls */}
+            <div className="grid grid-cols-3 gap-3">
               <button
-                onClick={() => {
-                  const randH = Math.floor(Math.random() * 360)
-                  const randS = Math.floor(40 + Math.random() * 40)
-                  const randL = Math.floor(30 + Math.random() * 40)
-                  setH(randH)
-                  setS(randS)
-                  setL(randL)
+                onClick={async () => {
+                  try {
+                    const text = generated.map(g => g.hex).join('\n')
+                    await navigator.clipboard.writeText(text)
+                    setCopied(true)
+                    if (typeof onCopyHex === 'function') onCopyHex(text)
+                    setTimeout(() => setCopied(false), 1500)
+                  } catch (e) {
+                    // ignore
+                  }
                 }}
-                className="btn btn-primary w-full"
+                className="btn btn-secondary"
+                aria-label="Copy all color codes"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M3 3v6h6M21 21v-6h-6"/></svg>
-                Generate Random Base Color
+                {copied ? '✓ Copied' : 'Copy'}
               </button>
 
-              <div className="flex gap-3">
-                <button
-                  onClick={async () => {
-                    try {
-                      const text = generated.map(g => g.hex).join('\n')
-                      await navigator.clipboard.writeText(text)
-                      setCopied(true)
-                      if (typeof onCopyHex === 'function') onCopyHex(text)
-                      setTimeout(() => setCopied(false), 1500)
-                    } catch (e) {
-                      // ignore
-                    }
-                  }}
-                  className="btn btn-ghost flex-1"
-                >
-                  Copy Codes
-                </button>
+              <button
+                onClick={() => {
+                  const colors = generated.map(g => g.hex)
+                  if (typeof onRequestSave === 'function') onRequestSave(colors)
+                  setSaved(true)
+                  setTimeout(() => setSaved(false), 1600)
+                }}
+                className="btn btn-success"
+                aria-label="Save palette to favorites"
+              >
+                {saved ? '✓ Saved' : 'Save'}
+              </button>
 
-                <button
-                  onClick={() => {
-                    const colors = generated.map(g => g.hex)
-                    if (typeof onRequestSave === 'function') onRequestSave(colors)
-                    setSaved(true)
-                    setTimeout(() => setSaved(false), 1600)
-                  }}
-                  className="btn btn-success flex-1"
-                >
-                  Save Palette
-                </button>
-
-                <button
-                  onClick={() => {
-                    const colors = generated.map(g => g.hex)
-                    if (typeof onRequestExport === 'function') onRequestExport(colors)
-                  }}
-                  className="btn btn-outline flex-1"
-                >
-                  Export
-                </button>
-              </div>
-
-              <div className="flex gap-2 items-center text-xs">
-                {copied && <div className="text-emerald-400">Copied codes to clipboard</div>}
-                {saved && <div className="text-emerald-400">Saved to Favorites</div>}
-              </div>
+              <button
+                onClick={() => {
+                  const colors = generated.map(g => g.hex)
+                  if (typeof onRequestExport === 'function') onRequestExport(colors)
+                }}
+                className="btn btn-ghost"
+                aria-label="Export palette"
+              >
+                Export
+              </button>
             </div>
           </div>
         </div>
       </div>
 
+      {/* ========== GENERATED PALETTE GRID ========== */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {generated.map((g, i) => (
           <div key={i}>
-            <HSLCard title={g.title} color={g.hex} h={g.h} s={g.s} l={g.l} showCMYK={!!settings.showCMYK} defaultCopy={settings.defaultCopy} />
+            <HSLCard 
+              title={g.title} 
+              color={g.hex} 
+              h={g.h} 
+              s={g.s} 
+              l={g.l} 
+              showCMYK={!!settings.showCMYK} 
+              defaultCopy={settings.defaultCopy} 
+            />
           </div>
         ))}
       </div>

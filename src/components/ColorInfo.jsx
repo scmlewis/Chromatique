@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import { hexToHsl, rgbString, rgbToCmykFromHex, wcagLevel } from '../utils/colors'
 import { getClosestColorName, getSimilarityDescription } from '../utils/colorNames'
 
@@ -28,23 +29,55 @@ export default function ColorInfo({ color, h, s, l, primary, showCMYK = true }) 
   })() : null
 
   return (
-    <div className="p-3 bg-slate-900/80">
-      {/* Color name */}
+    <div 
+      style={{
+        padding: 'var(--space-4)',
+        background: 'var(--color-surface-bg)',
+        borderTop: '1px solid var(--color-border-subtle)',
+      }}
+    >
+      {/* Color name section */}
       {colorName && (
-        <div className="mb-2 pb-2 border-b border-slate-700/50">
+        <div 
+          style={{
+            marginBottom: 'var(--space-3)',
+            paddingBottom: 'var(--space-2)',
+            borderBottom: '1px solid var(--color-border-subtle)',
+          }}
+        >
           <div className="flex items-center justify-between gap-2">
             <div>
-              <div className="font-semibold text-sm text-slate-100 capitalize">{colorName.name}</div>
+              <div 
+                className="capitalize font-semibold"
+                style={{
+                  fontSize: 'var(--font-size-sm)',
+                  color: 'var(--color-text-primary)',
+                }}
+              >
+                {colorName.name}
+              </div>
               {!colorName.isExactMatch && (
-                <div className="text-xs text-slate-400 mt-0.5">
+                <div 
+                  className="mt-1"
+                  style={{
+                    fontSize: 'var(--font-size-xs)',
+                    color: 'var(--color-text-secondary)',
+                  }}
+                >
                   {getSimilarityDescription(colorName.distance)} to {colorName.name}
                 </div>
               )}
             </div>
             {!colorName.isExactMatch && (
               <div 
-                className="w-8 h-8 rounded border border-slate-600 flex-shrink-0" 
-                style={{ background: colorName.hex }}
+                className="flex-shrink-0" 
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: 'var(--radius-md)',
+                  border: '1px solid var(--color-border-subtle)',
+                  background: colorName.hex,
+                }}
                 title={`Exact ${colorName.name}: ${colorName.hex}`}
               />
             )}
@@ -52,32 +85,155 @@ export default function ColorInfo({ color, h, s, l, primary, showCMYK = true }) 
         </div>
       )}
       
-      <div className="font-mono text-sm text-slate-100 break-words">{color}</div>
-      <div className="text-xs text-slate-300 mt-1">{rgb}</div>
-      <div className="text-xs text-slate-300 mt-1">HSL: {Math.round(hsl.h)}° · {Math.round(hsl.s)}% · {Math.round(hsl.l)}%</div>
-
-      <div className="mt-3 flex items-center gap-2">
-        <button className="btn btn-ghost text-xs px-3 py-1" onClick={() => doCopy('hex')} aria-label={`Copy ${color} as HEX`}>{copied === 'hex' ? 'Copied' : 'HEX'}</button>
-        <button className="btn btn-ghost text-xs px-3 py-1" onClick={() => doCopy('rgb')} aria-label={`Copy ${color} as RGB`}>{copied === 'rgb' ? 'Copied' : 'RGB'}</button>
-        <button className="btn btn-ghost text-xs px-3 py-1" onClick={() => doCopy('hsl')} aria-label={`Copy ${color} as HSL`}>{copied === 'hsl' ? 'Copied' : 'HSL'}</button>
+      {/* Hex value */}
+      <div 
+        className="font-mono break-words"
+        style={{
+          fontSize: 'var(--font-size-sm)',
+          color: 'var(--color-text-primary)',
+        }}
+      >
+        {color}
       </div>
 
+      {/* RGB value */}
+      <div 
+        className="mt-2"
+        style={{
+          fontSize: 'var(--font-size-xs)',
+          color: 'var(--color-text-secondary)',
+        }}
+      >
+        {rgb}
+      </div>
+
+      {/* HSL value */}
+      <div 
+        className="mt-2"
+        style={{
+          fontSize: 'var(--font-size-xs)',
+          color: 'var(--color-text-secondary)',
+        }}
+      >
+        HSL: {Math.round(hsl.h)}° · {Math.round(hsl.s)}% · {Math.round(hsl.l)}%
+      </div>
+
+      {/* Copy buttons */}
+      <div 
+        className="flex items-center gap-2 flex-wrap mt-4"
+        style={{ gap: 'var(--space-2)' }}
+      >
+        <button 
+          className="btn btn-ghost text-xs flex-1 min-w-fit" 
+          onClick={() => doCopy('hex')} 
+          aria-label={`Copy ${color} as HEX`}
+          style={{
+            padding: 'var(--space-2) var(--space-3)',
+          }}
+        >
+          {copied === 'hex' ? '✓ HEX' : 'HEX'}
+        </button>
+        <button 
+          className="btn btn-ghost text-xs flex-1 min-w-fit" 
+          onClick={() => doCopy('rgb')} 
+          aria-label={`Copy ${color} as RGB`}
+          style={{
+            padding: 'var(--space-2) var(--space-3)',
+          }}
+        >
+          {copied === 'rgb' ? '✓ RGB' : 'RGB'}
+        </button>
+        <button 
+          className="btn btn-ghost text-xs flex-1 min-w-fit" 
+          onClick={() => doCopy('hsl')} 
+          aria-label={`Copy ${color} as HSL`}
+          style={{
+            padding: 'var(--space-2) var(--space-3)',
+          }}
+        >
+          {copied === 'hsl' ? '✓ HSL' : 'HSL'}
+        </button>
+      </div>
+
+      {/* CMYK info */}
       {showCMYK && (
-        <div className="text-xs text-slate-400 mt-3">CMYK: {cmyk.c}% {cmyk.m}% {cmyk.y}% {cmyk.k}%</div>
+        <div 
+          className="mt-3"
+          style={{
+            fontSize: 'var(--font-size-xs)',
+            color: 'var(--color-text-tertiary)',
+          }}
+        >
+          CMYK: {cmyk.c}% {cmyk.m}% {cmyk.y}% {cmyk.k}%
+        </div>
       )}
 
+      {/* Contrast check section */}
       {primary && contrast && (
-        <div className="mt-3 pt-2 border-t border-white/10">
-          <div className="text-xs text-slate-300 mb-2 font-semibold">Contrast Check</div>
-          <div className="flex gap-2 flex-wrap">
-            {['black','white'].map((k) => {
+        <div 
+          style={{
+            marginTop: 'var(--space-3)',
+            paddingTop: 'var(--space-3)',
+            borderTop: '1px solid var(--color-border-subtle)',
+          }}
+        >
+          <div 
+            className="font-semibold mb-3"
+            style={{
+              fontSize: 'var(--font-size-xs)',
+              color: 'var(--color-text-secondary)',
+            }}
+          >
+            Contrast Check (WCAG)
+          </div>
+          <div 
+            className="flex gap-3 flex-wrap"
+            style={{ gap: 'var(--space-3)' }}
+          >
+            {['black', 'white'].map((k) => {
               const b = k === 'black' ? contrast.black : contrast.white
-              const cls = b.AAA ? 'bg-emerald-600 text-white' : (b.AA ? 'bg-amber-500 text-gray-900' : 'bg-red-600 text-white')
+              const badgeColor = b.AAA ? 'var(--color-success)' : (b.AA ? 'var(--color-warning)' : 'var(--color-error)')
+              const badgeTextColor = b.AAA ? '#ffffff' : (b.AA ? '#1f2937' : '#ffffff')
               return (
-                <div key={k} className="p-2 rounded-md bg-slate-800/60 text-xs w-full sm:w-auto">
-                  <div className="font-semibold">{k === 'black' ? 'Black Text' : 'White Text'}</div>
-                  <div className="text-sm mt-1">{b.ratio.toFixed(2)}:1</div>
-                  <div className={`inline-block mt-2 px-2 py-1 rounded-full text-xs ${cls}`}>{b.AAA ? 'AAA' : (b.AA ? 'AA' : 'Fail')}</div>
+                <div 
+                  key={k} 
+                  style={{
+                    padding: 'var(--space-3)',
+                    borderRadius: 'var(--radius-md)',
+                    background: 'var(--color-surface-elevated)',
+                    flex: '1 1 auto',
+                    minWidth: '120px',
+                  }}
+                >
+                  <div 
+                    className="font-semibold"
+                    style={{
+                      fontSize: 'var(--font-size-xs)',
+                      color: 'var(--color-text-primary)',
+                    }}
+                  >
+                    {k === 'black' ? 'Black Text' : 'White Text'}
+                  </div>
+                  <div 
+                    className="mt-2 text-sm"
+                    style={{
+                      fontSize: 'var(--font-size-sm)',
+                      color: 'var(--color-text-secondary)',
+                    }}
+                  >
+                    {b.ratio.toFixed(2)}:1
+                  </div>
+                  <div 
+                    className="inline-block mt-2 text-xs font-semibold"
+                    style={{
+                      padding: 'var(--space-2) var(--space-3)',
+                      borderRadius: 'var(--radius-full)',
+                      background: badgeColor,
+                      color: badgeTextColor,
+                    }}
+                  >
+                    {b.AAA ? 'AAA' : (b.AA ? 'AA' : 'Fail')}
+                  </div>
                 </div>
               )
             })}
@@ -86,4 +242,18 @@ export default function ColorInfo({ color, h, s, l, primary, showCMYK = true }) 
       )}
     </div>
   )
+}
+
+ColorInfo.propTypes = {
+  color: PropTypes.string.isRequired,
+  h: PropTypes.number,
+  s: PropTypes.number,
+  l: PropTypes.number,
+  primary: PropTypes.bool,
+  showCMYK: PropTypes.bool,
+}
+
+ColorInfo.defaultProps = {
+  primary: true,
+  showCMYK: true,
 }

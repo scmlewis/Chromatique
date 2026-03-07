@@ -218,50 +218,101 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen p-6 lg:p-12">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--color-surface-bg)', color: 'var(--color-text-primary)' }}>
+      <div className="max-w-6xl mx-auto p-6 lg:p-12">
+        {/* ========== HEADER ========== */}
         <header className="flex items-start justify-between mb-8 site-header gap-4">
           <div className="flex-1">
             <h1 className="app-title">Chromatique</h1>
-            <p className="app-subtitle">Generate, lock, copy, and save palettes — local only. HSL and Swatches views.</p>
+            <p className="app-subtitle hidden sm:block">Generate, lock, copy, and save palettes. HSL controls, color extraction, and favorites management.</p>
           </div>
 
+          {/* Header Actions - Desktop & Mobile Variants */}
           <div className="flex items-center gap-3">
-            {/* Desktop: text buttons */}
+            {/* Desktop: text + icon buttons */}
             <div className="hidden md:flex items-center gap-2">
-              <button className="btn btn-ghost" onClick={onClickImport}>Import</button>
-              <button className="btn btn-ghost" onClick={() => setShowSettings(true)}>Settings</button>
-              <button className="btn btn-ghost" onClick={() => setShowHelp(true)}>Help</button>
+              <button 
+                className="btn btn-ghost" 
+                onClick={onClickImport}
+                aria-label="Import palette from JSON file"
+              >
+                Import
+              </button>
+              <button 
+                className="btn btn-ghost" 
+                onClick={() => setShowSettings(true)}
+                aria-label="Open settings"
+              >
+                Settings
+              </button>
+              <button 
+                className="btn btn-ghost" 
+                onClick={() => setShowHelp(true)}
+                aria-label="Open help and keyboard shortcuts"
+              >
+                Help
+              </button>
             </div>
 
-            {/* Mobile: compact icons */}
+            {/* Mobile: icon-only buttons */}
             <div className="flex md:hidden items-center gap-2">
-              <button className="btn btn-ghost p-2" onClick={onClickImport} title="Import" aria-label="Import">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M12 5v14M5 12h14"/></svg>
+              <button 
+                className="btn-icon" 
+                onClick={onClickImport}
+                title="Import palette"
+                aria-label="Import palette from JSON file"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 2v12m0 0l-4-4m4 4l4-4" />
+                  <path d="M3 18h18" />
+                </svg>
               </button>
-              <button className="btn btn-ghost p-2" onClick={() => setShowSettings(true)} title="Settings" aria-label="Settings">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M12 15.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7zM19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09c0-.63-.39-1.2-1-1.51a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06c.36-.36.45-.9.33-1.37A1.65 1.65 0 013 12.3V12a2 2 0 010-4v-.3c.08-.48 0-1.01-.33-1.37L2.6 6A2 2 0 015.43 3.17l.06.06c.36.36.9.45 1.37.33.47-.12 1-.03 1.37.33.36.36.9.45 1.37.33H12a2 2 0 014 0h.09c.63 0 1.2.39 1.51 1 .12.47.03 1 .33 1.37.12.47.45.9.33 1.37.12.47.45.9.33 1.37.12.47.45.9.33 1.37.12.47.45.9.33 1.37.12.47.45.9.33 1.37.12.47.45.9.33 1.37z"/></svg>
+              <button 
+                className="btn-icon" 
+                onClick={() => setShowSettings(true)}
+                title="Settings"
+                aria-label="Open settings"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="3" />
+                  <path d="M12 2v6m0 6v6M2 12h6m6 0h6" />
+                </svg>
               </button>
-              <button className="btn btn-ghost p-2" onClick={() => setShowHelp(true)} title="Help" aria-label="Help">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M8 10a4 4 0 118 0c0 2-3 3-3 5m-2 2h.01"/></svg>
+              <button 
+                className="btn-icon" 
+                onClick={() => setShowHelp(true)}
+                title="Help"
+                aria-label="Open help and keyboard shortcuts"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 17v-1m0-4V8m-1-2h2" />
+                </svg>
               </button>
             </div>
 
-              <input ref={fileInputRef} type="file" accept=".json,application/json" onChange={handleFilePicked} style={{ display: 'none' }} />
-            </div>
-          </header>
+            <input 
+              ref={fileInputRef} 
+              type="file" 
+              accept=".json,application/json" 
+              onChange={handleFilePicked} 
+              style={{ display: 'none' }} 
+            />
+          </div>
+        </header>
 
-          <main>
-            <TabContents
-              palette={palette}
-              locks={locks}
-              favorites={favorites}
-              onToggleLock={toggleLock}
-              onUpdateColor={updateColor}
-              onReorderPalette={reorderPalette}
-              onCopyHex={copyHex}
-              onSaveFavorite={saveFavorite}
-              onExportJSON={exportJSON}
+        {/* ========== MAIN CONTENT ========== */}
+        <main className="space-y-6">
+          <TabContents
+            palette={palette}
+            locks={locks}
+            favorites={favorites}
+            onToggleLock={toggleLock}
+            onUpdateColor={updateColor}
+            onReorderPalette={reorderPalette}
+            onCopyHex={copyHex}
+            onSaveFavorite={saveFavorite}
+            onExportJSON={exportJSON}
             onGeneratePalette={generatePalette}
             count={count}
             setCount={setCount}
@@ -277,7 +328,8 @@ export default function App() {
           />
         </main>
 
-        {/* Settings modal */}
+        {/* ========== MODALS ========== */}
+        {/* Settings Modal */}
         <SettingsModal 
           isOpen={showSettings}
           onClose={() => setShowSettings(false)}
@@ -285,10 +337,16 @@ export default function App() {
           onSettingsChange={setSettings}
         />
 
+        {/* Help Modal */}
         {showHelp && (
-          <HelpModal onClose={() => setShowHelp(false)} settings={settings} setSettings={setSettings} />
+          <HelpModal 
+            onClose={() => setShowHelp(false)} 
+            settings={settings} 
+            setSettings={setSettings} 
+          />
         )}
 
+        {/* Toast Notification */}
         {toast && (
           <Toast
             message={toast.message}
