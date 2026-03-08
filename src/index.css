@@ -18,10 +18,15 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Main content padding for mobile floating nav */
+/* Main content padding for mobile floating nav + notch/home-bar safe area */
 @media (max-width: 639px) {
   main {
-    padding-bottom: 88px;
+    padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Extend mobile nav inner container to clear home indicator */
+  nav[aria-label="Mobile navigation"] > div {
+    padding-bottom: calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
   }
 }
 
@@ -301,6 +306,13 @@ body {
   @media (min-width: 640px) {
     width: 28px;
     height: 20px;
+  }
+}
+
+/* Hide swatches 5+ on mobile (only show first 4) */
+@media (max-width: 639px) {
+  .toast-preview .toast-swatch:nth-child(n+5) {
+    display: none;
   }
 }
 

@@ -140,8 +140,10 @@ export default function TabNav({ tabs, current, onChange }) {
               key={t.key}
               onClick={() => onChange(t.key)}
               role="tab"
+              id={`tab-${t.key}`}
               aria-selected={current === t.key}
               aria-controls={`panel-${t.key}`}
+              aria-label={t.label}
               className={current === t.key ? 'tab-active' : 'tab-inactive'}
               style={{
                 // Desktop touch targets: 44px with label

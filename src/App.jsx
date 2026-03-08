@@ -224,7 +224,7 @@ export default function App() {
         <header className="flex items-start justify-between mb-8 site-header gap-4">
           <div className="flex-1">
             <h1 className="app-title">Chromatique</h1>
-            <p className="app-subtitle hidden sm:block">Generate, lock, copy, and save palettes. HSL controls, color extraction, and favorites management.</p>
+            <p className="app-subtitle hidden sm:block">Create, lock, and export palettes</p>
           </div>
 
           {/* Header Actions - Desktop & Mobile Variants */}

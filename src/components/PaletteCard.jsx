@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import PropTypes from 'prop-types'
 import { HexColorPicker } from 'react-colorful'
 import { readableTextColor, hexToHsl, rgbString } from '../utils/colors'
 import { addRipple } from '../utils/ui'
 import ColorInfo from './ColorInfo'
 
-export default function PaletteCard({ color, locked, onToggleLock, onCopy, onColorChange, delay, settings = {} }) {
+export default function PaletteCard({ color, locked, onToggleLock, onCopy, onColorChange, delay, settings = {}, onMoveUp, onMoveDown }) {
   const textColor = readableTextColor(color)
   const [copiedType, setCopiedType] = useState(null)
   const [isEditing, setIsEditing] = useState(false)
@@ -105,7 +106,7 @@ export default function PaletteCard({ color, locked, onToggleLock, onCopy, onCol
 
   return (
     <div 
-      className="surface-card overflow-hidden animate-card-pop card-hover" 
+      className="surface-card overflow-visible animate-card-pop card-hover relative" 
       style={{ 
         ...animStyle,
         borderRadius: 'var(--radius-lg)'
@@ -243,7 +244,6 @@ export default function PaletteCard({ color, locked, onToggleLock, onCopy, onCol
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                   <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                 </svg>
-                <span className="text-xs font-mono">{color}</span>
               </button>
               <button
                 onClick={(e) => { 
@@ -270,18 +270,32 @@ export default function PaletteCard({ color, locked, onToggleLock, onCopy, onCol
           )}
         </div>
 
-        {/* Color picker popup */}
-        {showPicker && (
+      </div>
+
+      {/* Color picker portal - renders at document root to escape card hierarchy */}
+      {showPicker && createPortal(
+        <div 
+          className="fixed inset-0 flex items-center justify-center z-50"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowPicker(false)
+            }
+          }}
+          style={{
+            background: 'rgba(0, 0, 0, 0.5)',
+            backdropFilter: 'blur(2px)',
+          }}
+        >
           <div 
             ref={pickerRef}
-            className="absolute bottom-14 left-1/2 -translate-x-1/2 z-50 animate-pop"
+            className="animate-pop"
             onClick={(e) => e.stopPropagation()}
             style={{
               background: 'var(--color-surface-elevated)',
               border: '1px solid var(--color-border-subtle)',
               borderRadius: 'var(--radius-lg)',
               padding: 'var(--space-4)',
-              boxShadow: 'var(--shadow-lg)',
+              boxShadow: 'var(--shadow-xl)',
             }}
           >
             <HexColorPicker color={pickerColor} onChange={handlePickerChange} />
@@ -292,50 +306,59 @@ export default function PaletteCard({ color, locked, onToggleLock, onCopy, onCol
                   setShowPicker(false) 
                 }}
                 className="btn btn-primary btn-sm"
+                style={{
+                  background: 'var(--color-brand-primary)',
+                  color: 'white',
+                  padding: 'var(--space-2) var(--space-4)',
+                  borderRadius: 'var(--radius-md)',
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
               >
                 Done
               </button>
             </div>
           </div>
-        )}
+        </div>,
+        document.body
+      )}
 
-        {/* Error message */}
-        {error && (
-          <div className="absolute top-1/2 left-0 right-0 -translate-y-1/2 text-center">
-            <span 
-              className="text-xs font-semibold text-white shadow-lg animate-pop"
-              style={{
-                display: 'inline-block',
-                padding: 'var(--space-2) var(--space-3)',
-                background: 'var(--color-error)',
-                borderRadius: 'var(--radius-md)',
-              }}
-            >
-              {error}
-            </span>
-          </div>
-        )}
+      {/* Error message - positioned at card level */}
+      {error && (
+        <div className="absolute top-1/2 left-0 right-0 -translate-y-1/2 text-center z-40 pointer-events-none">
+          <span 
+            className="text-xs font-semibold text-white shadow-lg animate-pop"
+            style={{
+              display: 'inline-block',
+              padding: 'var(--space-2) var(--space-3)',
+              background: 'var(--color-error)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
+            {error}
+          </span>
+        </div>
+      )}
 
-        {/* Copy feedback */}
-        {copiedType && (
-          <div className="absolute top-1/2 left-0 right-0 -translate-y-1/2 text-center pointer-events-none">
-            <span 
-              className="text-xs font-semibold text-white shadow-lg animate-pop"
-              style={{
-                display: 'inline-block',
-                padding: 'var(--space-2) var(--space-3)',
-                background: 'var(--color-success)',
-                borderRadius: 'var(--radius-md)',
-              }}
-            >
-              Copied {copiedType.toUpperCase()}!
-            </span>
-          </div>
-        )}
-      </div>
+      {/* Copy feedback - positioned at card level */}
+      {copiedType && (
+        <div className="absolute top-1/2 left-0 right-0 -translate-y-1/2 text-center pointer-events-none z-40">
+          <span 
+            className="text-xs font-semibold text-white shadow-lg animate-pop"
+            style={{
+              display: 'inline-block',
+              padding: 'var(--space-2) var(--space-3)',
+              background: 'var(--color-success)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
+            Copied {copiedType.toUpperCase()}!
+          </span>
+        </div>
+      )}
 
-      {/* Color info footer */}
-      <ColorInfo color={color} primary={false} />
+      {/* Color info footer - Streamlined view */}
+      <ColorInfo color={color} primary={false} showDetails={false} settings={settings} onMoveUp={onMoveUp} onMoveDown={onMoveDown} />
     </div>
   )
 }

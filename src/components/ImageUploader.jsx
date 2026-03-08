@@ -91,7 +91,7 @@ export default function ImageUploader({ onExtract }) {
   }
 
   return (
-    <div className="p-4 bg-slate-800 rounded-md text-slate-100">
+    <div className="surface-glass p-4">
       <div
         role="button"
         aria-label="Image upload drop zone"
@@ -129,34 +129,37 @@ export default function ImageUploader({ onExtract }) {
       </div>
 
       {/* Controls separated from drop zone */}
-      <div className="flex items-center gap-3 mb-3">
+      <div className="image-uploader-controls mb-3">
         <label className="text-sm text-slate-300">Colors to extract</label>
-        <input type="number" min={1} max={12} value={count} onChange={e => setCount(e.target.value)} className="w-20 bg-slate-700/40 p-1 rounded text-slate-100" />
-        <button className="btn btn-primary ml-2 flex items-center" onClick={handleExtract} disabled={busy || !file} aria-busy={busy}>
-          {busy ? (
-            <>
-              <span className="inline-block animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2" aria-hidden="true" />
-              Extracting…
-            </>
-          ) : (
-            'Extract'
-          )}
-        </button>
+        <div className="flex items-center gap-3 mb-2">
+          <input type="number" min={1} max={10} value={count} onChange={e => setCount(e.target.value)} className="w-20 bg-slate-700/40 p-1 rounded text-slate-100" disabled={!file} />
+          <button className="btn btn-primary flex items-center disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none" onClick={handleExtract} disabled={busy || !file} aria-busy={busy}>
+            {busy ? (
+              <>
+                <span className="inline-block animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2" aria-hidden="true" />
+                Extracting…
+              </>
+            ) : (
+              'Extract'
+            )}
+          </button>
+        </div>
+        {!file && <p className="text-xs text-slate-400">Upload a valid image to enable extraction</p>}
       </div>
 
       {preview && (
         <div className="mb-3">
-          <img src={preview} alt="preview" className="max-h-48 rounded-md shadow-sm object-contain" />
+          <img src={preview} alt={file ? `Preview of ${file.name}` : 'Uploaded image preview'} className="max-h-48 rounded-md shadow-sm object-contain" />
         </div>
       )}
 
       {colors && colors.length > 0 && (
         <div className="mt-2">
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             {colors.map((c, i) => (
-              <div key={c} className="flex flex-col items-center text-xs">
+              <div key={i} className="flex flex-col items-center text-xs">
                 <div style={{ background: c }} className="w-12 h-12 rounded border" />
-                <div className="mt-1">{c}</div>
+                <div className="mt-1 max-w-[3.5rem] break-all text-center">{c}</div>
               </div>
             ))}
           </div>

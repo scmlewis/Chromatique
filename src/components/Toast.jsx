@@ -47,7 +47,7 @@ export default function Toast({ message, actionLabel, onAction, onClose, preview
         {previewColors && previewColors.length > 0 && (
           <div className="toast-preview mb-3 sm:mb-0 sm:px-0">
             {/* Mobile: 4 swatches | Desktop: 8 swatches */}
-            {previewColors.slice(0, window.innerWidth >= 640 ? 8 : 4).map((c, i) => (
+            {previewColors.slice(0, 8).map((c, i) => (
               <div key={i} className="toast-swatch" style={{ background: c }} />
             ))}
           </div>

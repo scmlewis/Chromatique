@@ -16,7 +16,6 @@ export default function TabContents(props) {
   const [showLoadConfirm, setShowLoadConfirm] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState('newest') // 'newest', 'oldest', 'name'
-  const [draggedIndex, setDraggedIndex] = useState(null)
   const [showSaveModal, setShowSaveModal] = useState(false)
   const [showExportModal, setShowExportModal] = useState(false)
   const [modalColors, setModalColors] = useState([])
@@ -75,30 +74,13 @@ export default function TabContents(props) {
     return Array.from(tagSet).sort()
   }, [favorites])
 
-  // Handle drag and drop reordering
-  const handleDragStart = (index) => {
-    setDraggedIndex(index)
-  }
-
-  const handleDragOver = (e, index) => {
-    e.preventDefault()
-    if (draggedIndex === null || draggedIndex === index) return
-  }
-
-  const handleDrop = (e, dropIndex) => {
-    e.preventDefault()
-    if (draggedIndex === null || draggedIndex === dropIndex) return
-
-    // Use parent's reorder function
-    if (onReorderPalette) {
-      onReorderPalette(draggedIndex, dropIndex)
+  // Handle color reordering with arrow buttons (mobile)
+  const handleMoveColor = (index, direction) => {
+    if (direction === 'up' && index > 0) {
+      onReorderPalette(index, index - 1)
+    } else if (direction === 'down' && index < palette.length - 1) {
+      onReorderPalette(index, index + 1)
     }
-    
-    setDraggedIndex(null)
-  }
-
-  const handleDragEnd = () => {
-    setDraggedIndex(null)
   }
 
   // generate a PNG image of a palette array and trigger download
@@ -141,7 +123,7 @@ export default function TabContents(props) {
       case 'hsl':
         return {
           title: 'HSL Color Palette Generator',
-          desc: 'Adjust the sliders to define the base color (H, S, L). Click on any color block to copy its HEX value.'
+          desc: 'Adjust the sliders to define the base color (H, S, L). Tap a swatch to copy the configured color format.'
         }
       case 'palette':
         return {
@@ -189,18 +171,20 @@ export default function TabContents(props) {
         const h = headerFor(tab)
         return (
           <div className="mb-6">
-            {h.title && <h2 className="text-2xl font-semibold mb-1">{h.title}</h2>}
-            {h.desc && <p className="text-sm text-slate-400">{h.desc}</p>}
+            {h.title && <h2 className="text-heading text-h2 mb-1">{h.title}</h2>}
+            {h.desc && <p className="tab-desc">{h.desc}</p>}
           </div>
         )
       })()}
 
       {tab === 'hsl' && (
-        <HSLPanel onRequestSave={(colors) => { setModalColors(colors); setModalName(''); setShowSaveModal(true) }} onRequestExport={(colors) => { setModalColors(colors); setShowExportModal(true) }} onCopyHex={onCopy} settings={settings} />
+        <section id="panel-hsl" role="tabpanel" aria-label="HSL Color Palette Generator">
+          <HSLPanel onRequestSave={(colors) => { setModalColors(colors); setModalName(''); setShowSaveModal(true) }} onRequestExport={(colors) => { setModalColors(colors); setShowExportModal(true) }} onCopyHex={onCopy} settings={settings} />
+        </section>
       )}
 
       {tab === 'palette' && (
-        <section className="mb-8">
+        <section id="panel-palette" role="tabpanel" aria-label="Swatches" className="mb-8">
           <div className="mb-4 control-panel">
             <div className="control-left">
               <label className="text-sm text-slate-300">Colors: <span className="font-medium text-slate-100">{count}</span></label>
@@ -236,26 +220,13 @@ export default function TabContents(props) {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 palette-grid">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 palette-grid">
             {palette && palette.length > 0 ? (
               palette.map((c, i) => (
                 <div 
-                  className={`palette-card ${draggedIndex === i ? 'opacity-50' : ''}`} 
+                  className="palette-card" 
                   key={`${c}-${i}`}
-                  draggable="true"
-                  onDragStart={() => handleDragStart(i)}
-                  onDragOver={(e) => handleDragOver(e, i)}
-                  onDrop={(e) => handleDrop(e, i)}
-                  onDragEnd={handleDragEnd}
-                  style={{ cursor: 'grab' }}
                 >
-                  <div className="relative">
-                    {/* Drag handle indicator */}
-                    <div className="absolute top-2 left-2 z-10 pointer-events-none">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white/40" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M7 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 2zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 14zm6-8a2 2 0 1 0-.001-4.001A2 2 0 0 0 13 6zm0 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 14z"></path>
-                      </svg>
-                    </div>
                     <PaletteCard
                       color={c}
                       locked={!!(locks && locks[i])}
@@ -264,8 +235,9 @@ export default function TabContents(props) {
                       onCopy={() => onCopy(c)}
                       delay={i * PALETTE_CARD_ANIMATION_DELAY_MS}
                       settings={settings}
+                      onMoveUp={i > 0 ? () => handleMoveColor(i, 'up') : null}
+                      onMoveDown={i < palette.length - 1 ? () => handleMoveColor(i, 'down') : null}
                     />
-                  </div>
                 </div>
               ))
             ) : (
@@ -276,23 +248,18 @@ export default function TabContents(props) {
       )}
 
       {tab === 'image' && (
-        <section className="mb-8">
-          <h2 className="text-lg font-medium mb-3">Extract from Image</h2>
+        <section id="panel-image" role="tabpanel" aria-label="Extract From Image" className="mb-8">
           <ImageUploader onExtract={(cols) => { setExtractedColors(cols); setExtractedName(''); }} />
           {extractedColors && extractedColors.length > 0 && (
-            <div className="mt-4">
-              <div className="flex gap-2 items-center mb-3">
-                <div className="flex gap-2">
-                  {extractedColors.map(c => (<div key={c} className="w-12 h-12 rounded border" style={{ background: c }} />))}
-                </div>
-                <div className="ml-4">
-                  <input value={extractedName} onChange={e => setExtractedName(e.target.value)} placeholder="Palette name (optional)" className="bg-slate-800/50 p-1 rounded text-sm" />
-                </div>
-                <div className="ml-auto flex gap-2">
-                  <button className="btn btn-primary" onClick={() => { onApplyPalette && onApplyPalette(extractedColors); setTab('palette') }}>Apply to palette</button>
-                  <button className="btn btn-success" onClick={() => { onSaveFavorite && onSaveFavorite(extractedColors, extractedName); setExtractedColors([]); setExtractedName('') }}>Save as favorite</button>
-                  <button className="btn btn-outline" onClick={() => { navigator.clipboard.writeText(extractedColors.join('\n')) }}>Copy HEX list</button>
-                </div>
+            <div className="mt-4 flex flex-col gap-3">
+              <div className="flex gap-2 flex-wrap">
+                {extractedColors.map((c, i) => (<div key={i} className="w-12 h-12 rounded border" style={{ background: c }} />))}
+              </div>
+              <input value={extractedName} onChange={e => setExtractedName(e.target.value)} placeholder="Palette name (optional)" className="bg-slate-800/50 p-1 rounded text-sm w-full max-w-xs" />
+              <div className="flex flex-wrap gap-2">
+                <button className="btn btn-primary" onClick={() => { onApplyPalette && onApplyPalette(extractedColors); setTab('palette') }}>Apply to palette</button>
+                <button className="btn btn-success" onClick={() => { onSaveFavorite && onSaveFavorite(extractedColors, extractedName); setExtractedColors([]); setExtractedName('') }}>Save as favorite</button>
+                <button className="btn btn-outline" onClick={() => { navigator.clipboard.writeText(extractedColors.join('\n')) }}>Copy HEX list</button>
               </div>
             </div>
           )}
@@ -305,18 +272,18 @@ export default function TabContents(props) {
           <div className="absolute inset-0 bg-black/50" onClick={() => setShowSaveModal(false)} />
           <div className="relative z-60 w-full max-w-lg p-6 bg-slate-900 rounded-md shadow-lg text-slate-100">
             <h3 className="text-lg font-semibold mb-2">Save Palette</h3>
-            <p className="text-sm text-slate-400 mb-4">Give this palette a name and optionally add tags.</p>
+            <p className="tab-desc mb-4">Give this palette a name and optionally add tags.</p>
             <input 
               value={modalName} 
               onChange={e => setModalName(e.target.value)} 
               placeholder="My Palette name" 
-              className="w-full p-2 rounded-md bg-slate-800/50 mb-3 text-slate-100 placeholder:text-slate-400" 
+              className="input-field w-full mb-3" 
             />
             <input 
               value={modalTags} 
               onChange={e => setModalTags(e.target.value)} 
               placeholder="Tags (comma-separated, e.g. dark, modern, blue)" 
-              className="w-full p-2 rounded-md bg-slate-800/50 mb-4 text-slate-100 placeholder:text-slate-400 text-sm" 
+              className="input-field w-full mb-4" 
             />
             <div className="flex justify-end gap-3">
               <button className="btn btn-ghost" onClick={() => setShowSaveModal(false)}>Cancel</button>
@@ -333,25 +300,68 @@ export default function TabContents(props) {
 
       {/* Export Modal */}
       {showExportModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
           <div className="absolute inset-0 bg-black/50" onClick={() => setShowExportModal(false)} />
-          <div className="relative z-60 w-full max-w-lg p-6 bg-slate-900 rounded-md shadow-lg text-slate-100">
-            <h3 className="text-lg font-semibold mb-2">Export Palette</h3>
-            <p className="text-sm text-slate-400 mb-4">Choose an export format for the current palette.</p>
-            <div className="flex flex-col gap-3">
-              <button className="btn btn-outline" onClick={() => { onExportJSON && onExportJSON(modalColors); setShowExportModal(false) }}>Download JSON</button>
-              <button className="btn btn-ghost" onClick={() => { const cssVars = modalColors.map((c, i) => `--color-${i+1}: ${c};`).join('\n'); navigator.clipboard.writeText(cssVars); setShowExportModal(false) }}>Copy CSS variables</button>
-              <button className="btn btn-ghost" onClick={() => { navigator.clipboard.writeText(modalColors.join('\n')); setShowExportModal(false) }}>Copy HEX list</button>
-              <button className="btn btn-ghost" onClick={() => {
-                const scss = `$palette: (\n${modalColors.map((c,i)=>`  "color-${i+1}": ${c}`).join(',\n')}\n);`
-                navigator.clipboard.writeText(scss); setShowExportModal(false)
-              }}>Copy SCSS map</button>
-              <button className="btn btn-ghost" onClick={() => {
-                const tailwind = `module.exports = {\n  theme: {\n    extend: {\n      colors: {\n${modalColors.map((c,i)=>`        'palette-${i+1}': '${c}',`).join('\n')}\n      }\n    }\n  }\n}`
-                navigator.clipboard.writeText(tailwind); setShowExportModal(false)
-              }}>Copy Tailwind config</button>
+          <div className="relative z-60 w-full max-w-2xl max-h-[90vh] overflow-y-auto p-4 sm:p-6 bg-slate-900 rounded-md shadow-lg text-slate-100">
+            <h3 className="text-2xl font-bold mb-2">Export Palette</h3>
+            <p className="text-sm text-slate-400 mb-6">Choose an export format for the current palette.</p>
+            
+            {/* Structured Data Section */}
+            <div className="mb-6">
+              <h4 className="text-sm font-semibold text-slate-300 mb-3 uppercase tracking-wider">Structured Data</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <button 
+                  className="export-format-card" 
+                  onClick={() => { onExportJSON && onExportJSON(modalColors); setShowExportModal(false) }}
+                >
+                  <div className="font-semibold text-white">JSON File</div>
+                  <p className="text-xs text-slate-400 mt-1">Download as a JSON file</p>
+                </button>
+                <button 
+                  className="export-format-card" 
+                  onClick={() => { const cssVars = modalColors.map((c, i) => `--color-${i+1}: ${c};`).join('\n'); navigator.clipboard.writeText(cssVars); setShowExportModal(false) }}
+                >
+                  <div className="font-semibold text-white">CSS Variables</div>
+                  <p className="text-xs text-slate-400 mt-1">Copy to clipboard</p>
+                </button>
+                <button 
+                  className="export-format-card" 
+                  onClick={() => {
+                    const scss = `$palette: (\n${modalColors.map((c,i)=>`  "color-${i+1}": ${c}`).join(',\n')}\n);`
+                    navigator.clipboard.writeText(scss); setShowExportModal(false)
+                  }}
+                >
+                  <div className="font-semibold text-white">SCSS Map</div>
+                  <p className="text-xs text-slate-400 mt-1">Copy to clipboard</p>
+                </button>
+                <button 
+                  className="export-format-card" 
+                  onClick={() => {
+                    const tailwind = `module.exports = {\n  theme: {\n    extend: {\n      colors: {\n${modalColors.map((c,i)=>`        'palette-${i+1}': '${c}',`).join('\n')}\n      }\n    }\n  }\n}`
+                    navigator.clipboard.writeText(tailwind); setShowExportModal(false)
+                  }}
+                >
+                  <div className="font-semibold text-white">Tailwind Config</div>
+                  <p className="text-xs text-slate-400 mt-1">Copy to clipboard</p>
+                </button>
+              </div>
             </div>
-            <div className="flex justify-end mt-4">
+            
+            {/* Quick Copy Section */}
+            <div className="mb-6">
+              <h4 className="text-sm font-semibold text-slate-300 mb-3 uppercase tracking-wider">Quick Copy</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <button 
+                  className="export-format-card" 
+                  onClick={() => { navigator.clipboard.writeText(modalColors.join('\n')); setShowExportModal(false) }}
+                >
+                  <div className="font-semibold text-white">HEX List</div>
+                  <p className="text-xs text-slate-400 mt-1">Copy to clipboard</p>
+                </button>
+              </div>
+            </div>
+            
+            <div className="flex justify-end mt-6 pt-4 border-t border-slate-700">
               <button className="btn btn-ghost" onClick={() => setShowExportModal(false)}>Close</button>
             </div>
           </div>
@@ -359,15 +369,12 @@ export default function TabContents(props) {
       )}
 
       {tab === 'favorites' && (
-        <section className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-medium">Favorites</h2>
-            {favorites && favorites.length > 0 && (
-              <div className="text-sm text-slate-400">
-                {filteredFavorites.length} of {favorites.length} palette{favorites.length !== 1 ? 's' : ''}
-              </div>
-            )}
-          </div>
+        <section id="panel-favorites" role="tabpanel" aria-label="Favorites" className="mb-8">
+          {favorites && favorites.length > 0 && (
+            <div className="tab-desc mb-4">
+              {filteredFavorites.length} of {favorites.length} palette{favorites.length !== 1 ? 's' : ''}
+            </div>
+          )}
 
           {/* Search and Filter Controls */}
           {favorites && favorites.length > 0 && (
@@ -379,7 +386,7 @@ export default function TabContents(props) {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search palettes by name or color..."
-                  className="w-full px-4 py-2 pl-10 bg-slate-800/50 border border-slate-700 rounded-md text-slate-100 placeholder-slate-400 focus:border-indigo-500 focus:outline-none"
+                  className="input-field w-full pl-10"
                 />
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 absolute left-3 top-2.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -402,7 +409,7 @@ export default function TabContents(props) {
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="px-4 py-2 pr-10 bg-slate-800/50 border border-slate-700 rounded-md text-slate-100 focus:border-indigo-500 focus:outline-none appearance-none cursor-pointer"
+                  className="input-field pr-10 appearance-none cursor-pointer"
                 >
                   <option value="newest">Newest First</option>
                   <option value="oldest">Oldest First</option>
@@ -421,9 +428,7 @@ export default function TabContents(props) {
               <span className="text-sm text-slate-400">Filter by tag:</span>
               <button
                 onClick={() => setFilterTag('')}
-                className={`px-3 py-1 rounded-full text-xs transition-colors ${
-                  !filterTag ? 'bg-indigo-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
-                }`}
+                className={`tag-chip ${!filterTag ? 'tag-chip-active' : ''}`}
               >
                 All
               </button>
@@ -431,9 +436,7 @@ export default function TabContents(props) {
                 <button
                   key={tag}
                   onClick={() => setFilterTag(filterTag === tag ? '' : tag)}
-                  className={`px-3 py-1 rounded-full text-xs transition-colors ${
-                    filterTag === tag ? 'bg-indigo-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
-                  }`}
+                  className={`tag-chip ${filterTag === tag ? 'tag-chip-active' : ''}`}
                 >
                   {tag}
                 </button>
@@ -460,12 +463,12 @@ export default function TabContents(props) {
           {/* Favorites grid */}
           <div className="flex gap-3 flex-wrap">
             {filteredFavorites.length > 0 ? filteredFavorites.map(f => (
-              <div key={f.id} className="p-3 rounded-md bg-slate-800/40 glass cursor-pointer relative" onClick={() => setShowLoadConfirm(f)}>
-                <div className="btn-wrap" style={{ position: 'absolute', top: -10, right: -10 }}>
+              <div key={f.id} className="fav-card" onClick={() => setShowLoadConfirm(f)}>
+                <div className="btn-wrap absolute -top-2.5 -right-2.5">
                   <button
                     onClick={(e) => { e.stopPropagation(); onRemoveFavorite(f.id) }}
                     title="Remove favorite"
-                    className="bg-slate-700 hover:bg-red-600 p-1 rounded-full icon-btn"
+                    className="icon-btn hover:bg-red-600/80"
                     aria-label="Remove favorite"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -475,20 +478,20 @@ export default function TabContents(props) {
                   <span className="tooltip">Remove</span>
                 </div>
                 <div className="mb-2">
-                  <div className="font-semibold text-slate-100">{f.name || 'Saved Palette'}</div>
-                  <div className="text-xs text-slate-400">{new Date(f.createdAt || f.id).toLocaleString()}</div>
+                  <div className="text-label">{f.name || 'Saved Palette'}</div>
+                  <div className="text-caption mt-0.5">{new Date(f.createdAt || f.id).toLocaleString()}</div>
                   {/* Tags */}
                   {f.tags && f.tags.length > 0 && (
                     <div className="flex flex-wrap gap-1 mt-2">
                       {f.tags.map((tag, idx) => (
-                        <span 
-                          key={idx} 
-                          className="px-2 py-0.5 bg-indigo-600/30 text-indigo-300 rounded-full text-xs border border-indigo-500/30"
+                        <button
+                          key={idx}
+                          className="tag-chip"
                           onClick={(e) => { e.stopPropagation(); setFilterTag(tag) }}
                           title={`Filter by ${tag}`}
                         >
                           {tag}
-                        </span>
+                        </button>
                       ))}
                     </div>
                   )}
@@ -501,13 +504,13 @@ export default function TabContents(props) {
                 <div className="mt-3 relative">
                   <button className="btn btn-ghost text-sm" onClick={(e) => { e.stopPropagation(); setOpenMenuFav(openMenuFav === f.id ? null : f.id) }}>Export ▾</button>
                   {openMenuFav === f.id && (
-                    <div className="fav-menu absolute right-0 mt-2 w-56 p-2 bg-slate-800 rounded shadow-lg z-40">
-                      <button className="w-full text-left px-2 py-1 hover:bg-slate-700 rounded" onClick={(e) => { e.stopPropagation(); onExportJSON && onExportJSON(f.colors); setOpenMenuFav(null) }}>Download JSON</button>
-                      <button className="w-full text-left px-2 py-1 hover:bg-slate-700 rounded" onClick={async (e) => { e.stopPropagation(); const css = f.colors.map((c,i)=>`--color-${i+1}: ${c};`).join('\n'); await navigator.clipboard.writeText(css); setCopiedFav({ id: f.id, type: 'CSS' }); setTimeout(()=>setCopiedFav(null),1200); setOpenMenuFav(null) }}>Copy CSS variables</button>
-                      <button className="w-full text-left px-2 py-1 hover:bg-slate-700 rounded" onClick={async (e) => { e.stopPropagation(); await navigator.clipboard.writeText(f.colors.join('\n')); setCopiedFav({ id: f.id, type: 'HEX' }); setTimeout(()=>setCopiedFav(null),1200); setOpenMenuFav(null) }}>Copy HEX list</button>
-                      <button className="w-full text-left px-2 py-1 hover:bg-slate-700 rounded" onClick={async (e) => { e.stopPropagation(); const scss = `$palette: (\n${f.colors.map((c,i)=>`  "color-${i+1}": ${c}`).join(',\n')}\n);`; await navigator.clipboard.writeText(scss); setCopiedFav({ id: f.id, type: 'SCSS' }); setTimeout(()=>setCopiedFav(null),1200); setOpenMenuFav(null) }}>Copy SCSS map</button>
-                      <button className="w-full text-left px-2 py-1 hover:bg-slate-700 rounded" onClick={async (e) => { e.stopPropagation(); const tailwind = `module.exports = {\n  theme: {\n    extend: {\n      colors: {\n${f.colors.map((c,i)=>`        'palette-${i+1}': '${c}',`).join('\n')}\n      }\n    }\n  }\n}`; await navigator.clipboard.writeText(tailwind); setCopiedFav({ id: f.id, type: 'Tailwind' }); setTimeout(()=>setCopiedFav(null),1200); setOpenMenuFav(null) }}>Copy Tailwind config</button>
-                      <button className="w-full text-left px-2 py-1 hover:bg-slate-700 rounded" onClick={(e) => { e.stopPropagation(); downloadPalettePNG(f.colors, f.name || `palette-${f.id}`); setOpenMenuFav(null) }}>Download PNG</button>
+                    <div className="fav-menu absolute right-0 mt-2 w-56 z-40">
+                      <button className="fav-menu-item" onClick={(e) => { e.stopPropagation(); onExportJSON && onExportJSON(f.colors); setOpenMenuFav(null) }}>Download JSON</button>
+                      <button className="fav-menu-item" onClick={async (e) => { e.stopPropagation(); const css = f.colors.map((c,i)=>`--color-${i+1}: ${c};`).join('\n'); await navigator.clipboard.writeText(css); setCopiedFav({ id: f.id, type: 'CSS' }); setTimeout(()=>setCopiedFav(null),1200); setOpenMenuFav(null) }}>Copy CSS variables</button>
+                      <button className="fav-menu-item" onClick={async (e) => { e.stopPropagation(); await navigator.clipboard.writeText(f.colors.join('\n')); setCopiedFav({ id: f.id, type: 'HEX' }); setTimeout(()=>setCopiedFav(null),1200); setOpenMenuFav(null) }}>Copy HEX list</button>
+                      <button className="fav-menu-item" onClick={async (e) => { e.stopPropagation(); const scss = `$palette: (\n${f.colors.map((c,i)=>`  "color-${i+1}": ${c}`).join(',\n')}\n);`; await navigator.clipboard.writeText(scss); setCopiedFav({ id: f.id, type: 'SCSS' }); setTimeout(()=>setCopiedFav(null),1200); setOpenMenuFav(null) }}>Copy SCSS map</button>
+                      <button className="fav-menu-item" onClick={async (e) => { e.stopPropagation(); const tailwind = `module.exports = {\n  theme: {\n    extend: {\n      colors: {\n${f.colors.map((c,i)=>`        'palette-${i+1}': '${c}',`).join('\n')}\n      }\n    }\n  }\n}`; await navigator.clipboard.writeText(tailwind); setCopiedFav({ id: f.id, type: 'Tailwind' }); setTimeout(()=>setCopiedFav(null),1200); setOpenMenuFav(null) }}>Copy Tailwind config</button>
+                      <button className="fav-menu-item" onClick={(e) => { e.stopPropagation(); downloadPalettePNG(f.colors, f.name || `palette-${f.id}`); setOpenMenuFav(null) }}>Download PNG</button>
                     </div>
                   )}
                   {copiedFav && copiedFav.id === f.id && <div className="text-emerald-400 text-xs mt-2">Copied {copiedFav.type}</div>}
@@ -521,11 +524,66 @@ export default function TabContents(props) {
       )}
 
       {tab === 'export' && (
-        <section className="mb-8">
-          <h2 className="text-lg font-medium mb-3">Export</h2>
-          <div className="flex gap-3">
-            <button onClick={onSaveFavorite} className="px-3 py-2 border border-slate-700 rounded-md">Save Favorite</button>
-            <button onClick={onExportJSON} className="px-3 py-2 border border-slate-700 rounded-md">Export JSON</button>
+        <section id="panel-export" role="tabpanel" aria-label="Export" className="mb-8">
+          <div className="mb-6">
+            <h4 className="text-sm font-semibold text-[var(--color-text-secondary)] mb-3 uppercase tracking-wider">Structured Data</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <button
+                className="export-format-card"
+                onClick={() => { onExportJSON && onExportJSON(palette) }}
+              >
+                <div className="font-semibold text-white">JSON File</div>
+                <p className="text-xs text-slate-400 mt-1">Download palette as a JSON file</p>
+              </button>
+              <button
+                className="export-format-card"
+                onClick={async () => { const cssVars = palette.map((c, i) => `--color-${i+1}: ${c};`).join('\n'); await navigator.clipboard.writeText(cssVars) }}
+              >
+                <div className="font-semibold text-white">CSS Variables</div>
+                <p className="text-xs text-slate-400 mt-1">Copy to clipboard</p>
+              </button>
+              <button
+                className="export-format-card"
+                onClick={async () => { const scss = `$palette: (\n${palette.map((c,i)=>`  "color-${i+1}": ${c}`).join(',\n')}\n);`; await navigator.clipboard.writeText(scss) }}
+              >
+                <div className="font-semibold text-white">SCSS Map</div>
+                <p className="text-xs text-slate-400 mt-1">Copy to clipboard</p>
+              </button>
+              <button
+                className="export-format-card"
+                onClick={async () => { const tw = `module.exports = {\n  theme: {\n    extend: {\n      colors: {\n${palette.map((c,i)=>`        'palette-${i+1}': '${c}',`).join('\n')}\n      }\n    }\n  }\n}`; await navigator.clipboard.writeText(tw) }}
+              >
+                <div className="font-semibold text-white">Tailwind Config</div>
+                <p className="text-xs text-slate-400 mt-1">Copy to clipboard</p>
+              </button>
+            </div>
+          </div>
+          <div className="mb-6">
+            <h4 className="text-sm font-semibold text-[var(--color-text-secondary)] mb-3 uppercase tracking-wider">Quick Copy</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <button
+                className="export-format-card"
+                onClick={async () => { await navigator.clipboard.writeText(palette.join('\n')) }}
+              >
+                <div className="font-semibold text-white">HEX List</div>
+                <p className="text-xs text-slate-400 mt-1">Copy to clipboard</p>
+              </button>
+              <button
+                className="export-format-card"
+                onClick={() => downloadPalettePNG(palette, 'palette')}
+              >
+                <div className="font-semibold text-white">Download PNG</div>
+                <p className="text-xs text-slate-400 mt-1">Save palette as image</p>
+              </button>
+            </div>
+          </div>
+          <div className="flex gap-3 pt-4 border-t border-[var(--color-border-subtle)]">
+            <button
+              className="btn btn-success"
+              onClick={() => { setModalColors(palette); setModalName(''); setShowSaveModal(true) }}
+            >
+              Save to Favorites
+            </button>
           </div>
         </section>
       )}
@@ -558,13 +616,13 @@ export default function TabContents(props) {
 
             <div className="flex justify-end gap-3">
               <button 
-                className="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-md transition-colors" 
+                className="btn btn-ghost" 
                 onClick={() => setShowLoadConfirm(null)}
               >
                 Cancel
               </button>
               <button 
-                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-md transition-colors" 
+                className="btn btn-primary" 
                 onClick={() => {
                   onLoadFavorite && onLoadFavorite(showLoadConfirm.colors)
                   setShowLoadConfirm(null)
