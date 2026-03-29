@@ -2,7 +2,8 @@ import React, { useEffect, useState, useRef, useReducer } from 'react'
 import TabContents from './components/TabContents'
 import HelpModal from './components/HelpModal'
 import SettingsModal from './components/SettingsModal'
-import { randomHex } from './utils/colors'
+import Sidebar from './components/Sidebar'
+import { randomHex, getHarmonyColors, hexToHsl, hslToHex } from './utils/colors'
 import Toast from './components/Toast'
 import { safeCopyToClipboard } from './utils/storage'
 import { 
@@ -41,9 +42,13 @@ export default function App() {
   const toastTimerRef = useRef(null)
   const fileInputRef = useRef(null)
   const [showSettings, setShowSettings] = useState(false)
-    const [showHelp, setShowHelp] = useState(false)
+  const [showHelp, setShowHelp] = useState(false)
   const [settings, setSettings] = useLocalStorage('palette:settings', { showCMYK: true, defaultCopy: 'hex', reducedMotion: false })
   const [isGenerating, setIsGenerating] = useState(false)
+  const [currentTool, setCurrentTool] = useLocalStorage('palette:tool', 'palette')
+  const [genMode, setGenMode] = useLocalStorage('palette:gen-mode', 'random') // 'random', 'monochromatic', 'analogous', 'triadic'
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useLocalStorage('palette:sidebar-collapsed', false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     if (!palette || palette.length === 0) {
@@ -59,13 +64,40 @@ export default function App() {
 
   function generatePalette(forceCount) {
     setIsGenerating(true)
-    // Use setTimeout to allow UI to update with loading state
     setTimeout(() => {
       const n = forceCount ?? count
-      const next = Array.from({ length: n }, (_, i) => {
-        if (locks && locks[i]) return palette[i] || randomHex()
-        return randomHex()
-      })
+      let next = []
+      
+      if (genMode === 'random') {
+        next = Array.from({ length: n }, (_, i) => {
+          if (locks && locks[i]) return palette[i] || randomHex()
+          return randomHex()
+        })
+      } else {
+        // Harmony modes
+        const seed = palette.find((_, i) => locks[i]) || randomHex()
+        const harmonyColors = getHarmonyColors(seed, genMode)
+        next = Array.from({ length: n }, (_, i) => {
+          if (locks && locks[i]) return palette[i]
+          
+          // Get the base color from harmony set
+          const base = harmonyColors[i % harmonyColors.length] || randomHex()
+          
+          // If we are repeating colors (e.g. 5 colors from 2 harmony colors), create variations
+          if (i >= harmonyColors.length) {
+            // This is a simple logic to shift lightness and saturation for variations
+            const { h, s, l } = hexToHsl(base)
+            // Shift progressively based on how many times we've repeated
+            const shiftCount = Math.floor(i / harmonyColors.length)
+            const newS = Math.max(10, Math.min(100, s + (shiftCount * 10 > 50 ? -20 : 10)))
+            const newL = Math.max(10, Math.min(90, l + (shiftCount % 2 === 0 ? 15 : -15)))
+            return hslToHex(h, newS, newL)
+          }
+          
+          return base
+        })
+      }
+
       setPalette(next)
       setLocks(l => {
         const nextLocks = Array.from({ length: n }, (_, i) => !!(l && l[i]))
@@ -126,10 +158,10 @@ export default function App() {
   function saveFavorite(colors, name, tags = []) {
     const toSave = Array.isArray(colors) && colors.length > 0 ? colors : palette
     if (!toSave || toSave.length === 0) return
-    const id = Date.now()
+    const id = Date.now().toString()
     const item = { 
       id, 
-      name: name || `Palette ${new Date(id).toLocaleString()}`, 
+      name: name || `Palette ${new Date(Number(id)).toLocaleString()}`, 
       colors: toSave, 
       createdAt: id,
       tags: Array.isArray(tags) ? tags : []
@@ -154,7 +186,10 @@ export default function App() {
   }
 
   function closeToast() {
-    if (toastTimerRef.current) { clearTimeout(toastTimerRef.current); toastTimerRef.current = null }
+    if (toastTimerRef.current) { 
+      clearTimeout(toastTimerRef.current) 
+      toastTimerRef.current = null 
+    }
     setToast(null)
   }
 
@@ -218,104 +253,105 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--color-surface-bg)', color: 'var(--color-text-primary)' }}>
-      <div className="max-w-6xl mx-auto p-6 lg:p-12">
-        {/* ========== HEADER ========== */}
-        <header className="flex items-start justify-between mb-8 site-header gap-4">
-          <div className="flex-1">
-            <h1 className="app-title">Chromatique</h1>
-            <p className="app-subtitle hidden sm:block">Create, lock, and export palettes</p>
-          </div>
+    <div className="flex min-h-screen bg-[var(--color-surface-bg)] text-[var(--color-text-primary)]">
+      {/* Sidebar Overlay (Mobile) */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden animate-fade-in" 
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
 
-          {/* Header Actions - Desktop & Mobile Variants */}
+      {/* Sidebar Tool Navigation */}
+      <Sidebar 
+        currentTool={currentTool} 
+        onToolChange={(toolId) => { setCurrentTool(toolId); setIsMobileMenuOpen(false) }} 
+        isCollapsed={isSidebarCollapsed}
+        onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+        isOpenMobile={isMobileMenuOpen}
+        onCloseMobile={() => setIsMobileMenuOpen(false)}
+      />
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
+        <header className="flex items-center justify-between p-4 sm:p-6 border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-bg)]/80 backdrop-blur-md z-30 sticky top-0">
           <div className="flex items-center gap-3">
-            {/* Desktop: text + icon buttons */}
-            <div className="hidden md:flex items-center gap-2">
-              <button 
-                className="btn btn-ghost" 
-                onClick={onClickImport}
-                aria-label="Import palette from JSON file"
-              >
-                Import
-              </button>
-              <button 
-                className="btn btn-ghost" 
-                onClick={() => setShowSettings(true)}
-                aria-label="Open settings"
-              >
-                Settings
-              </button>
-              <button 
-                className="btn btn-ghost" 
-                onClick={() => setShowHelp(true)}
-                aria-label="Open help and keyboard shortcuts"
-              >
-                Help
-              </button>
-            </div>
+             {/* Mobile Menu Toggle */}
+             <button 
+                onClick={() => setIsMobileMenuOpen(true)}
+                className="lg:hidden p-2 -ml-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+                aria-label="Open menu"
+             >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+             </button>
 
-            {/* Mobile: icon-only buttons */}
-            <div className="flex md:hidden items-center gap-2">
-              <button 
-                className="btn-icon" 
-                onClick={onClickImport}
-                title="Import palette"
-                aria-label="Import palette from JSON file"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M12 2v12m0 0l-4-4m4 4l4-4" />
-                  <path d="M3 18h18" />
-                </svg>
-              </button>
-              <button 
-                className="btn-icon" 
-                onClick={() => setShowSettings(true)}
-                title="Settings"
-                aria-label="Open settings"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="3" />
-                  <path d="M12 2v6m0 6v6M2 12h6m6 0h6" />
-                </svg>
-              </button>
-              <button 
-                className="btn-icon" 
-                onClick={() => setShowHelp(true)}
-                title="Help"
-                aria-label="Open help and keyboard shortcuts"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M12 17v-1m0-4V8m-1-2h2" />
-                </svg>
-              </button>
+            <div className="flex items-center gap-3">
+              <span className="font-bold text-lg hidden sm:block tracking-wide">Chromatique</span>
+              <span className="text-xs font-bold text-indigo-400 uppercase tracking-widest bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20">
+                {currentTool?.replace(/([A-Z])/g, ' $1').trim() || 'Tool'}
+              </span>
             </div>
-
-            <input 
-              ref={fileInputRef} 
-              type="file" 
-              accept=".json,application/json" 
-              onChange={handleFilePicked} 
-              style={{ display: 'none' }} 
-            />
           </div>
+
+          <div className="flex items-center gap-2">
+            <button className="btn btn-ghost" onClick={onClickImport} title="Import Palette">
+              <span className="hidden sm:inline mr-2">Import</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 2v12m0 0l-4-4m4 4l4-4" />
+                <path d="M3 18h18" />
+              </svg>
+            </button>
+            <button 
+              className="btn-icon p-2 hover:bg-slate-800 rounded-lg transition-colors" 
+              onClick={() => setShowSettings(true)}
+              aria-label="Settings"
+              title="Settings"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M12 2v6m0 6v6M2 12h6m6 0h6" />
+              </svg>
+            </button>
+            <button 
+              className="btn-icon p-2 hover:bg-slate-800 rounded-lg transition-colors" 
+              onClick={() => setShowHelp(true)}
+              aria-label="Help"
+              title="Help"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 17v-1m0-4V8m-1-2h2" />
+              </svg>
+            </button>
+          </div>
+          
+          <input 
+            ref={fileInputRef} 
+            type="file" 
+            accept=".json,application/json" 
+            onChange={handleFilePicked} 
+            style={{ display: 'none' }} 
+          />
         </header>
 
-        {/* ========== MAIN CONTENT ========== */}
-        <main className="space-y-6">
+        <main className="flex-1 overflow-y-auto p-6 lg:p-10">
           <TabContents
+            tab={currentTool}
+            onToolChange={setCurrentTool}
             palette={palette}
             locks={locks}
             favorites={favorites}
             onToggleLock={toggleLock}
             onUpdateColor={updateColor}
             onReorderPalette={reorderPalette}
-            onCopyHex={copyHex}
+            onCopy={copyHex}
             onSaveFavorite={saveFavorite}
             onExportJSON={exportJSON}
             onGeneratePalette={generatePalette}
             count={count}
             setCount={setCount}
+            genMode={genMode}
+            setGenMode={setGenMode}
             onLoadFavorite={loadFavorite}
             onRemoveFavorite={removeFavorite}
             onCloseToast={closeToast}
@@ -327,37 +363,34 @@ export default function App() {
             isGenerating={isGenerating}
           />
         </main>
-
-        {/* ========== MODALS ========== */}
-        {/* Settings Modal */}
-        <SettingsModal 
-          isOpen={showSettings}
-          onClose={() => setShowSettings(false)}
-          settings={settings}
-          onSettingsChange={setSettings}
-        />
-
-        {/* Help Modal */}
-        {showHelp && (
-          <HelpModal 
-            onClose={() => setShowHelp(false)} 
-            settings={settings} 
-            setSettings={setSettings} 
-          />
-        )}
-
-        {/* Toast Notification */}
-        {toast && (
-          <Toast
-            message={toast.message}
-            actionLabel={toast.actionLabel}
-            previewColors={toast.previewColors}
-            type={toast.type || 'info'}
-            onAction={() => handleUndoSave(toast.id)}
-            onClose={closeToast}
-          />
-        )}
       </div>
+
+      {/* ========== MODALS ========== */}
+      <SettingsModal 
+        isOpen={showSettings}
+        onClose={() => setShowSettings(false)}
+        settings={settings}
+        onSettingsChange={setSettings}
+      />
+
+      {showHelp && (
+        <HelpModal 
+          onClose={() => setShowHelp(false)} 
+          settings={settings} 
+          setSettings={setSettings} 
+        />
+      )}
+
+      {toast && (
+        <Toast
+          message={toast.message}
+          actionLabel={toast.actionLabel}
+          previewColors={toast.previewColors}
+          type={toast.type || 'info'}
+          onAction={() => handleUndoSave(toast.id)}
+          onClose={closeToast}
+        />
+      )}
     </div>
   )
 }

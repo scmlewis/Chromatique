@@ -142,3 +142,100 @@ export function generateTintsShades(hex, steps = 5) {
   }
   return { tints, shades }
 }
+
+export function getHarmonyColors(hex, type = 'complementary') {
+  const { h, s, l } = hexToHsl(hex)
+  const results = [hex]
+
+  const add = (hueOffset, sOffset = 0, lOffset = 0) => {
+    const newH = (h + hueOffset + 360) % 360
+    const newS = Math.max(0, Math.min(100, s + sOffset))
+    const newL = Math.max(0, Math.min(100, l + lOffset))
+    results.push(hslToHex(newH, newS, newL))
+  }
+
+  switch (type) {
+    case 'complementary':
+      add(180)
+      break
+    case 'analogous':
+      add(-30)
+      add(30)
+      break
+    case 'triadic':
+      add(120)
+      add(240)
+      break
+    case 'split-complementary':
+      add(150)
+      add(210)
+      break
+    case 'tetradic':
+      add(90)
+      add(180)
+      add(270)
+      break
+    case 'monochromatic':
+      add(0, -20, 20)
+      add(0, -10, -10)
+      add(0, 10, 10)
+      add(0, 20, -20)
+      break
+    default:
+      break
+  }
+
+  return results
+}
+
+/**
+ * Simulates various color blindness conditions using LMS color space transformations.
+ * Reference: Viénot, Brettel and Mollon (1999) & Machado, Oliveira and Fernandes (2009)
+ */
+export function simulateBlindness(hex, type = 'protanopia') {
+  const { r, g, b } = hexToRgb(hex)
+  
+  // Linear RGB
+  const rl = srgbToLinear(r) * 100
+  const gl = srgbToLinear(g) * 100
+  const bl = srgbToLinear(b) * 100
+
+  let rf = rl, gf = gl, bf = bl
+
+  switch (type) {
+    case 'protanopia': // Red-blind
+      rf = 0.56667 * rl + 0.43333 * gl + 0 * bl
+      gf = 0.55833 * rl + 0.44167 * gl + 0 * bl
+      bf = 0 * rl + 0.24167 * gl + 0.75833 * bl
+      break
+    case 'deuteranopia': // Green-blind
+      rf = 0.625 * rl + 0.375 * gl + 0 * bl
+      gf = 0.7 * rl + 0.3 * gl + 0 * bl
+      bf = 0 * rl + 0.3 * gl + 0.7 * bl
+      break
+    case 'tritanopia': // Blue-blind
+      rf = 0.95 * rl + 0.05 * gl + 0 * bl
+      gf = 0 * rl + 0.43333 * gl + 0.56667 * bl
+      bf = 0 * rl + 0.475 * gl + 0.525 * bl
+      break
+    case 'achromatopsia': // Total color blind (Grayscale)
+      const grey = rl * 0.2126 + gl * 0.7152 + bl * 0.0722
+      rf = gf = bf = grey
+      break
+    default:
+      break
+  }
+
+  // Linear to sRGB
+  const toSRGB = (c) => {
+    c /= 100
+    c = c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055
+    return Math.max(0, Math.min(255, Math.round(c * 255)))
+  }
+
+  const R = toSRGB(rf)
+  const G = toSRGB(gf)
+  const B = toSRGB(bf)
+
+  return `#${[R, G, B].map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase()}`
+}

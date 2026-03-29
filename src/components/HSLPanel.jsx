@@ -3,11 +3,11 @@ import HSLCard from './HSLCard'
 import { hslToHex } from '../utils/colors'
 
 const labelsByScheme = {
-  analogous: ['Primary', 'Analogous 1', 'Analogous 2', 'Accent Tone 1', 'Accent Tone 2'],
+  analogous: ['Primary', 'Analogous 1', 'Analogous 2', 'Accent 1', 'Accent 2'],
   complementary: ['Primary', 'Light Primary', 'Dark Primary', 'Complementary', 'Light Complement'],
-  'split-complementary': ['Primary', 'Accent 1', 'Accent 2', 'Primary Light', 'Accent 1 Dark'],
-  triadic: ['Color 1 (Primary)', 'Color 2 (Accent)', 'Color 3 (Accent)', 'Color 1 (Light)', 'Color 2 (Dark)'],
-  tetradic: ['Primary (H1)', 'Secondary (H2)', 'Complement 1 (H3)', 'Complement 2 (H4)', 'Primary Light'],
+  'split-complementary': ['Primary', 'Accent 1', 'Accent 2', 'Light Primary', 'Dark Accent'],
+  triadic: ['Primary', 'Accent 1', 'Accent 2', 'Light Tone', 'Dark Tone'],
+  tetradic: ['Primary', 'Secondary', 'Complement 1', 'Complement 2', 'Light Primary'],
   monochromatic: ['Lightest Tone', 'Light Tone', 'Primary', 'Dark Tone', 'Darkest Tone']
 }
 

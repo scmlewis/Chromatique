@@ -2,13 +2,16 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import TabNav from './TabNav'
 import HSLPanel from './HSLPanel'
+import HarmonyPanel from './HarmonyPanel'
+import BlindnessSimulator from './BlindnessSimulator'
+import GradientPanel from './GradientPanel'
 import ImageUploader from './ImageUploader'
 import PaletteCard from './PaletteCard'
 import Toast from './Toast'
 import { PALETTE_CARD_ANIMATION_DELAY_MS } from '../constants'
 
 export default function TabContents(props) {
-  const { palette, locks, favorites, toast, onToggleLock, onUpdateColor, onReorderPalette, onCopy, onSaveFavorite, onExportJSON, onLoadFavorite, onRemoveFavorite, onCloseToast, onUndoSave, onGeneratePalette, count, setCount, settings, onApplyPalette, onApplyAndLock, isGenerating } = props
+  const { tab, onToolChange, palette, locks, favorites, toast, onToggleLock, onUpdateColor, onReorderPalette, onCopy, onSaveFavorite, onExportJSON, onLoadFavorite, onRemoveFavorite, onCloseToast, onUndoSave, onGeneratePalette, count, setCount, genMode, setGenMode, settings, onApplyPalette, onApplyAndLock, isGenerating } = props
   const [copiedFav, setCopiedFav] = useState(null)
   const [openMenuFav, setOpenMenuFav] = useState(null)
   const [extractedColors, setExtractedColors] = useState([])
@@ -22,60 +25,46 @@ export default function TabContents(props) {
   const [modalName, setModalName] = useState('')
   const [modalTags, setModalTags] = useState('')
   const [filterTag, setFilterTag] = useState('')
-  const [tab, setTab] = useState('hsl')
 
   // Filter and sort favorites
-  const filteredFavorites = React.useMemo(() => {
-    if (!favorites || favorites.length === 0) return []
-    
-    // Filter by search query and tags
-    let filtered = favorites.filter(fav => {
-      // Search filter
-      if (searchQuery.trim()) {
-        const query = searchQuery.toLowerCase()
-        const matchesName = fav.name.toLowerCase().includes(query)
-        const matchesColor = fav.colors.some(color => color.toLowerCase().includes(query))
-        const matchesTags = fav.tags && fav.tags.some(tag => tag.toLowerCase().includes(query))
-        if (!matchesName && !matchesColor && !matchesTags) return false
-      }
-      
-      // Tag filter
-      if (filterTag) {
-        if (!fav.tags || !fav.tags.includes(filterTag)) return false
-      }
-      
-      return true
-    })
+  const allTags = Array.from(new Set((favorites || []).flatMap(f => f.tags || []))).sort()
 
-    // Sort
-    filtered.sort((a, b) => {
-      if (sortBy === 'newest') {
-        return (b.createdAt || b.id) - (a.createdAt || a.id)
-      } else if (sortBy === 'oldest') {
-        return (a.createdAt || a.id) - (b.createdAt || b.id)
-      } else if (sortBy === 'name') {
-        return (a.name || '').localeCompare(b.name || '')
-      }
+  const filteredFavorites = (favorites || [])
+    .filter(f => {
+      if (!searchQuery) return true
+      const q = searchQuery.toLowerCase()
+      const matchesName = f.name?.toLowerCase().includes(q)
+      const matchesColor = f.colors.some(c => c.toLowerCase().includes(q))
+      const matchesTag = f.tags?.some(t => t.toLowerCase().includes(q))
+      return matchesName || matchesColor || matchesTag
+    })
+    .filter(f => !filterTag || (f.tags && f.tags.includes(filterTag)))
+    .sort((a, b) => {
+      if (sortBy === 'newest') return (b.createdAt || b.id) - (a.createdAt || a.id)
+      if (sortBy === 'oldest') return (a.createdAt || a.id) - (b.createdAt || b.id)
+      if (sortBy === 'name') return (a.name || '').localeCompare(b.name || '')
       return 0
     })
 
-    return filtered
-  }, [favorites, searchQuery, sortBy, filterTag])
-
-  // Get all unique tags from favorites
-  const allTags = React.useMemo(() => {
-    if (!favorites) return []
-    const tagSet = new Set()
-    favorites.forEach(fav => {
-      if (fav.tags && Array.isArray(fav.tags)) {
-        fav.tags.forEach(tag => tagSet.add(tag))
-      }
+  function downloadPalettePNG(colors, filename) {
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+    const size = 200
+    canvas.width = colors.length * size
+    canvas.height = size
+    
+    colors.forEach((color, i) => {
+      ctx.fillStyle = color
+      ctx.fillRect(i * size, 0, size, size)
     })
-    return Array.from(tagSet).sort()
-  }, [favorites])
+    
+    const link = document.createElement('a')
+    link.download = `${filename}.png`
+    link.href = canvas.toDataURL('image/png')
+    link.click()
+  }
 
-  // Handle color reordering with arrow buttons (mobile)
-  const handleMoveColor = (index, direction) => {
+  function handleMoveColor(index, direction) {
     if (direction === 'up' && index > 0) {
       onReorderPalette(index, index - 1)
     } else if (direction === 'down' && index < palette.length - 1) {
@@ -83,186 +72,208 @@ export default function TabContents(props) {
     }
   }
 
-  // generate a PNG image of a palette array and trigger download
-  function downloadPalettePNG(colors, name = 'palette') {
-    try {
-      const cols = colors.length
-      const sw = 180
-      const padding = 20
-      const width = sw * cols
-      const height = sw + 80
-      const canvas = document.createElement('canvas')
-      canvas.width = width
-      canvas.height = height
-      const ctx = canvas.getContext('2d')
-      // background
-      ctx.fillStyle = '#0f172a'
-      ctx.fillRect(0, 0, width, height)
-      // draw swatches
-      colors.forEach((c, i) => {
-        ctx.fillStyle = c
-        ctx.fillRect(i * sw, 0, sw, sw)
-        // label
-        ctx.fillStyle = '#E6EDF3'
-        ctx.font = '14px monospace'
-        ctx.textAlign = 'center'
-        ctx.fillText(c, i * sw + sw / 2, sw + 24)
-      })
-      // filename
-      const a = document.createElement('a')
-      a.href = canvas.toDataURL('image/png')
-      a.download = `${name.replace(/\s+/g,'_')}.png`
-      a.click()
-    } catch (e) {
-      // ignore
-    }
-  }
-
   function headerFor(tabKey) {
     switch (tabKey) {
       case 'hsl':
         return {
-          title: 'HSL Color Palette Generator',
-          desc: 'Adjust the sliders to define the base color (H, S, L). Tap a swatch to copy the configured color format.'
+          title: 'HSL Adjuster',
+          desc: 'Fine-tune your colors using Hue, Saturation, and Lightness sliders.'
         }
       case 'palette':
         return {
-          title: 'Swatches',
-          desc: 'View generated swatches. Click a swatch to copy its HEX; lock a color to keep it when regenerating.'
+          title: 'Palette Generator',
+          desc: 'Generate, lock, and reorder colors to create your perfect theme.'
+        }
+      case 'harmony':
+        return {
+          title: 'Harmony Finder',
+          desc: 'Discover beautiful color relationships based on classic color theory.'
+        }
+      case 'blindness':
+        return {
+          title: 'Accessibility Simulator',
+          desc: 'Preview how your colors appear to users with different types of color vision deficiency.'
+        }
+      case 'gradient':
+        return {
+          title: 'Gradient Maker',
+          desc: 'Create smooth, modern gradients and export them as CSS or images.'
         }
       case 'favorites':
         return {
-          title: 'Favorites',
-          desc: 'Saved palettes you can load or export. Use the menu to copy or download palettes.'
-        }
-      case 'export':
-        return {
-          title: 'Export',
-          desc: 'Export the current palette as JSON, CSS variables, SCSS map, Tailwind config, or PNG.'
+          title: 'Saved Palettes',
+          desc: 'Your collection of curated palettes, ready for export and reuse.'
         }
       case 'image':
         return {
-          title: 'Extract From Image',
-          desc: 'Upload an image to extract dominant colors; apply them to the palette or save as a favorite.'
+          title: 'Image Extractor',
+          desc: 'Upload an image and we\'ll extract the most prominent colors for you.'
         }
       default:
-        return { title: '', desc: '' }
+        return { title: 'Tool', desc: 'Description' }
     }
   }
 
+  const h = headerFor(tab)
+
   return (
-    <div className="mt-6">
-      <div className="mb-4">
-        <TabNav 
-          tabs={[
-            { key: 'hsl', label: 'HSL' },
-            { key: 'palette', label: 'Swatches' },
-            { key: 'favorites', label: 'Favorites' },
-            { key: 'export', label: 'Export' },
-            { key: 'image', label: 'Image' },
-          ]}
-          current={tab}
-          onChange={setTab}
-        />
+    <div className="animate-fade-in">
+      {/* Tab header + description (Slimmed) */}
+      <div className="mb-4 py-4 px-6 rounded-2xl bg-indigo-500/5 border border-indigo-500/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-sm">
+        <div>
+          <h2 className="text-2xl font-bold text-white tracking-tight">{h.title}</h2>
+          <p className="text-xs text-slate-400 max-w-2xl mt-0.5">{h.desc}</p>
+        </div>
       </div>
 
-      {/* Tab header + description */}
-      {(() => {
-        const h = headerFor(tab)
-        return (
-          <div className="mb-6">
-            {h.title && <h2 className="text-heading text-h2 mb-1">{h.title}</h2>}
-            {h.desc && <p className="tab-desc">{h.desc}</p>}
-          </div>
-        )
-      })()}
-
       {tab === 'hsl' && (
-        <section id="panel-hsl" role="tabpanel" aria-label="HSL Color Palette Generator">
+        <section id="panel-hsl" role="tabpanel">
           <HSLPanel onRequestSave={(colors) => { setModalColors(colors); setModalName(''); setShowSaveModal(true) }} onRequestExport={(colors) => { setModalColors(colors); setShowExportModal(true) }} onCopyHex={onCopy} settings={settings} />
         </section>
       )}
 
       {tab === 'palette' && (
-        <section id="panel-palette" role="tabpanel" aria-label="Swatches" className="mb-8">
-          <div className="mb-4 control-panel">
-            <div className="control-left">
-              <label className="text-sm text-slate-300">Colors: <span className="font-medium text-slate-100">{count}</span></label>
-              <input
-                aria-label="Number of colors"
-                type="range"
-                min={3}
-                max={10}
-                value={count}
-                onChange={e => setCount(Number(e.target.value))}
-                className="accent-indigo-500 range-compact"
-              />
+        <section id="panel-palette" role="tabpanel" className="mb-0">
+          <div className="mb-4 control-panel bg-slate-800/40 p-3.5 rounded-2xl border border-slate-700/50 flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="flex flex-col gap-0.5">
+                <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest px-0.5">Colors</span>
+                <div className="flex items-center gap-3">
+                   <input
+                    aria-label="Number of colors"
+                    type="range"
+                    min={3}
+                    max={10}
+                    value={count}
+                    onChange={e => setCount(Number(e.target.value))}
+                    className="accent-indigo-500 w-28 h-1.5"
+                  />
+                  <span className="font-mono text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded text-xs font-bold">{count}</span>
+                </div>
+              </div>
+
+              <div className="h-6 w-[1px] bg-slate-700/50 mx-1 hidden md:block" />
+
+              <div className="flex flex-col gap-0.5">
+                <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest px-0.5">Method</span>
+                <select 
+                  value={genMode} 
+                  onChange={(e) => setGenMode(e.target.value)}
+                  className="bg-slate-900/50 border border-slate-700 text-slate-300 text-[11px] font-bold rounded-lg px-2 py-1 outline-none focus:border-indigo-500 transition-colors cursor-pointer"
+                >
+                  <option value="random">Random</option>
+                  <option value="complementary">Complementary</option>
+                  <option value="analogous">Analogous</option>
+                  <option value="triadic">Triadic</option>
+                  <option value="split-complementary">Split-Comp</option>
+                  <option value="tetradic">Tetradic</option>
+                  <option value="monochromatic">Mono</option>
+                </select>
+              </div>
             </div>
 
-            <div className="control-right">
+            <div className="flex items-center gap-2">
               <button 
                 onClick={() => onGeneratePalette && onGeneratePalette()} 
-                className="btn btn-primary" 
+                className="btn bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-1.5 rounded-xl text-xs font-bold shadow-lg shadow-indigo-500/20 transition-all active:scale-95 disabled:opacity-50" 
                 disabled={isGenerating}
               >
-                {isGenerating ? (
-                  <span className="flex items-center gap-2">
-                    <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Generating...
-                  </span>
-                ) : 'Generate'}
+                {isGenerating ? 'Generating...' : 'Generate New'}
               </button>
-              <button onClick={() => { setModalColors(palette); setModalName(''); setShowSaveModal(true) }} className="btn btn-success">Save</button>
-              <button onClick={() => { setModalColors(palette); setShowExportModal(true) }} className="btn btn-outline">Export</button>
+              <button onClick={() => { setModalColors(palette); setModalName(''); setShowSaveModal(true) }} className="btn bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 px-4 py-1.5 rounded-xl text-xs font-bold transition-all">Save</button>
+              <button onClick={() => { setModalColors(palette); setShowExportModal(true) }} className="btn bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-4 py-1.5 rounded-xl text-xs font-bold transition-all">Export</button>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 palette-grid">
+          <div className="palette-container-interactive flex flex-col md:flex-row gap-2 h-[480px] w-full min-h-[350px]">
             {palette && palette.length > 0 ? (
-              palette.map((c, i) => (
-                <div 
-                  className="palette-card" 
-                  key={`${c}-${i}`}
-                >
-                    <PaletteCard
-                      color={c}
-                      locked={!!(locks && locks[i])}
-                      onToggleLock={() => onToggleLock(i)}
-                      onColorChange={(newColor) => onUpdateColor && onUpdateColor(i, newColor)}
-                      onCopy={() => onCopy(c)}
-                      delay={i * PALETTE_CARD_ANIMATION_DELAY_MS}
-                      settings={settings}
-                      onMoveUp={i > 0 ? () => handleMoveColor(i, 'up') : null}
-                      onMoveDown={i < palette.length - 1 ? () => handleMoveColor(i, 'down') : null}
-                    />
-                </div>
-              ))
+              palette.map((c, i) => {
+                const isHighCount = palette.length > 6;
+                const flexHover = isHighCount ? 5 : 2.5; 
+                
+                return (
+                  <div 
+                    className="flex-1 transition-all duration-500 relative min-w-[30px] md:min-w-[40px] overflow-hidden" 
+                    style={{ flexBasis: '0%' }}
+                    key={`${c}-${i}`}
+                    onMouseEnter={e => e.currentTarget.style.flex = flexHover}
+                    onMouseLeave={e => e.currentTarget.style.flex = '1'}
+                  >
+                      <PaletteCard
+                        color={c}
+                        locked={!!(locks && locks[i])}
+                        onToggleLock={() => onToggleLock(i)}
+                        onColorChange={(newColor) => onUpdateColor && onUpdateColor(i, newColor)}
+                        onCopy={() => onCopy(c)}
+                        delay={i * 50}
+                        settings={settings}
+                        isCompact={isHighCount}
+                        onMoveUp={i > 0 ? () => handleMoveColor(i, 'up') : null}
+                        onMoveDown={i < palette.length - 1 ? () => handleMoveColor(i, 'down') : null}
+                      />
+                  </div>
+                );
+              })
             ) : (
-              <div className="text-slate-400">No colors yet</div>
+              <div className="col-span-full py-20 text-center text-slate-500 w-full bg-slate-900/40 rounded-3xl border border-dashed border-slate-700">
+                <div className="mb-4 text-4xl">🎨</div>
+                <p>No colors generated yet.</p>
+              </div>
             )}
           </div>
         </section>
       )}
 
       {tab === 'image' && (
-        <section id="panel-image" role="tabpanel" aria-label="Extract From Image" className="mb-8">
+        <section id="panel-image" role="tabpanel" className="mb-8">
           <ImageUploader onExtract={(cols) => { setExtractedColors(cols); setExtractedName(''); }} />
           {extractedColors && extractedColors.length > 0 && (
-            <div className="mt-4 flex flex-col gap-3">
-              <div className="flex gap-2 flex-wrap">
-                {extractedColors.map((c, i) => (<div key={i} className="w-12 h-12 rounded border" style={{ background: c }} />))}
+            <div className="mt-8 p-6 bg-slate-800/40 rounded-2xl border border-slate-700/50 animate-pop">
+              <h3 className="text-lg font-bold text-white mb-4">Extracted Colors</h3>
+              <div className="flex gap-3 flex-wrap mb-6">
+                {extractedColors.map((c, i) => (
+                  <div key={i} className="w-16 h-16 rounded-xl border-2 border-slate-700/50 shadow-lg cursor-pointer hover:scale-110 transition-transform" style={{ background: c }} />
+                ))}
               </div>
-              <input value={extractedName} onChange={e => setExtractedName(e.target.value)} placeholder="Palette name (optional)" className="bg-slate-800/50 p-1 rounded text-sm w-full max-w-xs" />
-              <div className="flex flex-wrap gap-2">
-                <button className="btn btn-primary" onClick={() => { onApplyPalette && onApplyPalette(extractedColors); setTab('palette') }}>Apply to palette</button>
-                <button className="btn btn-success" onClick={() => { onSaveFavorite && onSaveFavorite(extractedColors, extractedName); setExtractedColors([]); setExtractedName('') }}>Save as favorite</button>
-                <button className="btn btn-outline" onClick={() => { navigator.clipboard.writeText(extractedColors.join('\n')) }}>Copy HEX list</button>
+              <div className="flex flex-col sm:flex-row gap-4 items-end">
+                <div className="flex-1 w-full">
+                  <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 block">Palette Name</label>
+                  <input value={extractedName} onChange={e => setExtractedName(e.target.value)} placeholder="Summer Sunset, etc." className="bg-slate-900/50 border border-slate-700 p-3 rounded-xl text-sm w-full outline-none focus:border-indigo-500 transition-colors" />
+                </div>
+                <div className="flex gap-2 w-full sm:w-auto">
+                  <button className="btn bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-3 rounded-xl font-semibold flex-1 sm:flex-none" onClick={() => { onApplyPalette && onApplyPalette(extractedColors); onToolChange && onToolChange('palette') }}>Apply</button>
+                  <button className="btn bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 px-4 py-3 rounded-xl font-semibold flex-1 sm:flex-none" onClick={() => { onSaveFavorite && onSaveFavorite(extractedColors, extractedName); setExtractedColors([]); setExtractedName('') }}>Save Fav</button>
+                </div>
               </div>
             </div>
           )}
+        </section>
+      )}
+
+      {tab === 'harmony' && (
+        <section id="panel-harmony" role="tabpanel">
+          <HarmonyPanel 
+            baseColor={palette[0] || '#6366F1'} 
+            onApplyPalette={(colors) => { onApplyPalette(colors); onToolChange('palette') }}
+            onSaveFavorite={onSaveFavorite}
+            onCopyHex={onCopy}
+          />
+        </section>
+      )}
+
+      {tab === 'blindness' && (
+        <section id="panel-blindness" role="tabpanel">
+          <BlindnessSimulator palette={palette} />
+        </section>
+      )}
+
+      {tab === 'gradient' && (
+        <section id="panel-gradient" role="tabpanel">
+          <GradientPanel 
+            palette={palette} 
+            onApplyPalette={(colors) => { onApplyPalette(colors); onToolChange('palette') }}
+            onCopyHex={onCopy}
+          />
         </section>
       )}
 
@@ -479,7 +490,7 @@ export default function TabContents(props) {
                 </div>
                 <div className="mb-2">
                   <div className="text-label">{f.name || 'Saved Palette'}</div>
-                  <div className="text-caption mt-0.5">{new Date(f.createdAt || f.id).toLocaleString()}</div>
+                  <div className="text-caption mt-0.5">{new Date(Number(f.createdAt || f.id)).toLocaleString()}</div>
                   {/* Tags */}
                   {f.tags && f.tags.length > 0 && (
                     <div className="flex flex-wrap gap-1 mt-2">

@@ -1,0 +1,126 @@
+import React, { useState } from 'react'
+import PropTypes from 'prop-types'
+import { simulateBlindness } from '../utils/colors'
+
+const DEFICIENCIES = [
+  { id: 'protanopia', label: 'Protanopia', desc: 'Red-blind (1% of males)', impact: 'Difficulty distinguishing red/green and blue/purple.' },
+  { id: 'deuteranopia', label: 'Deuteranopia', desc: 'Green-blind (1% of males)', impact: 'Similar to protanopia; most common form of color blindness.' },
+  { id: 'tritanopia', label: 'Tritanopia', desc: 'Blue-blind (<1% of population)', impact: 'Difficulty distinguishing blue/green and yellow/violet.' },
+  { id: 'achromatopsia', label: 'Achromatopsia', desc: 'Total color blind', impact: 'Sees only in shades of grey. Very rare.' },
+]
+
+export default function BlindnessSimulator({ palette }) {
+  const [selected, setSelected] = useState('deuteranopia')
+
+  if (!palette || palette.length === 0) {
+    return (
+      <div className="p-12 text-center bg-slate-800/20 rounded-3xl border border-dashed border-slate-700">
+        <p className="text-slate-500 font-medium">Generate a palette first to simulate vision deficiencies.</p>
+      </div>
+    )
+  }
+
+  const simulatedPalette = palette.map(c => simulateBlindness(c, selected))
+  const activeDeficiency = DEFICIENCIES.find(d => d.id === selected)
+
+  return (
+    <div className="space-y-8 animate-fade-in">
+      {/* Header & Selector */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        {DEFICIENCIES.map((d) => (
+          <button
+            key={d.id}
+            onClick={() => setSelected(d.id)}
+            className={`p-4 rounded-2xl border text-left transition-all ${
+              selected === d.id 
+                ? 'bg-indigo-500 border-indigo-400 text-white shadow-lg shadow-indigo-500/20' 
+                : 'bg-slate-800/40 border-slate-700/50 text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
+            }`}
+          >
+            <div className="font-bold mb-1">{d.label}</div>
+            <div className={`text-[10px] uppercase tracking-wider font-semibold opacity-70 ${selected === d.id ? 'text-white' : 'text-slate-500'}`}>
+              {d.desc}
+            </div>
+          </button>
+        ))}
+      </div>
+
+      {/* Info Card */}
+      <div className="p-6 bg-indigo-500/5 border border-indigo-500/10 rounded-2xl flex gap-4 items-center">
+        <div className="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 shrink-0">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        </div>
+        <div>
+          <h4 className="font-bold text-slate-200 text-sm mb-1">{activeDeficiency.label} Impact</h4>
+          <p className="text-sm text-slate-400 leading-relaxed">{activeDeficiency.impact}</p>
+        </div>
+      </div>
+
+      {/* Comparison View */}
+      <div className="space-y-6">
+        {/* Original */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between px-2">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Normal Vision (Original)</span>
+          </div>
+          <div className="flex w-full h-24 rounded-2xl overflow-hidden shadow-xl border border-slate-800">
+            {palette.map((c, i) => (
+              <div 
+                key={i} 
+                className="flex-1 transition-all duration-500" 
+                style={{ backgroundColor: c }} 
+                title={`Original: ${c}`}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Simulated */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between px-2">
+            <span className="text-xs font-bold text-indigo-400 uppercase tracking-widest italic">{activeDeficiency.label} Simulation</span>
+          </div>
+          <div className="flex w-full h-32 rounded-3xl overflow-hidden shadow-2xl border-4 border-slate-800 ring-1 ring-indigo-500/30">
+            {simulatedPalette.map((c, i) => (
+              <div 
+                key={i} 
+                className="flex-1 transition-all duration-500 group relative" 
+                style={{ backgroundColor: c }}
+              >
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20 backdrop-blur-[2px]">
+                   <span className="bg-black/60 text-white text-[10px] font-mono px-2 py-1 rounded-full border border-white/10">{c}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Comparison Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
+        {palette.map((c, i) => (
+          <div key={i} className="p-4 bg-slate-900/40 rounded-2xl border border-slate-800/60 flex flex-col gap-3">
+             <div className="flex items-center gap-2">
+               <div className="w-8 h-8 rounded-lg" style={{ backgroundColor: c }} />
+               <div className="flex flex-col">
+                 <span className="text-[10px] font-bold text-slate-500 uppercase">Original</span>
+                 <span className="text-xs font-mono text-slate-300">{c}</span>
+               </div>
+             </div>
+             <div className="flex items-center gap-2">
+               <div className="w-8 h-8 rounded-lg" style={{ backgroundColor: simulatedPalette[i] }} />
+               <div className="flex flex-col">
+                 <span className="text-[10px] font-bold text-indigo-400 uppercase">Simulated</span>
+                 <span className="text-xs font-mono text-indigo-300">{simulatedPalette[i]}</span>
+               </div>
+             </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+BlindnessSimulator.propTypes = {
+  palette: PropTypes.arrayOf(PropTypes.string).isRequired,
+}

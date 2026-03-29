@@ -18,26 +18,76 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Main content padding for mobile floating nav + notch/home-bar safe area */
-@media (max-width: 639px) {
-  main {
-    padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
-  }
+main {
+  flex: 1;
+}
 
-  /* Extend mobile nav inner container to clear home indicator */
-  nav[aria-label="Mobile navigation"] > div {
-    padding-bottom: calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
+/* Layout refinements */
+.main-content {
+  padding: var(--space-4) var(--space-4);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+@media (min-width: 1024px) {
+  .main-content {
+    padding: var(--space-4) var(--space-8);
   }
 }
 
-/* ============================================================================
-   APP HEADER STYLES
-   ============================================================================ */
-
-.site-header {
-  align-items: center;
+/* Palette Container Interactivity */
+.palette-container-interactive {
+  perspective: 1000px;
 }
 
+@media (max-width: 768px) {
+  .palette-container-interactive {
+    height: auto !important;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  
+  .palette-container-interactive > div {
+    height: 120px;
+    flex: none !important;
+  }
+}
+
+/* Custom transitions and scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-slate-800);
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-surface-bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-slate-700);
+}
+
+/* Global utility for interactive animations */
+.animate-pop {
+  animation: card-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes card-pop {
+  0% { transform: scale(0.9) translateY(20px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.1ms !important;
+    transition-duration: 0.1ms !important;
+  }
+}
 .app-title {
   font-size: clamp(24px, 5vw, 32px);
   font-weight: var(--font-weight-extrabold);
