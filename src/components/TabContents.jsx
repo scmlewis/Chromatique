@@ -11,9 +11,11 @@ import Toast from './Toast'
 import { PALETTE_CARD_ANIMATION_DELAY_MS } from '../constants'
 
 export default function TabContents(props) {
-  const { tab, onToolChange, palette, locks, favorites, toast, onToggleLock, onUpdateColor, onReorderPalette, onCopy, onSaveFavorite, onExportJSON, onLoadFavorite, onRemoveFavorite, onCloseToast, onUndoSave, onGeneratePalette, count, setCount, genMode, setGenMode, settings, onApplyPalette, onApplyAndLock, isGenerating } = props
+  const { tab, onToolChange, palette, locks, favorites, toast, onToggleLock, onUpdateColor, onReorderPalette, onCopy, onSaveFavorite, onExportJSON, onLoadFavorite, onRemoveFavorite, onRenameFavorite, onCloseToast, onUndoSave, onGeneratePalette, count, setCount, genMode, setGenMode, settings, onApplyPalette, onApplyAndLock, isGenerating } = props
   const [copiedFav, setCopiedFav] = useState(null)
   const [openMenuFav, setOpenMenuFav] = useState(null)
+  const [renamingId, setRenamingId] = useState(null)
+  const [renamingText, setRenamingText] = useState('')
   const [extractedColors, setExtractedColors] = useState([])
   const [extractedName, setExtractedName] = useState('')
   const [showLoadConfirm, setShowLoadConfirm] = useState(null)
@@ -119,7 +121,7 @@ export default function TabContents(props) {
   return (
     <div className="animate-fade-in">
       {/* Tab header + description (Slimmed) */}
-      <div className="mb-4 py-4 px-6 rounded-2xl bg-indigo-500/5 border border-indigo-500/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-sm">
+      <div className="mb-4 py-4 px-6 rounded-2xl bg-amber-500/5 border border-amber-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-sm">
         <div>
           <h2 className="text-2xl font-bold text-white tracking-tight">{h.title}</h2>
           <p className="text-xs text-slate-400 max-w-2xl mt-0.5">{h.desc}</p>
@@ -146,9 +148,9 @@ export default function TabContents(props) {
                     max={10}
                     value={count}
                     onChange={e => setCount(Number(e.target.value))}
-                    className="accent-indigo-500 w-28 h-1.5"
+                    className="accent-amber-500 w-28 h-1.5"
                   />
-                  <span className="font-mono text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded text-xs font-bold">{count}</span>
+                  <span className="font-mono text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded text-xs font-bold">{count}</span>
                 </div>
               </div>
 
@@ -159,7 +161,7 @@ export default function TabContents(props) {
                 <select 
                   value={genMode} 
                   onChange={(e) => setGenMode(e.target.value)}
-                  className="bg-slate-900/50 border border-slate-700 text-slate-300 text-[11px] font-bold rounded-lg px-2 py-1 outline-none focus:border-indigo-500 transition-colors cursor-pointer"
+                  className="bg-slate-900/50 border border-slate-700 text-slate-300 text-[11px] font-bold rounded-lg px-2 py-1 outline-none focus:border-amber-500 transition-colors cursor-pointer"
                 >
                   <option value="random">Random</option>
                   <option value="complementary">Complementary</option>
@@ -175,7 +177,7 @@ export default function TabContents(props) {
             <div className="flex items-center gap-2">
               <button 
                 onClick={() => onGeneratePalette && onGeneratePalette()} 
-                className="btn bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-1.5 rounded-xl text-xs font-bold shadow-lg shadow-indigo-500/20 transition-all active:scale-95 disabled:opacity-50" 
+                className="btn bg-amber-600 hover:bg-amber-500 text-white px-5 py-1.5 rounded-xl text-xs font-bold shadow-lg shadow-amber-600/20 transition-all active:scale-95 disabled:opacity-50" 
                 disabled={isGenerating}
               >
                 {isGenerating ? 'Generating...' : 'Generate New'}
@@ -185,19 +187,15 @@ export default function TabContents(props) {
             </div>
           </div>
 
-          <div className="palette-container-interactive flex flex-col md:flex-row gap-2 h-[480px] w-full min-h-[350px]">
+          <div className="palette-container-interactive flex flex-col md:flex-row gap-3 md:gap-2 w-full h-auto md:h-[480px] min-h-0 border-decorative-gold pattern-accent p-4 rounded-xl">
             {palette && palette.length > 0 ? (
               palette.map((c, i) => {
-                const isHighCount = palette.length > 6;
-                const flexHover = isHighCount ? 5 : 2.5; 
+                const isHighCount = palette.length > 6
                 
                 return (
                   <div 
-                    className="flex-1 transition-all duration-500 relative min-w-[30px] md:min-w-[40px] overflow-hidden" 
-                    style={{ flexBasis: '0%' }}
-                    key={`${c}-${i}`}
-                    onMouseEnter={e => e.currentTarget.style.flex = flexHover}
-                    onMouseLeave={e => e.currentTarget.style.flex = '1'}
+                    className="relative overflow-hidden w-full h-[220px] sm:h-[240px] md:w-auto md:h-auto md:flex-1 md:min-h-0 md:min-w-[40px] animate-card-pop"
+                    key={`palette-card-${i}`}
                   >
                       <PaletteCard
                         color={c}
@@ -238,10 +236,10 @@ export default function TabContents(props) {
               <div className="flex flex-col sm:flex-row gap-4 items-end">
                 <div className="flex-1 w-full">
                   <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 block">Palette Name</label>
-                  <input value={extractedName} onChange={e => setExtractedName(e.target.value)} placeholder="Summer Sunset, etc." className="bg-slate-900/50 border border-slate-700 p-3 rounded-xl text-sm w-full outline-none focus:border-indigo-500 transition-colors" />
+                  <input value={extractedName} onChange={e => setExtractedName(e.target.value)} placeholder="Summer Sunset, etc." className="bg-slate-900/50 border border-slate-700 p-3 rounded-xl text-sm w-full outline-none focus:border-amber-500 transition-colors" />
                 </div>
                 <div className="flex gap-2 w-full sm:w-auto">
-                  <button className="btn bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-3 rounded-xl font-semibold flex-1 sm:flex-none" onClick={() => { onApplyPalette && onApplyPalette(extractedColors); onToolChange && onToolChange('palette') }}>Apply</button>
+                  <button className="btn bg-amber-600 hover:bg-amber-500 text-white px-4 py-3 rounded-xl font-semibold flex-1 sm:flex-none" onClick={() => { onApplyPalette && onApplyPalette(extractedColors); onToolChange && onToolChange('palette') }}>Apply</button>
                   <button className="btn bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 px-4 py-3 rounded-xl font-semibold flex-1 sm:flex-none" onClick={() => { onSaveFavorite && onSaveFavorite(extractedColors, extractedName); setExtractedColors([]); setExtractedName('') }}>Save Fav</button>
                 </div>
               </div>
@@ -253,7 +251,7 @@ export default function TabContents(props) {
       {tab === 'harmony' && (
         <section id="panel-harmony" role="tabpanel">
           <HarmonyPanel 
-            baseColor={palette[0] || '#6366F1'} 
+            baseColor={palette[0] || '#d4af37'} 
             onApplyPalette={(colors) => { onApplyPalette(colors); onToolChange('palette') }}
             onSaveFavorite={onSaveFavorite}
             onCopyHex={onCopy}
@@ -464,7 +462,7 @@ export default function TabContents(props) {
               <p>No palettes found matching "{searchQuery}"</p>
               <button
                 onClick={() => setSearchQuery('')}
-                className="mt-2 text-indigo-400 hover:text-indigo-300 text-sm"
+                className="mt-2 text-amber-300 hover:text-amber-200 text-sm"
               >
                 Clear search
               </button>
@@ -477,6 +475,17 @@ export default function TabContents(props) {
               <div key={f.id} className="fav-card" onClick={() => setShowLoadConfirm(f)}>
                 <div className="btn-wrap absolute -top-2.5 -right-2.5">
                   <button
+                    onClick={(e) => { e.stopPropagation(); setRenamingId(f.id); setRenamingText(f.name || ''); setOpenMenuFav(null) }}
+                    title="Rename palette"
+                    className="icon-btn hover:bg-amber-600/80"
+                    aria-label="Rename palette"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z" />
+                      <path d="M20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+                    </svg>
+                  </button>
+                  <button
                     onClick={(e) => { e.stopPropagation(); onRemoveFavorite(f.id) }}
                     title="Remove favorite"
                     className="icon-btn hover:bg-red-600/80"
@@ -486,11 +495,40 @@ export default function TabContents(props) {
                       <path d="M9 3h6l1 2h4v2H4V5h4l1-2zM6 7h12l-1 14a2 2 0 01-2 2H9a2 2 0 01-2-2L6 7z" />
                     </svg>
                   </button>
-                  <span className="tooltip">Remove</span>
+                  <span className="tooltip">Rename / Remove</span>
                 </div>
                 <div className="mb-2">
-                  <div className="text-label">{f.name || 'Saved Palette'}</div>
-                  <div className="text-caption mt-0.5">{new Date(Number(f.createdAt || f.id)).toLocaleString()}</div>
+                  {renamingId === f.id ? (
+                    <div className="flex gap-2 items-center mb-2">
+                      <input
+                        type="text"
+                        value={renamingText}
+                        onChange={(e) => setRenamingText(e.target.value)}
+                        onClick={(e) => e.stopPropagation()}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            onRenameFavorite(f.id, renamingText)
+                            setRenamingId(null)
+                          } else if (e.key === 'Escape') {
+                            setRenamingId(null)
+                          }
+                        }}
+                        className="bg-slate-800 border border-amber-500/40 text-white text-sm px-2 py-1 rounded flex-1 outline-none focus:border-amber-500"
+                        autoFocus
+                      />
+                      <button
+                        onClick={(e) => { e.stopPropagation(); onRenameFavorite(f.id, renamingText); setRenamingId(null) }}
+                        className="btn btn-primary text-xs px-2 py-1"
+                      >
+                        ✓
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="text-label">{f.name || 'Saved Palette'}</div>
+                      <div className="text-caption mt-0.5">{new Date(Number(f.createdAt || f.id)).toLocaleString()}</div>
+                    </>
+                  )}
                   {/* Tags */}
                   {f.tags && f.tags.length > 0 && (
                     <div className="flex flex-wrap gap-1 mt-2">

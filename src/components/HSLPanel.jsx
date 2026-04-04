@@ -109,8 +109,8 @@ export default function HSLPanel({ onRequestSave, onRequestExport, onCopyHex, se
   return (
     <section className="mb-10">
       {/* ========== CONTROL PANEL ========== */}
-      <div className="surface-glass p-6 mb-6">
-        <div className="grid gap-6">
+      <div className="surface-glass p-4 md:p-6 mb-6">
+        <div className="grid gap-4 md:gap-6">
           {/* Scheme Selection */}
           <div>
             <label className="text-label block mb-2">Palette Scheme</label>
@@ -134,18 +134,18 @@ export default function HSLPanel({ onRequestSave, onRequestExport, onCopyHex, se
               <span className="inline-block w-3 h-3 rounded-full" style={{ background: hueGradient }}></span>
               Hue (H)
             </label>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4">
               <input 
                 type="range" 
                 min={0} 
                 max={360} 
                 value={h} 
                 onChange={e => setH(Number(e.target.value))}
-                className="hsl-range flex-1" 
+                className="hsl-range flex-1 w-full" 
                 style={{ background: hueGradient }}
                 aria-label="Hue slider"
               />
-              <div className="text-label w-16 text-right font-mono">{Math.round(h)}°</div>
+              <div className="text-label w-12 md:w-16 text-right font-mono">{Math.round(h)}°</div>
             </div>
           </div>
 
@@ -155,18 +155,18 @@ export default function HSLPanel({ onRequestSave, onRequestExport, onCopyHex, se
               <span className="inline-block w-3 h-3 rounded-full" style={{ background: `linear-gradient(90deg, hsl(${h},0%,50%) 0%, hsl(${h},100%,50%) 100%)` }}></span>
               Saturation (S)
             </label>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4">
               <input 
                 type="range" 
                 min={0} 
                 max={100} 
                 value={s} 
                 onChange={e => setS(Number(e.target.value))}
-                className="hsl-range flex-1" 
+                className="hsl-range flex-1 w-full" 
                 style={{ background: `linear-gradient(90deg, hsl(${h},0%,50%) 0%, hsl(${h},100%,50%) 100%)` }}
                 aria-label="Saturation slider"
               />
-              <div className="text-label w-16 text-right font-mono">{Math.round(s)}%</div>
+              <div className="text-label w-12 md:w-16 text-right font-mono">{Math.round(s)}%</div>
             </div>
           </div>
 
@@ -176,18 +176,18 @@ export default function HSLPanel({ onRequestSave, onRequestExport, onCopyHex, se
               <span className="inline-block w-3 h-3 rounded-full" style={{ background: `linear-gradient(90deg, hsl(${h}, ${s}%, 0%) 0%, hsl(${h}, ${s}%, 50%) 50%, hsl(${h}, ${s}%, 100%) 100%)` }}></span>
               Lightness (L)
             </label>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4">
               <input 
                 type="range" 
                 min={0} 
                 max={100} 
                 value={l} 
                 onChange={e => setL(Number(e.target.value))}
-                className="hsl-range flex-1" 
+                className="hsl-range flex-1 w-full" 
                 style={{ background: `linear-gradient(90deg, hsl(${h}, ${s}%, 0%) 0%, hsl(${h}, ${s}%, 50%) 50%, hsl(${h}, ${s}%, 100%) 100%)` }}
                 aria-label="Lightness slider"
               />
-              <div className="text-label w-16 text-right font-mono">{Math.round(l)}%</div>
+              <div className="text-label w-12 md:w-16 text-right font-mono">{Math.round(l)}%</div>
             </div>
           </div>
 

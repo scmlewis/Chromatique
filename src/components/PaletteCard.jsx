@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import PropTypes from 'prop-types'
 import { HexColorPicker } from 'react-colorful'
@@ -9,34 +9,18 @@ import ColorInfo from './ColorInfo'
 export default function PaletteCard({ color, locked, onToggleLock, onCopy, onColorChange, delay, settings = {}, onMoveUp, onMoveDown, isCompact }) {
   const textColor = readableTextColor(color)
   const [copiedType, setCopiedType] = useState(null)
-  const [isEditing, setIsEditing] = useState(false)
   const [showPicker, setShowPicker] = useState(false)
-  const [editValue, setEditValue] = useState(color)
+  const [pickerInput, setPickerInput] = useState(color)
   const [pickerColor, setPickerColor] = useState(color)
   const [error, setError] = useState(null)
-  const pickerRef = useRef(null)
 
   const animStyle = {}
   if (typeof delay === 'number') animStyle.animationDelay = `${delay}ms`
 
-  // Close picker when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (pickerRef.current && !pickerRef.current.contains(event.target)) {
-        setShowPicker(false)
-      }
-    }
-
-    if (showPicker) {
-      document.addEventListener('mousedown', handleClickOutside)
-      return () => document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [showPicker])
-
   // Update picker color when color prop changes
   useEffect(() => {
     setPickerColor(color)
-    setEditValue(color)
+    setPickerInput(color)
   }, [color])
 
   const validateHex = (value) => {
@@ -57,50 +41,44 @@ export default function PaletteCard({ color, locked, onToggleLock, onCopy, onCol
   }
 
   const handleEditStart = () => {
-    setIsEditing(true)
-    setEditValue(color)
-    setError(null)
-    setShowPicker(false)
-  }
-
-  const handlePickerStart = () => {
     setShowPicker(true)
     setPickerColor(color)
-    setIsEditing(false)
-    setError(null)
-  }
-
-  const handleEditCancel = () => {
-    setIsEditing(false)
-    setEditValue(color)
+    setPickerInput(color)
     setError(null)
   }
 
   const handlePickerChange = (newColor) => {
-    setPickerColor(newColor)
+    const normalized = newColor.toUpperCase()
+    setPickerColor(normalized)
+    setPickerInput(normalized)
     if (onColorChange) {
-      onColorChange(newColor.toUpperCase())
+      onColorChange(normalized)
     }
   }
 
-  const handleEditSave = () => {
-    if (validateHex(editValue)) {
-      const normalized = normalizeHex(editValue)
+  const handlePickerInputChange = (value) => {
+    setPickerInput(value)
+    if (validateHex(value)) {
+      const normalized = normalizeHex(value)
+      setPickerColor(normalized)
       if (onColorChange) {
         onColorChange(normalized)
       }
-      setIsEditing(false)
       setError(null)
-    } else {
+    } else if (value.trim().length > 0) {
       setError('Invalid hex color')
+    } else {
+      setError(null)
     }
   }
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      handleEditSave()
+      if (validateHex(pickerInput)) {
+        setShowPicker(false)
+      }
     } else if (e.key === 'Escape') {
-      handleEditCancel()
+      setShowPicker(false)
     }
   }
 
@@ -134,33 +112,25 @@ export default function PaletteCard({ color, locked, onToggleLock, onCopy, onCol
             title={locked ? 'Unlock' : 'Lock'}
           >
             {locked ? (
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M12 1a4 4 0 00-4 4v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-2V5a4 4 0 00-4-4zm-1 10v6h2v-6h-2z" />
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <rect x="7" y="11" width="10" height="9" rx="2" />
+                <path d="M9 11V8a3 3 0 0 1 6 0v3" />
               </svg>
             ) : (
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M17 8V7a5 5 0 00-10 0h2a3 3 0 016 0v1h-8a2 2 0 00-2 2v8a2 2 0 002 2h10a2 2 0 002-2v-8a2 2 0 00-2-2h-1zM11 13h2v4h-2z" />
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <rect x="7" y="11" width="10" height="9" rx="2" />
+                <path d="M9 11V8a3 3 0 0 1 4.5-2.6" />
               </svg>
             )}
           </button>
         </div>
 
-        {/* Center Icons - Only visible on hover (lg) but persistent on touch/mobile */}
-        <div className="absolute inset-0 flex items-center justify-center gap-3 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-300 transform translate-y-0 lg:translate-y-2 lg:group-hover:translate-y-0">
+        {/* Center Action - Single color edit action to avoid duplicate behavior */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-300 transform translate-y-0 lg:translate-y-2 lg:group-hover:translate-y-0">
           <button
-            onClick={(e) => { e.stopPropagation(); handleEditStart() }}
-            className="p-3 rounded-xl bg-black/40 backdrop-blur-lg text-white hover:bg-black/60 transition-all border border-white/20 shadow-xl"
-            title="Edit Hex"
-          >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
-            </svg>
-          </button>
-          
-          <button
-             onClick={(e) => { e.stopPropagation(); setShowPicker(true); setPickerColor(color) }}
+             onClick={(e) => { e.stopPropagation(); handleEditStart() }}
              className="p-3 rounded-xl bg-black/40 backdrop-blur-lg text-white hover:bg-black/60 transition-all border border-white/20 shadow-xl"
-             title="Pick Color"
+             title="Edit Color"
           >
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="3" />
@@ -168,26 +138,6 @@ export default function PaletteCard({ color, locked, onToggleLock, onCopy, onCol
           </button>
         </div>
 
-        {/* Edit Input Overlay */}
-        {isEditing && (
-           <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-md z-20" onClick={e => e.stopPropagation()}>
-              <div className="flex flex-col gap-2 p-4 animate-pop">
-                 <input
-                    type="text"
-                    value={editValue}
-                    onChange={(e) => setEditValue(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    className="font-mono text-lg text-center bg-slate-900 text-white border-2 border-indigo-500 rounded-lg px-3 py-2 outline-none shadow-[0_0_15px_rgba(99,102,241,0.3)]"
-                    placeholder="#HEX"
-                    autoFocus
-                 />
-                 <div className="flex gap-2">
-                    <button onClick={handleEditSave} className="flex-1 bg-indigo-500 hover:bg-indigo-600 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider">Save</button>
-                    <button onClick={handleEditCancel} className="flex-1 bg-slate-800 hover:bg-slate-700 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider text-slate-400">Cancel</button>
-                 </div>
-              </div>
-           </div>
-        )}
       </div>
 
       {/* 2. CARD FOOTER (INFO BAR) - Hide in compact mode unless hovered or on touch */}
@@ -214,12 +164,29 @@ export default function PaletteCard({ color, locked, onToggleLock, onCopy, onCol
 
       {/* 3. COLOR PICKER PORTAL */}
       {showPicker && createPortal(
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/60 backdrop-blur-sm" onClick={() => setShowPicker(false)}>
-          <div ref={pickerRef} className="bg-slate-900 border border-white/10 p-6 rounded-2xl shadow-2xl animate-pop" onClick={e => e.stopPropagation()}>
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/60 backdrop-blur-sm p-4">
+          <div className="w-full max-w-[420px] bg-slate-900 border border-white/10 p-4 sm:p-6 rounded-2xl shadow-2xl animate-pop" onClick={e => e.stopPropagation()}>
             <HexColorPicker color={pickerColor} onChange={handlePickerChange} />
-            <div className="mt-4 flex justify-between items-center bg-slate-800/50 p-3 rounded-xl border border-white/5">
-               <span className="font-mono font-bold text-indigo-400 uppercase">{pickerColor}</span>
-               <button onClick={() => setShowPicker(false)} className="px-4 py-1.5 bg-indigo-500 rounded-lg text-xs font-bold uppercase">Done</button>
+            <div className="mt-4 bg-slate-800/50 p-3 rounded-xl border border-white/5 space-y-3">
+               <input
+                 type="text"
+                 value={pickerInput}
+                 onChange={(e) => handlePickerInputChange(e.target.value)}
+                 onKeyDown={handleKeyDown}
+                 className="w-full font-mono font-bold text-xl text-amber-200 uppercase bg-slate-900/80 border border-amber-500/40 rounded-lg px-3 py-2 outline-none focus:border-amber-400"
+                 inputMode="text"
+                 pattern="^#?[0-9A-Fa-f]{6}$"
+                 aria-label="Color hex input"
+               />
+               <div className="flex items-center justify-between gap-3">
+                 <span className="text-[11px] text-slate-400">Type a HEX code to preview live</span>
+                 <button
+                   onClick={() => setShowPicker(false)}
+                   className="px-5 py-2 bg-amber-600 rounded-lg text-sm font-bold uppercase"
+                 >
+                   Done
+                 </button>
+               </div>
             </div>
           </div>
         </div>,

@@ -19,8 +19,8 @@ export default function SettingsModal({ isOpen, onClose, settings, onSettingsCha
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md animate-fade-in p-4" onClick={onClose}>
       <div className="glass rounded-2xl shadow-2xl max-w-lg w-full mx-4 animate-pop overflow-hidden border border-white/10" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-white/10 bg-gradient-to-r from-purple-500/10 to-blue-500/10">
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">Settings</h2>
+        <div className="flex items-center justify-between p-6 border-b border-white/10 bg-gradient-to-r from-amber-500/10 to-orange-500/10">
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-amber-300 to-orange-300 bg-clip-text text-transparent">Settings</h2>
           <button
             onClick={onClose}
             className="p-2 text-slate-400 hover:text-slate-100 hover:bg-white/10 rounded-lg transition-all duration-200 cursor-pointer"
@@ -43,7 +43,7 @@ export default function SettingsModal({ isOpen, onClose, settings, onSettingsCha
             <button
               onClick={handleToggleCMYK}
               className={`relative inline-flex h-7 w-12 items-center rounded-full transition-all duration-200 cursor-pointer shadow-inner ${
-                settings.showCMYK ? 'bg-gradient-to-r from-purple-500 to-blue-500' : 'bg-slate-600'
+                settings.showCMYK ? 'bg-gradient-to-r from-amber-600 to-orange-600' : 'bg-slate-600'
               }`}
               role="switch"
               aria-checked={settings.showCMYK}
@@ -67,7 +67,7 @@ export default function SettingsModal({ isOpen, onClose, settings, onSettingsCha
                   onClick={() => handleCopyFormatChange(format)}
                   className={`px-5 py-2.5 rounded-lg font-semibold transition-all duration-200 cursor-pointer ${
                     settings.defaultCopy === format
-                      ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg transform scale-105'
+                      ? 'bg-gradient-to-r from-amber-600 to-orange-600 text-white shadow-lg transform scale-105'
                       : 'bg-slate-700/50 text-slate-300 hover:bg-slate-600/50 hover:scale-105'
                   }`}
                 >
@@ -86,7 +86,7 @@ export default function SettingsModal({ isOpen, onClose, settings, onSettingsCha
             <button
               onClick={handleToggleReducedMotion}
               className={`relative inline-flex h-7 w-12 items-center rounded-full transition-all duration-200 cursor-pointer shadow-inner ${
-                settings.reducedMotion ? 'bg-gradient-to-r from-purple-500 to-blue-500' : 'bg-slate-600'
+                settings.reducedMotion ? 'bg-gradient-to-r from-amber-600 to-orange-600' : 'bg-slate-600'
               }`}
               role="switch"
               aria-checked={settings.reducedMotion}
@@ -104,7 +104,7 @@ export default function SettingsModal({ isOpen, onClose, settings, onSettingsCha
         <div className="flex justify-end p-6 border-t border-slate-700">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-md transition-colors"
+            className="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-md transition-colors"
           >
             Done
           </button>

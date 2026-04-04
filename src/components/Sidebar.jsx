@@ -61,8 +61,8 @@ export default function Sidebar({ currentTool, onToolChange, isCollapsed, onTogg
       {/* Brand / Logo */}
       <div className="p-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex-shrink-0" />
-          {(!isCollapsed || isOpenMobile) && <span className="font-bold text-xl tracking-tight text-white">Chromatique</span>}
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 via-orange-600 to-amber-700 flex-shrink-0" />
+          {(!isCollapsed || isOpenMobile) && <span className="font-bold text-xl tracking-tight text-white" style={{ fontFamily: "var(--font-family-serif-display)" }}>Chromatique</span>}
         </div>
         
         {/* Mobile Close Button */}
@@ -83,15 +83,15 @@ export default function Sidebar({ currentTool, onToolChange, isCollapsed, onTogg
             onClick={() => onToolChange(tool.id)}
             className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group ${
               currentTool === tool.id 
-                ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 shadow-lg shadow-indigo-500/5' 
+                ? 'bg-[var(--color-accent-gold)]/10 text-[var(--color-accent-gold)] border border-[var(--color-accent-gold)]/30 shadow-lg shadow-[var(--color-accent-gold)]/5' 
                 : 'text-slate-400 border border-transparent hover:bg-slate-800/50 hover:text-slate-200'
             }`}
           >
-            <span className={`${currentTool === tool.id ? 'text-indigo-400' : 'text-slate-500 group-hover:text-slate-300'}`}>
+            <span className={`${currentTool === tool.id ? 'text-[var(--color-accent-gold)]' : 'text-slate-500 group-hover:text-slate-300'}`}>
               {tool.icon}
             </span>
             {(!isCollapsed || isOpenMobile) && <span className="font-medium truncate">{tool.label}</span>}
-            {currentTool === tool.id && (!isCollapsed || isOpenMobile) && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(129,140,248,0.6)]" />}
+            {currentTool === tool.id && (!isCollapsed || isOpenMobile) && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[var(--color-accent-gold)] shadow-[0_0_8px_rgba(212,175,55,0.6)]" />}
           </button>
         ))}
       </nav>

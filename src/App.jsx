@@ -202,6 +202,10 @@ export default function App() {
     setFavorites(prev => (prev || []).filter(f => f.id !== id))
   }
 
+  function renameFavorite(id, newName) {
+    setFavorites(prev => (prev || []).map(f => f.id === id ? { ...f, name: newName } : f))
+  }
+
   function exportJSON(colors) {
     const toExport = Array.isArray(colors) && colors.length > 0 ? colors : palette
     const payload = JSON.stringify({ colors: toExport }, null, 2)
@@ -274,7 +278,7 @@ export default function App() {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
-        <header className="flex items-center justify-between p-4 sm:p-6 border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-bg)]/80 backdrop-blur-md z-30 sticky top-0">
+        <header className="flex items-center justify-between p-4 sm:p-6 border-[var(--color-border-subtle)] bg-[var(--color-surface-bg)]/80 backdrop-blur-md z-30 sticky top-0 border-decorative-bottom">
           <div className="flex items-center gap-3">
              {/* Mobile Menu Toggle */}
              <button 
@@ -286,8 +290,8 @@ export default function App() {
              </button>
 
             <div className="flex items-center gap-3">
-              <span className="font-bold text-lg hidden sm:block tracking-wide">Chromatique</span>
-              <span className="text-xs font-bold text-indigo-400 uppercase tracking-widest bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20">
+              <span className="font-bold text-lg hidden sm:block tracking-wide" style={{ fontFamily: "var(--font-family-serif-display)" }}>Chromatique</span>
+              <span className="text-xs font-bold text-amber-300 uppercase tracking-widest bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">
                 {currentTool?.replace(/([A-Z])/g, ' $1').trim() || 'Tool'}
               </span>
             </div>
@@ -354,6 +358,7 @@ export default function App() {
             setGenMode={setGenMode}
             onLoadFavorite={loadFavorite}
             onRemoveFavorite={removeFavorite}
+            onRenameFavorite={renameFavorite}
             onCloseToast={closeToast}
             onUndoSave={handleUndoSave}
             settings={settings}

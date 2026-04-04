@@ -102,7 +102,7 @@ export default function ImageUploader({ onExtract }) {
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
-        className={`mb-3 p-6 rounded-2xl border-2 transition-transform duration-200 ${dragging ? 'border-transparent bg-gradient-to-r from-indigo-600 via-violet-600 to-pink-500 shadow-2xl transform scale-102' : 'border-dashed border-slate-700 bg-slate-800/40'} cursor-pointer`}
+        className={`mb-3 p-6 rounded-2xl border-2 transition-transform duration-200 ${dragging ? 'border-transparent bg-gradient-to-r from-amber-700 via-orange-700 to-amber-500 shadow-2xl transform scale-102' : 'border-dashed border-slate-700 bg-slate-800/40'} cursor-pointer`}
         style={{ minHeight: 160 }}
       >
         <input ref={inputRef} type="file" accept="image/*" onChange={handleFileInputChange} style={{ display: 'none' }} />

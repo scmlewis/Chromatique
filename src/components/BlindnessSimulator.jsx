@@ -33,7 +33,7 @@ export default function BlindnessSimulator({ palette }) {
             onClick={() => setSelected(d.id)}
             className={`p-4 rounded-2xl border text-left transition-all ${
               selected === d.id 
-                ? 'bg-indigo-500 border-indigo-400 text-white shadow-lg shadow-indigo-500/20' 
+                ? 'bg-amber-600 border-amber-500 text-white shadow-lg shadow-amber-600/20' 
                 : 'bg-slate-800/40 border-slate-700/50 text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
             }`}
           >
@@ -46,8 +46,8 @@ export default function BlindnessSimulator({ palette }) {
       </div>
 
       {/* Info Card */}
-      <div className="p-6 bg-indigo-500/5 border border-indigo-500/10 rounded-2xl flex gap-4 items-center">
-        <div className="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 shrink-0">
+      <div className="p-6 bg-amber-500/5 border border-amber-500/20 rounded-2xl flex gap-4 items-center">
+        <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-300 shrink-0">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
         </div>
         <div>
@@ -78,9 +78,9 @@ export default function BlindnessSimulator({ palette }) {
         {/* Simulated */}
         <div className="space-y-3">
           <div className="flex items-center justify-between px-2">
-            <span className="text-xs font-bold text-indigo-400 uppercase tracking-widest italic">{activeDeficiency.label} Simulation</span>
+            <span className="text-xs font-bold text-amber-300 uppercase tracking-widest italic">{activeDeficiency.label} Simulation</span>
           </div>
-          <div className="flex w-full h-32 rounded-3xl overflow-hidden shadow-2xl border-4 border-slate-800 ring-1 ring-indigo-500/30">
+          <div className="flex w-full h-32 rounded-3xl overflow-hidden shadow-2xl border-4 border-slate-800 ring-1 ring-amber-500/30">
             {simulatedPalette.map((c, i) => (
               <div 
                 key={i} 
@@ -110,8 +110,8 @@ export default function BlindnessSimulator({ palette }) {
              <div className="flex items-center gap-2">
                <div className="w-8 h-8 rounded-lg" style={{ backgroundColor: simulatedPalette[i] }} />
                <div className="flex flex-col">
-                 <span className="text-[10px] font-bold text-indigo-400 uppercase">Simulated</span>
-                 <span className="text-xs font-mono text-indigo-300">{simulatedPalette[i]}</span>
+                 <span className="text-[10px] font-bold text-amber-300 uppercase">Simulated</span>
+                 <span className="text-xs font-mono text-amber-200">{simulatedPalette[i]}</span>
                </div>
              </div>
           </div>

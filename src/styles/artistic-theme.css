@@ -9,13 +9,19 @@
    GRADIENT ANIMATIONS
    -------- */
 
-/* Animated gradient background for hero sections */
+/* Animated gradient background for hero sections - Enhanced with warmer tones */
 @keyframes gradient-drift {
   0% {
     background-position: 0% 50%;
   }
+  25% {
+    background-position: 50% 50%;
+  }
   50% {
     background-position: 100% 50%;
+  }
+  75% {
+    background-position: 50% 50%;
   }
   100% {
     background-position: 0% 50%;
@@ -24,7 +30,7 @@
 
 .gradient-animated {
   background-size: 200% 100%;
-  animation: gradient-drift var(--duration-slower) ease-in-out infinite;
+  animation: gradient-drift 1200ms ease-in-out infinite;
 }
 
 /* Shimmer effect for loading states */
@@ -42,18 +48,39 @@
   animation: shimmer 2s infinite;
 }
 
+/* Warm golden shimmer effect */
+@keyframes shimmer-gold {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.shimmer-gold {
+  background: linear-gradient(
+    90deg,
+    rgba(212, 175, 55, 0.1) 25%,
+    rgba(212, 175, 55, 0.3) 50%,
+    rgba(212, 175, 55, 0.1) 75%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer-gold 2s infinite;
+}
+
 /* --------
    CARD & ELEMENT ANIMATIONS
    -------- */
 
-/* Pop in entrance animation with 3D perspective */
+/* Pop in entrance animation with 3D perspective and subtle rotation */
 @keyframes card-pop {
   from {
-    transform: translateY(8px) scaleY(0.95);
+    transform: translateY(8px) scaleY(0.95) rotate(-1deg);
     opacity: 0;
   }
   to {
-    transform: translateY(0) scaleY(1);
+    transform: translateY(0) scaleY(1) rotate(0deg);
     opacity: 1;
   }
 }
@@ -77,13 +104,41 @@
   animation: float 3s ease-in-out infinite;
 }
 
+/* Gentle side-to-side sway animation */
+@keyframes sway {
+  0%, 100% {
+    transform: translateX(0px);
+  }
+  50% {
+    transform: translateX(3px);
+  }
+}
+
+.animate-sway {
+  animation: sway 4s ease-in-out infinite;
+}
+
+/* Warm golden glow pulse animation */
+@keyframes pulse-glow-gold {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(212, 175, 55, 0);
+  }
+}
+
+.animate-pulse-glow-gold {
+  animation: pulse-glow-gold 2s ease-in-out infinite;
+}
+
 /* Subtle pulse glow animation */
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4);
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4);
   }
   50% {
-    box-shadow: 0 0 0 8px rgba(139, 92, 246, 0);
+    box-shadow: 0 0 0 8px rgba(212, 175, 55, 0);
   }
 }
 
@@ -128,13 +183,13 @@
 /* Toast color pulse on copy */
 @keyframes color-pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.7);
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7);
   }
   70% {
-    box-shadow: 0 0 0 12px rgba(139, 92, 246, 0);
+    box-shadow: 0 0 0 12px rgba(212, 175, 55, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(139, 92, 246, 0);
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
   }
 }
 
@@ -320,7 +375,9 @@
 
   .animate-card-pop,
   .animate-float,
+  .animate-sway,
   .animate-pulse-glow,
+  .animate-pulse-glow-gold,
   .animate-swatch-expand:hover,
   .animate-slide-up,
   .animate-color-pulse,
@@ -329,6 +386,7 @@
   .btn-glow:hover,
   .animate-spin-smooth,
   .skeleton,
+  .shimmer-gold,
   .hover-lift:hover,
   .hover-scale:hover,
   .gradient-animated,
@@ -404,7 +462,7 @@
 }
 
 .text-gradient {
-  background: linear-gradient(135deg, #7c3aed 0%, #ec4899 50%, #f97316 100%);
+  background: linear-gradient(135deg, #9d7e60 0%, #d4927a 50%, #d4af37 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -417,7 +475,7 @@
 
 /* Glow text effect */
 .text-glow {
-  text-shadow: 0 0 20px rgba(124, 58, 237, 0.5), 0 0 40px rgba(99, 102, 241, 0.3);
+  text-shadow: 0 0 20px rgba(212, 175, 55, 0.5), 0 0 40px rgba(184, 115, 51, 0.3);
   letter-spacing: 0.05em;
 }
 
@@ -435,7 +493,7 @@
   right: 0;
   bottom: 0;
   background-image: 
-    radial-gradient(circle, rgba(124, 58, 237, 0.1) 1px, transparent 1px);
+    radial-gradient(circle, rgba(212, 175, 55, 0.1) 1px, transparent 1px);
   background-size: 20px 20px;
   pointer-events: none;
   z-index: 0;
@@ -448,7 +506,7 @@
 
 /* Soft gradient background overlay */
 .bg-gradient-soft {
-  background: linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(99, 102, 241, 0.05) 50%, rgba(52, 211, 153, 0.03) 100%);
+  background: linear-gradient(135deg, rgba(157, 126, 96, 0.08) 0%, rgba(184, 115, 51, 0.05) 50%, rgba(212, 175, 55, 0.03) 100%);
 }
 
 /* Artistic card with layered depth */
@@ -469,7 +527,7 @@
   height: 200%;
   background: linear-gradient(
     135deg,
-    rgba(124, 58, 237, 0.1) 0%,
+    rgba(212, 175, 55, 0.1) 0%,
     transparent 70%
   );
   pointer-events: none;
@@ -527,4 +585,89 @@
     animation: none !important;
     background-position: initial !important;
   }
+}
+
+/* ========================================================================
+   DECORATIVE BORDERS & PATTERNS
+   ======================================================================== */
+
+/* Decorative top border with gradient fade */
+.border-decorative-top {
+  position: relative;
+  padding-top: var(--space-4);
+}
+
+.border-decorative-top::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-accent-gold) 25%,
+    rgba(184, 115, 51, 0.4) 50%,
+    transparent 100%
+  );
+}
+
+/* Decorative gold border with glow */
+.border-decorative-gold {
+  border: 1px solid var(--color-accent-gold);
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.2);
+  border-radius: var(--radius-lg);
+}
+
+/* Decorative bottom border */
+.border-decorative-bottom {
+  position: relative;
+  padding-bottom: var(--space-4);
+}
+
+.border-decorative-bottom::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-accent-gold) 20%,
+    var(--color-accent-gold) 80%,
+    transparent 100%
+  );
+}
+
+/* Subtle geometric accent pattern */
+.pattern-accent {
+  position: relative;
+  overflow: hidden;
+}
+
+.pattern-accent::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 2px,
+      rgba(212, 175, 55, 0.03) 2px,
+      rgba(212, 175, 55, 0.03) 4px
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.pattern-accent > * {
+  position: relative;
+  z-index: 1;
 }
