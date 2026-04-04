@@ -14,8 +14,8 @@
   --color-brand-primary: #9d7e60;
   --color-brand-secondary: #b87333;
   --color-brand-accent: #d4af37;
-  --color-accent-cyan: #34d399;
-  --color-accent-blue: #60a5fa;
+   --color-accent-cyan: #d4af37;
+   --color-accent-blue: #b87333;
   --color-accent-pink: #ec4899;
   --color-accent-orange: #f97316;
   
@@ -60,7 +60,7 @@
   --color-success-dark: #059669;
   --color-error: #ef4444;
   --color-warning: #f59e0b;
-  --color-info: #3b82f6;
+   --color-info: #ea8c55;
   
   /* Semantic Overlays for Glass Effect */
   --color-glass-bg: rgba(255, 255, 255, 0.03);

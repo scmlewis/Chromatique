@@ -14,8 +14,8 @@ export default function BlindnessSimulator({ palette }) {
 
   if (!palette || palette.length === 0) {
     return (
-      <div className="p-12 text-center bg-slate-800/20 rounded-3xl border border-dashed border-slate-700">
-        <p className="text-slate-500 font-medium">Generate a palette first to simulate vision deficiencies.</p>
+      <div className="p-12 text-center bg-amber-950/20 rounded-3xl border border-dashed border-amber-900">
+        <p className="text-amber-500 font-medium">Generate a palette first to simulate vision deficiencies.</p>
       </div>
     )
   }
@@ -34,11 +34,11 @@ export default function BlindnessSimulator({ palette }) {
             className={`p-4 rounded-2xl border text-left transition-all ${
               selected === d.id 
                 ? 'bg-amber-600 border-amber-500 text-white shadow-lg shadow-amber-600/20' 
-                : 'bg-slate-800/40 border-slate-700/50 text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
+                : 'bg-amber-950/25 border-amber-900/35 text-amber-300 hover:bg-amber-950/35 hover:text-amber-200'
             }`}
           >
             <div className="font-bold mb-1">{d.label}</div>
-            <div className={`text-[10px] uppercase tracking-wider font-semibold opacity-70 ${selected === d.id ? 'text-white' : 'text-slate-500'}`}>
+            <div className={`text-[10px] uppercase tracking-wider font-semibold opacity-70 ${selected === d.id ? 'text-white' : 'text-amber-500'}`}>
               {d.desc}
             </div>
           </button>
@@ -51,8 +51,8 @@ export default function BlindnessSimulator({ palette }) {
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
         </div>
         <div>
-          <h4 className="font-bold text-slate-200 text-sm mb-1">{activeDeficiency.label} Impact</h4>
-          <p className="text-sm text-slate-400 leading-relaxed">{activeDeficiency.impact}</p>
+          <h4 className="font-bold text-amber-200 text-sm mb-1">{activeDeficiency.label} Impact</h4>
+          <p className="text-sm text-amber-300 leading-relaxed">{activeDeficiency.impact}</p>
         </div>
       </div>
 
@@ -61,9 +61,9 @@ export default function BlindnessSimulator({ palette }) {
         {/* Original */}
         <div className="space-y-3">
           <div className="flex items-center justify-between px-2">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Normal Vision (Original)</span>
+            <span className="text-xs font-bold text-amber-500 uppercase tracking-widest">Normal Vision (Original)</span>
           </div>
-          <div className="flex w-full h-24 rounded-2xl overflow-hidden shadow-xl border border-slate-800">
+          <div className="flex w-full h-24 rounded-2xl overflow-hidden shadow-xl border border-stone-900">
             {palette.map((c, i) => (
               <div 
                 key={i} 
@@ -80,7 +80,7 @@ export default function BlindnessSimulator({ palette }) {
           <div className="flex items-center justify-between px-2">
             <span className="text-xs font-bold text-amber-300 uppercase tracking-widest italic">{activeDeficiency.label} Simulation</span>
           </div>
-          <div className="flex w-full h-32 rounded-3xl overflow-hidden shadow-2xl border-4 border-slate-800 ring-1 ring-amber-500/30">
+          <div className="flex w-full h-32 rounded-3xl overflow-hidden shadow-2xl border-4 border-stone-900 ring-1 ring-amber-500/30">
             {simulatedPalette.map((c, i) => (
               <div 
                 key={i} 
@@ -99,12 +99,12 @@ export default function BlindnessSimulator({ palette }) {
       {/* Comparison Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
         {palette.map((c, i) => (
-          <div key={i} className="p-4 bg-slate-900/40 rounded-2xl border border-slate-800/60 flex flex-col gap-3">
+          <div key={i} className="p-4 bg-stone-950/30 rounded-2xl border border-stone-900/70 flex flex-col gap-3">
              <div className="flex items-center gap-2">
                <div className="w-8 h-8 rounded-lg" style={{ backgroundColor: c }} />
                <div className="flex flex-col">
-                 <span className="text-[10px] font-bold text-slate-500 uppercase">Original</span>
-                 <span className="text-xs font-mono text-slate-300">{c}</span>
+                 <span className="text-[10px] font-bold text-amber-500 uppercase">Original</span>
+                 <span className="text-xs font-mono text-amber-200">{c}</span>
                </div>
              </div>
              <div className="flex items-center gap-2">
@@ -124,3 +124,4 @@ export default function BlindnessSimulator({ palette }) {
 BlindnessSimulator.propTypes = {
   palette: PropTypes.arrayOf(PropTypes.string).isRequired,
 }
+

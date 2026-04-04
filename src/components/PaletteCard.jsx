@@ -143,7 +143,7 @@ export default function PaletteCard({ color, locked, onToggleLock, onCopy, onCol
       {/* 2. CARD FOOTER (INFO BAR) - Hide in compact mode unless hovered or on touch */}
       <div className={`bg-[#0f1115] p-3 flex items-center justify-between border-t border-white/5 transition-all duration-300 ${isCompact ? 'opacity-100 lg:opacity-0 lg:group-hover:opacity-100 max-h-20 lg:max-h-0 lg:group-hover:max-h-20 overflow-hidden' : 'opacity-100'}`}>
         <div className="flex flex-col">
-          <span className="text-[9px] uppercase tracking-widest text-slate-500 font-bold">HEX</span>
+          <span className="text-[9px] uppercase tracking-widest text-amber-500 font-bold">HEX</span>
           <span className="font-mono text-xs font-bold text-white tracking-widest leading-none">{color}</span>
         </div>
         
@@ -156,7 +156,7 @@ export default function PaletteCard({ color, locked, onToggleLock, onCopy, onCol
                 setTimeout(() => setCopiedType(null), 1200);
              } catch(err){}
           }}
-          className="bg-slate-800/80 hover:bg-slate-700 text-slate-200 text-[10px] font-bold px-2 py-1 rounded-md border border-white/5 transition-colors uppercase tracking-tight"
+          className="bg-amber-950/80 hover:bg-amber-900 text-amber-200 text-[10px] font-bold px-2 py-1 rounded-md border border-white/5 transition-colors uppercase tracking-tight"
         >
           {copiedType === 'hex' ? 'COPIED!' : 'COPY'}
         </button>
@@ -165,21 +165,21 @@ export default function PaletteCard({ color, locked, onToggleLock, onCopy, onCol
       {/* 3. COLOR PICKER PORTAL */}
       {showPicker && createPortal(
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/60 backdrop-blur-sm p-4">
-          <div className="w-full max-w-[420px] bg-slate-900 border border-white/10 p-4 sm:p-6 rounded-2xl shadow-2xl animate-pop" onClick={e => e.stopPropagation()}>
+          <div className="w-full max-w-[420px] bg-stone-950 border border-white/10 p-4 sm:p-6 rounded-2xl shadow-2xl animate-pop" onClick={e => e.stopPropagation()}>
             <HexColorPicker color={pickerColor} onChange={handlePickerChange} />
-            <div className="mt-4 bg-slate-800/50 p-3 rounded-xl border border-white/5 space-y-3">
+            <div className="mt-4 bg-amber-950/30 p-3 rounded-xl border border-white/5 space-y-3">
                <input
                  type="text"
                  value={pickerInput}
                  onChange={(e) => handlePickerInputChange(e.target.value)}
                  onKeyDown={handleKeyDown}
-                 className="w-full font-mono font-bold text-xl text-amber-200 uppercase bg-slate-900/80 border border-amber-500/40 rounded-lg px-3 py-2 outline-none focus:border-amber-400"
+                 className="w-full font-mono font-bold text-xl text-amber-200 uppercase bg-stone-950/70 border border-amber-500/40 rounded-lg px-3 py-2 outline-none focus:border-amber-400"
                  inputMode="text"
                  pattern="^#?[0-9A-Fa-f]{6}$"
                  aria-label="Color hex input"
                />
                <div className="flex items-center justify-between gap-3">
-                 <span className="text-[11px] text-slate-400">Type a HEX code to preview live</span>
+                 <span className="text-[11px] text-amber-300">Type a HEX code to preview live</span>
                  <button
                    onClick={() => setShowPicker(false)}
                    className="px-5 py-2 bg-amber-600 rounded-lg text-sm font-bold uppercase"
@@ -217,3 +217,4 @@ PaletteCard.defaultProps = {
   delay: 0,
   settings: {},
 }
+

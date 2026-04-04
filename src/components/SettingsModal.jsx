@@ -23,7 +23,7 @@ export default function SettingsModal({ isOpen, onClose, settings, onSettingsCha
           <h2 className="text-2xl font-bold bg-gradient-to-r from-amber-300 to-orange-300 bg-clip-text text-transparent">Settings</h2>
           <button
             onClick={onClose}
-            className="p-2 text-slate-400 hover:text-slate-100 hover:bg-white/10 rounded-lg transition-all duration-200 cursor-pointer"
+            className="p-2 text-amber-300 hover:text-amber-100 hover:bg-white/10 rounded-lg transition-all duration-200 cursor-pointer"
             aria-label="Close settings"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -37,13 +37,13 @@ export default function SettingsModal({ isOpen, onClose, settings, onSettingsCha
           {/* CMYK Display Toggle */}
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-slate-100 font-medium">Show CMYK Values</h3>
-              <p className="text-slate-400 text-sm mt-1">Display CMYK color format in color info panels</p>
+              <h3 className="text-amber-100 font-medium">Show CMYK Values</h3>
+              <p className="text-amber-300 text-sm mt-1">Display CMYK color format in color info panels</p>
             </div>
             <button
               onClick={handleToggleCMYK}
               className={`relative inline-flex h-7 w-12 items-center rounded-full transition-all duration-200 cursor-pointer shadow-inner ${
-                settings.showCMYK ? 'bg-gradient-to-r from-amber-600 to-orange-600' : 'bg-slate-600'
+                settings.showCMYK ? 'bg-gradient-to-r from-amber-600 to-orange-600' : 'bg-amber-800'
               }`}
               role="switch"
               aria-checked={settings.showCMYK}
@@ -58,8 +58,8 @@ export default function SettingsModal({ isOpen, onClose, settings, onSettingsCha
 
           {/* Default Copy Format */}
           <div>
-            <h3 className="text-slate-100 font-medium mb-3">Default Copy Format</h3>
-            <p className="text-slate-400 text-sm mb-3">Choose the format used when clicking color swatches</p>
+            <h3 className="text-amber-100 font-medium mb-3">Default Copy Format</h3>
+            <p className="text-amber-300 text-sm mb-3">Choose the format used when clicking color swatches</p>
             <div className="flex gap-3">
               {['hex', 'rgb', 'hsl'].map((format) => (
                 <button
@@ -68,7 +68,7 @@ export default function SettingsModal({ isOpen, onClose, settings, onSettingsCha
                   className={`px-5 py-2.5 rounded-lg font-semibold transition-all duration-200 cursor-pointer ${
                     settings.defaultCopy === format
                       ? 'bg-gradient-to-r from-amber-600 to-orange-600 text-white shadow-lg transform scale-105'
-                      : 'bg-slate-700/50 text-slate-300 hover:bg-slate-600/50 hover:scale-105'
+                      : 'bg-amber-900/45 text-amber-200 hover:bg-amber-800/50 hover:scale-105'
                   }`}
                 >
                   {format.toUpperCase()}
@@ -80,13 +80,13 @@ export default function SettingsModal({ isOpen, onClose, settings, onSettingsCha
           {/* Reduced Motion */}
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-slate-100 font-medium">Reduce Motion</h3>
-              <p className="text-slate-400 text-sm mt-1">Minimize animations for better accessibility</p>
+              <h3 className="text-amber-100 font-medium">Reduce Motion</h3>
+              <p className="text-amber-300 text-sm mt-1">Minimize animations for better accessibility</p>
             </div>
             <button
               onClick={handleToggleReducedMotion}
               className={`relative inline-flex h-7 w-12 items-center rounded-full transition-all duration-200 cursor-pointer shadow-inner ${
-                settings.reducedMotion ? 'bg-gradient-to-r from-amber-600 to-orange-600' : 'bg-slate-600'
+                settings.reducedMotion ? 'bg-gradient-to-r from-amber-600 to-orange-600' : 'bg-amber-800'
               }`}
               role="switch"
               aria-checked={settings.reducedMotion}
@@ -101,7 +101,7 @@ export default function SettingsModal({ isOpen, onClose, settings, onSettingsCha
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end p-6 border-t border-slate-700">
+        <div className="flex justify-end p-6 border-t border-amber-900">
           <button
             onClick={onClose}
             className="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-md transition-colors"
@@ -113,3 +113,4 @@ export default function SettingsModal({ isOpen, onClose, settings, onSettingsCha
     </div>
   )
 }
+

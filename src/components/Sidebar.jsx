@@ -68,7 +68,7 @@ export default function Sidebar({ currentTool, onToolChange, isCollapsed, onTogg
         {/* Mobile Close Button */}
         <button 
           onClick={onCloseMobile}
-          className="lg:hidden p-2 text-slate-400 hover:text-white"
+          className="lg:hidden p-2 text-amber-300 hover:text-white"
           aria-label="Close menu"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -84,10 +84,10 @@ export default function Sidebar({ currentTool, onToolChange, isCollapsed, onTogg
             className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group ${
               currentTool === tool.id 
                 ? 'bg-[var(--color-accent-gold)]/10 text-[var(--color-accent-gold)] border border-[var(--color-accent-gold)]/30 shadow-lg shadow-[var(--color-accent-gold)]/5' 
-                : 'text-slate-400 border border-transparent hover:bg-slate-800/50 hover:text-slate-200'
+                : 'text-amber-300 border border-transparent hover:bg-amber-950/30 hover:text-amber-200'
             }`}
           >
-            <span className={`${currentTool === tool.id ? 'text-[var(--color-accent-gold)]' : 'text-slate-500 group-hover:text-slate-300'}`}>
+            <span className={`${currentTool === tool.id ? 'text-[var(--color-accent-gold)]' : 'text-amber-500 group-hover:text-amber-200'}`}>
               {tool.icon}
             </span>
             {(!isCollapsed || isOpenMobile) && <span className="font-medium truncate">{tool.label}</span>}
@@ -100,7 +100,7 @@ export default function Sidebar({ currentTool, onToolChange, isCollapsed, onTogg
       <div className="hidden lg:block p-3 border-t border-[var(--color-border-subtle)]">
         <button 
           onClick={onToggleCollapse}
-          className="w-full flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-slate-300 transition-colors"
+          className="w-full flex items-center gap-3 px-3 py-2 text-amber-500 hover:text-amber-200 transition-colors"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`transition-transform duration-300 ${isCollapsed ? 'rotate-180' : ''}`}>
             <polyline points="11 17 6 12 11 7"/>
@@ -121,3 +121,4 @@ Sidebar.propTypes = {
   isOpenMobile: PropTypes.bool,
   onCloseMobile: PropTypes.func
 }
+

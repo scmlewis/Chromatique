@@ -283,7 +283,7 @@ export default function App() {
              {/* Mobile Menu Toggle */}
              <button 
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="lg:hidden p-2 -ml-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+                className="lg:hidden p-2 -ml-2 text-amber-300 hover:text-white hover:bg-amber-950 rounded-lg transition-colors"
                 aria-label="Open menu"
              >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -306,7 +306,7 @@ export default function App() {
               </svg>
             </button>
             <button 
-              className="btn-icon p-2 hover:bg-slate-800 rounded-lg transition-colors" 
+              className="btn-icon p-2 hover:bg-amber-950 rounded-lg transition-colors" 
               onClick={() => setShowSettings(true)}
               aria-label="Settings"
               title="Settings"
@@ -317,7 +317,7 @@ export default function App() {
               </svg>
             </button>
             <button 
-              className="btn-icon p-2 hover:bg-slate-800 rounded-lg transition-colors" 
+              className="btn-icon p-2 hover:bg-amber-950 rounded-lg transition-colors" 
               onClick={() => setShowHelp(true)}
               aria-label="Help"
               title="Help"
@@ -399,4 +399,5 @@ export default function App() {
     </div>
   )
 }
+
 

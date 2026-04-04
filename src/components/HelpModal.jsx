@@ -14,17 +14,17 @@ export default function HelpModal({ onClose, settings = {}, setSettings }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={onClose} />
-      <div className="relative z-60 w-full max-w-3xl glass rounded-2xl shadow-2xl text-slate-100 border border-white/10 overflow-hidden">
+      <div className="relative z-60 w-full max-w-3xl glass rounded-2xl shadow-2xl text-amber-100 border border-white/10 overflow-hidden">
         <div className="p-6 border-b border-white/10 bg-gradient-to-r from-amber-500/10 to-orange-500/10">
           <div className="flex items-start justify-between gap-4">
             <h2 className="text-3xl font-bold bg-gradient-to-r from-amber-300 to-orange-300 bg-clip-text text-transparent">Help & Guide</h2>
             <div className="flex items-center gap-3">
-              <label className="text-sm text-slate-300 flex items-center gap-2 cursor-pointer hover:text-slate-100 transition-colors">
+              <label className="text-sm text-amber-200 flex items-center gap-2 cursor-pointer hover:text-amber-100 transition-colors">
                 <input 
                   type="checkbox" 
                   checked={dontShow} 
                   onChange={toggleDontShow} 
-                  className="w-4 h-4 rounded border-slate-600 text-amber-500 focus:ring-2 focus:ring-amber-500 cursor-pointer"
+                  className="w-4 h-4 rounded border-amber-800 text-amber-500 focus:ring-2 focus:ring-amber-500 cursor-pointer"
                 />
                 Don't show on startup
               </label>
@@ -33,7 +33,7 @@ export default function HelpModal({ onClose, settings = {}, setSettings }) {
           </div>
         </div>
 
-        <div className="p-6 max-h-[70vh] overflow-y-auto space-y-6 text-sm text-slate-200">
+        <div className="p-6 max-h-[70vh] overflow-y-auto space-y-6 text-sm text-amber-200">
           <section className="bg-white/5 rounded-lg p-4 border border-white/10">
             <h3 className="font-semibold text-lg text-amber-300 mb-2">Overview</h3>
             <p className="mt-1 leading-relaxed">Chromatique helps you generate color palettes (HSL-based schemes and random swatches), lock colors, copy color values, save favorites, and export palettes for use in code or design tools.</p>
@@ -82,3 +82,4 @@ export default function HelpModal({ onClose, settings = {}, setSettings }) {
     </div>
   )
 }
+
