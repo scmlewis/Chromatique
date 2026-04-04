@@ -62,10 +62,40 @@
   --color-warning: #f59e0b;
    --color-info: #ea8c55;
   
+  /* Extended Text Hierarchy - Muted & Tertiary Tiers */
+  --color-text-muted: #667074;
+  --color-text-disabled: #475569;
+  --color-text-on-gold: #1a1410;
+  --color-text-on-copper: #1a1410;
+  
+  /* Input State Colors */
+  --color-input-border: rgba(255, 255, 255, 0.08);
+  --color-input-border-focus: rgba(212, 175, 55, 0.4);
+  --color-input-border-error: rgba(239, 68, 68, 0.4);
+  --color-input-bg-focus: rgba(212, 175, 55, 0.05);
+  --color-input-bg-error: rgba(239, 68, 68, 0.05);
+  --color-input-bg-disabled: rgba(26, 20, 16, 0.5);
+  
+  /* Interactive State Backgrounds */
+  --color-interactive-hover: rgba(184, 115, 51, 0.15);
+  --color-interactive-active: rgba(212, 175, 55, 0.2);
+  --color-interactive-disabled: rgba(255, 255, 255, 0.04);
+  
+  /* Selection & Checked States */
+  --color-selection-bg: rgba(212, 175, 55, 0.15);
+  --color-selection-border: rgba(212, 175, 55, 0.4);
+  --color-checked-bg: #b87333;
+  --color-checked-border: #d4af37;
+  
+  /* Error State Variants */
+  --color-error-subtle: rgba(239, 68, 68, 0.1);
+  --color-error-muted: rgba(239, 68, 68, 0.2);
+  
   /* Semantic Overlays for Glass Effect */
   --color-glass-bg: rgba(255, 255, 255, 0.03);
   --color-glass-border: rgba(255, 255, 255, 0.08);
   --color-glass-border-bright: rgba(255, 255, 255, 0.12);
+  --color-glass-focus: rgba(212, 175, 55, 0.15);
   --color-glass-glow: 0 0 20px rgba(212, 175, 55, 0.15);
   
   /* --------
@@ -131,6 +161,16 @@
   --shadow-glow-success-hover: 0 6px 20px rgba(16, 185, 129, 0.4);
   --shadow-glow-accent: 0 4px 12px rgba(184, 115, 51, 0.3);
   
+  /* Focus Ring Shadows (warm-themed) */
+  --shadow-focus-ring: 0 0 0 3px rgba(26, 20, 16, 0.8), 0 0 0 5px rgba(212, 175, 55, 0.4);
+  --shadow-focus-ring-soft: 0 0 0 2px rgba(212, 175, 55, 0.3);
+  
+  /* State-specific Glows */
+  --shadow-glow-error: 0 4px 12px rgba(239, 68, 68, 0.25);
+  --shadow-glow-error-focus: 0 0 12px rgba(239, 68, 68, 0.35);
+  --shadow-glow-warning: 0 4px 12px rgba(245, 158, 11, 0.25);
+  --shadow-glow-info: 0 4px 12px rgba(234, 140, 85, 0.25);
+  
   /* --------
      BORDER RADIUS
      -------- */
@@ -155,6 +195,13 @@
   --easing-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
   --easing-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
   
+  /* State Transition Shorthand */
+  --transition-color: color var(--duration-normal) var(--easing-ease-out);
+  --transition-bg: background-color var(--duration-normal) var(--easing-ease-out);
+  --transition-border: border-color var(--duration-normal) var(--easing-ease-out);
+  --transition-shadow: box-shadow var(--duration-normal) var(--easing-ease-out);
+  --transition-all: all var(--duration-normal) var(--easing-ease-out);
+  
   /* --------
      Z-INDEX SCALE
      -------- */
@@ -164,6 +211,39 @@
   --z-modal: 200;
   --z-toast: 300;
   --z-tooltip: 400;
+  
+  /* --------
+     COMPONENT-SPECIFIC STATE TOKENS
+     -------- */
+  
+  /* Toggle/Switch States */
+  --color-toggle-off-bg: rgba(255, 255, 255, 0.08);
+  --color-toggle-off-dot: rgba(255, 255, 255, 0.4);
+  --color-toggle-on-bg: #b87333;
+  --color-toggle-on-dot: #f8fafc;
+  --color-toggle-disabled-bg: rgba(255, 255, 255, 0.04);
+  
+  /* Link States */
+  --color-link-default: #d4af37;
+  --color-link-hover: #e8c547;
+  --color-link-visited: #b87333;
+  --color-link-active: #f8fafc;
+  
+  /* Button Variants */
+  --color-button-primary-bg: #b87333;
+  --color-button-primary-bg-hover: #d4af37;
+  --color-button-secondary-bg: rgba(184, 115, 51, 0.1);
+  --color-button-secondary-bg-hover: rgba(184, 115, 51, 0.2);
+  --color-button-tertiary-bg: transparent;
+  --color-button-tertiary-border: rgba(255, 255, 255, 0.1);
+  --color-button-tertiary-border-hover: rgba(212, 175, 55, 0.3);
+  
+  /* Tab States */
+  --color-tab-inactive-text: #9a8b8a;
+  --color-tab-inactive-border: rgba(255, 255, 255, 0.04);
+  --color-tab-active-text: #f8fafc;
+  --color-tab-active-border: #d4af37;
+  --color-tab-active-bg: rgba(212, 175, 55, 0.08);
   
   /* --------
      TOUCH TARGETS
