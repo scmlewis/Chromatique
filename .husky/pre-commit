@@ -1,0 +1,14 @@
+#!/bin/sh
+# Pre-commit hook: Enforces warm theme compliance
+
+echo "🎨 Checking warm theme compliance..."
+npm run check:warm-theme
+
+if [ $? -ne 0 ]; then
+  echo "❌ Warm theme compliance check failed!"
+  echo "Please fix cool-tone violations before committing."
+  exit 1
+fi
+
+echo "✅ Warm theme check passed!"
+exit 0

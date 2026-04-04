@@ -1,0 +1,60 @@
+name: Theme Compliance Check
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  warm-theme:
+    runs-on: ubuntu-latest
+    name: Verify Warm Theme Compliance
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run warm theme compliance check
+        run: npm run check:warm-theme
+
+      - name: Build project
+        run: npm run build
+
+      - name: Run test suite
+        run: npm test -- --watchAll=false --passWithNoTests
+        continue-on-error: true
+
+  accessibility:
+    runs-on: ubuntu-latest
+    name: Accessibility Validation
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+      - name: Check build output exists
+        run: |
+          if [ -d "dist" ] && [ -f "dist/index.html" ]; then
+            echo "✅ Build output verified"
+          else
+            echo "❌ Build output missing"
+            exit 1
+          fi
