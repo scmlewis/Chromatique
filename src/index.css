@@ -169,14 +169,14 @@ main {
 
 .icon-btn:focus,
 .icon-btn:hover {
-  background: var(--color-surface-glass-light);
-  border-color: rgba(212, 175, 55, 0.5);
+  background: var(--color-interactive-hover);
+  border-color: var(--color-input-border-focus);
   box-shadow: var(--shadow-glow-accent);
   outline: none;
 }
 
 .icon-btn:focus-visible {
-  outline: 2px solid rgba(212, 175, 55, 0.6);
+  outline: var(--outline-focus-gold);
   outline-offset: 2px;
 }
 

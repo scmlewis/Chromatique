@@ -164,6 +164,7 @@
   /* Focus Ring Shadows (warm-themed) */
   --shadow-focus-ring: 0 0 0 3px rgba(26, 20, 16, 0.8), 0 0 0 5px rgba(212, 175, 55, 0.4);
   --shadow-focus-ring-soft: 0 0 0 2px rgba(212, 175, 55, 0.3);
+  --outline-focus-gold: 2px solid rgba(212, 175, 55, 0.6);
   
   /* State-specific Glows */
   --shadow-glow-error: 0 4px 12px rgba(239, 68, 68, 0.25);

@@ -40,7 +40,7 @@
 }
 
 .btn:focus-visible {
-  outline: 2px solid rgba(212, 175, 55, 0.6);
+  outline: var(--outline-focus-gold);
   outline-offset: 2px;
 }
 
@@ -65,7 +65,7 @@
 
 .btn-secondary:hover {
   background: var(--color-surface-glass-light);
-  border-color: rgba(212, 175, 55, 0.5);
+  border-color: var(--color-selection-border);
 }
 
 .btn-ghost {
@@ -86,8 +86,8 @@
 }
 
 .btn-outline:hover {
-  background: var(--color-surface-glass);
-  border-color: rgba(212, 175, 55, 0.5);
+  background: var(--color-interactive-hover);
+  border-color: var(--color-selection-border);
 }
 
 .btn-success {
@@ -119,13 +119,13 @@
 }
 
 .btn-icon:hover {
-  background: var(--color-surface-glass-light);
-  border-color: rgba(212, 175, 55, 0.5);
+  background: var(--color-interactive-hover);
+  border-color: var(--color-input-border-focus);
   box-shadow: var(--shadow-glow-accent);
 }
 
 .btn-icon:focus-visible {
-  outline: 2px solid rgba(212, 175, 55, 0.6);
+  outline: var(--outline-focus-gold);
   outline-offset: 2px;
 }
 
@@ -188,8 +188,8 @@
 }
 
 .surface-interactive:hover {
-  background: var(--color-surface-glass-light);
-  border-color: rgba(212, 175, 55, 0.5);
+  background: var(--color-interactive-hover);
+  border-color: var(--color-selection-border);
 }
 
 /* --------
@@ -263,25 +263,25 @@
 .input-field {
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md);
-  background: rgba(30, 41, 59, 0.8);
-  border: 2px solid var(--color-border-primary);
+  background: var(--color-input-bg-disabled);
+  border: 2px solid var(--color-input-border);
   color: var(--color-text-primary);
   font-size: var(--font-size-base);
   font-family: var(--font-family-ui);
-  transition: all var(--duration-normal) ease;
+  transition: var(--transition-all);
   backdrop-filter: blur(4px);
 }
 
 .input-field:hover {
-  border-color: rgba(212, 175, 55, 0.5);
-  background: rgba(30, 41, 59, 0.95);
+  border-color: var(--color-input-border-focus);
+  background: rgba(26, 20, 16, 0.95);
 }
 
 .input-field:focus {
   outline: none;
-  border-color: rgba(212, 175, 55, 0.8);
-  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  background: rgba(30, 41, 59, 0.95);
+  border-color: var(--color-brand-accent);
+  box-shadow: 0 0 0 3px var(--color-input-bg-focus), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  background: rgba(26, 20, 16, 0.95);
 }
 
 .input-field::placeholder {
@@ -391,14 +391,14 @@
 }
 
 .export-format-card:hover {
-  background: var(--color-surface-glass-light);
-  border-color: rgba(212, 175, 55, 0.5);
+  background: var(--color-interactive-hover);
+  border-color: var(--color-selection-border);
   box-shadow: var(--shadow-glow-accent);
   transform: translateY(-2px);
 }
 
 .export-format-card:focus-visible {
-  outline: 2px solid rgba(212, 175, 55, 0.6);
+  outline: var(--outline-focus-gold);
   outline-offset: 2px;
 }
 
@@ -472,9 +472,9 @@
 }
 
 .fav-card:hover {
-  background: var(--color-surface-glass-lighter);
-  border-color: rgba(212, 175, 55, 0.45);
-  box-shadow: var(--shadow-xl), 0 0 20px rgba(184, 115, 51, 0.2);
+  background: var(--color-interactive-active);
+  border-color: var(--color-selection-border);
+  box-shadow: var(--shadow-xl), var(--shadow-glow-accent);
   transform: translateY(-4px);
 }
 
@@ -517,7 +517,7 @@
 }
 
 .fav-menu-item:focus-visible {
-  outline: 2px solid rgba(212, 175, 55, 0.6);
+  outline: var(--outline-focus-gold);
   outline-offset: 2px;
 }
 
@@ -550,13 +550,13 @@
 }
 
 .tag-chip:hover {
-  background: var(--color-surface-glass-light);
+  background: var(--color-interactive-hover);
   color: var(--color-text-primary);
-  border-color: rgba(212, 175, 55, 0.4);
+  border-color: var(--color-input-border-focus);
 }
 
 .tag-chip:focus-visible {
-  outline: 2px solid rgba(212, 175, 55, 0.6);
+  outline: var(--outline-focus-gold);
   outline-offset: 2px;
 }
 
@@ -564,7 +564,7 @@
   background: linear-gradient(135deg, var(--color-brand-primary) 0%, var(--color-brand-secondary) 100%);
   color: white;
   border-color: transparent;
-  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.35);
+  box-shadow: var(--shadow-glow-primary);
 }
 
 .tag-chip-active:hover {
