@@ -1,5 +1,11 @@
 # Chromatique
 
+[![Deploy](https://img.shields.io/github/actions/workflow/status/scmlewis/Chromatique/deploy-gh-pages.yml?branch=main&style=for-the-badge&logo=githubactions&label=Deploy)](https://github.com/scmlewis/Chromatique/actions/workflows/deploy-gh-pages.yml)
+[![Theme Compliance](https://img.shields.io/github/actions/workflow/status/scmlewis/Chromatique/theme-compliance.yml?branch=main&style=for-the-badge&logo=githubactions&label=Theme%20Compliance)](https://github.com/scmlewis/Chromatique/actions/workflows/theme-compliance.yml)
+[![React](https://img.shields.io/badge/React-18.2.0-61dafb?style=for-the-badge&logo=react&logoColor=white)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-5.1.0-646cff?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Jest](https://img.shields.io/badge/Jest-Testing-c21325?style=for-the-badge&logo=jest&logoColor=white)](https://jestjs.io/)
+
 A modern color palette web app built with React and Vite. Generate HSL palettes, lock colors, save favorites, extract colors from images, and export palettes for designers and developers.
 
 ## Features
