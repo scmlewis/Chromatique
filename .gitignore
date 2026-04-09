@@ -49,4 +49,7 @@ ehthumbs.db
 .cache/
 .parcel-cache/
 
+# Archived scaffolding and generated notes
+.ref/archive/
+
 .ref/

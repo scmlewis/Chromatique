@@ -72,7 +72,7 @@ Feel free to fork, submit issues, or create pull requests. The test suite should
 
 ## Future Improvements
 
-See [CODE_IMPROVEMENTS.md](CODE_IMPROVEMENTS.md) for completed optimizations and potential future enhancement
+Historical optimization notes were archived out of the tracked repo during housekeeping.
 
 Test files are located in:
 - `src/__tests__/` - Test files organized by module
