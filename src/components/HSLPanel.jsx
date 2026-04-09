@@ -109,7 +109,7 @@ export default function HSLPanel({ onRequestSave, onRequestExport, onCopyHex, se
   return (
     <section className="mb-10">
       {/* ========== CONTROL PANEL ========== */}
-      <div className="surface-glass p-4 md:p-6 mb-6">
+      <div className="surface-glass p-3 md:p-4 mb-4">
         <div className="grid gap-4 md:gap-6">
           {/* Scheme Selection */}
           <div>

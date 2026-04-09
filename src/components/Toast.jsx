@@ -4,7 +4,7 @@ export default function Toast({ message, actionLabel, onAction, onClose, preview
   return (
     // Mobile: centered, positioned above nav | Desktop: bottom-right
     <div className="toast-container">
-      <div className="glass border border-white/10 text-amber-100 toast-content animate-pop">
+      <div className="glass border border-white/10 text-[var(--color-primary)]/80 toast-content animate-pop">
         {/* Top row: Icon + Message */}
         <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-0">
           {/* Icon based on type */}
@@ -24,7 +24,7 @@ export default function Toast({ message, actionLabel, onAction, onClose, preview
           )}
           {type === 'loading' && (
             <div className="flex-shrink-0 mt-0.5">
-              <svg className="animate-spin h-5 w-5 sm:h-6 sm:w-6 text-amber-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <svg className="animate-spin h-5 w-5 sm:h-6 sm:w-6 text-[var(--color-primary)]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
@@ -36,7 +36,7 @@ export default function Toast({ message, actionLabel, onAction, onClose, preview
           </div>
 
           {/* Close button - positioned top-right on desktop */}
-          <button onClick={onClose} aria-label="Close toast" className="hidden sm:block flex-shrink-0 p-1.5 text-amber-300 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200 cursor-pointer">
+          <button onClick={onClose} aria-label="Close toast" className="hidden sm:block flex-shrink-0 p-1.5 text-[var(--color-primary)]/75 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200 cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -62,7 +62,7 @@ export default function Toast({ message, actionLabel, onAction, onClose, preview
           )}
           
           {/* Close button - mobile only */}
-          <button onClick={onClose} aria-label="Close toast" className="sm:hidden p-1.5 text-amber-300 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200 cursor-pointer self-end">
+          <button onClick={onClose} aria-label="Close toast" className="sm:hidden p-1.5 text-[var(--color-primary)]/75 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200 cursor-pointer self-end">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>

@@ -40,16 +40,21 @@
 }
 
 .btn:focus-visible {
-  outline: var(--outline-focus-gold);
+  outline: var(--outline-focus);
   outline-offset: 2px;
 }
 
 /* Button Variants */
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--color-brand-primary) 0%, var(--color-brand-secondary) 100%);
-  color: white;
+  background: var(--gradient-primary);
+  color: var(--color-on-primary);
   box-shadow: var(--shadow-glow-primary);
+  padding: var(--space-3) var(--space-8);
+  border-radius: 9999px;
+  border: none;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.01em;
 }
 
 .btn-primary:hover {
@@ -57,37 +62,59 @@
   transform: translateY(-1px);
 }
 
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .btn-secondary {
-  background: var(--color-surface-glass);
-  color: var(--color-text-primary);
-  border: 1px solid var(--color-border-primary);
+  background: var(--color-surface-container);
+  color: var(--color-primary);
+  border: none;
 }
 
 .btn-secondary:hover {
-  background: var(--color-surface-glass-light);
-  border-color: var(--color-selection-border);
+  background: var(--color-surface-container-high);
+  box-shadow: var(--shadow-glow-accent);
+  transform: translateY(-1px);
 }
 
 .btn-ghost {
-  background: var(--color-surface-glass);
-  border: 1px solid var(--color-border-light);
+  background: var(--color-surface-container-low);
+  border: none;
   color: var(--color-text-primary);
 }
 
 .btn-ghost:hover {
-  background: var(--color-surface-glass-light);
-  border-color: var(--color-border-primary);
+  background: var(--color-surface-container);
+  box-shadow: var(--shadow-ambient);
+  transform: translateY(-1px);
+}
+
+.btn-tertiary {
+  background: transparent;
+  border: none;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-relaxed);
+  font-size: var(--font-size-xs);
+}
+
+.btn-tertiary:hover {
+  opacity: 0.8;
 }
 
 .btn-outline {
-  background: transparent;
-  border: 1px solid var(--color-border-primary);
+  background: var(--color-surface-container-low);
+  border: none;
   color: var(--color-text-primary);
 }
 
 .btn-outline:hover {
-  background: var(--color-interactive-hover);
-  border-color: var(--color-selection-border);
+  background: var(--color-surface-container-high);
+  box-shadow: var(--shadow-glow-accent);
+  transform: translateY(-1px);
 }
 
 .btn-success {
@@ -113,19 +140,19 @@
   height: var(--touch-target-desktop);
   cursor: pointer;
   transition: all var(--duration-fast) ease;
-  background: var(--color-surface-glass);
-  border: 1px solid var(--color-border-primary);
+  background: var(--color-surface-container);
+  border: none;
   color: var(--color-text-primary);
 }
 
 .btn-icon:hover {
-  background: var(--color-interactive-hover);
-  border-color: var(--color-input-border-focus);
+  background: var(--color-surface-container-high);
   box-shadow: var(--shadow-glow-accent);
+  transform: translateY(-1px);
 }
 
 .btn-icon:focus-visible {
-  outline: var(--outline-focus-gold);
+  outline: var(--outline-focus);
   outline-offset: 2px;
 }
 
@@ -149,47 +176,71 @@
 }
 
 /* --------
-   SURFACES & CARDS
+   TABS
+   -------- */
+
+.tab-active {
+  color: var(--color-tab-active-text);
+  background: rgba(255, 180, 164, 0.18);
+  border: 2px solid var(--color-tab-active-border);
+  box-shadow: inset 0 0 12px rgba(255, 180, 164, 0.2);
+}
+
+.tab-active:hover {
+  background: rgba(255, 180, 164, 0.24);
+  box-shadow: inset 0 0 16px rgba(255, 180, 164, 0.28);
+}
+
+.tab-inactive {
+  color: var(--color-tab-inactive-text);
+  background: transparent;
+  border: 1px solid var(--color-tab-inactive-border);
+}
+
+.tab-inactive:hover {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* --------
+   SURFACES & CARDS - Midnight Gallery (No-Line Rule)
    -------- */
 
 .surface-card {
   border-radius: var(--radius-lg);
-  background: var(--color-surface-card);
-  border: 1px solid var(--color-border-primary);
-  box-shadow: var(--shadow-md);
+  background: var(--color-surface-container-low);
+  box-shadow: none;
   transition: all var(--duration-normal) ease;
 }
 
 .surface-card:hover {
+  background: var(--color-surface-container);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
 }
 
 .surface-glass {
-  backdrop-filter: blur(12px) saturate(1.5);
-  background: var(--color-surface-glass);
-  border: 1px solid var(--color-glass-border);
-  box-shadow: var(--shadow-lg), var(--shadow-inset);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  background: var(--color-glass-bg);
+  border: none;
+  box-shadow: var(--shadow-glow-subtle);
 }
 
 .surface-elevated {
-  background: var(--color-surface-elevated);
-  border: 1px solid var(--color-border-primary);
-  box-shadow: var(--shadow-lg);
+  background: var(--color-surface-container-high);
+  box-shadow: var(--shadow-ambient);
 }
 
 .surface-interactive {
   padding: var(--space-4);
   border-radius: var(--radius-md);
-  background: var(--color-surface-glass);
-  border: 1px solid var(--color-border-primary);
+  background: var(--color-surface-container-low);
+  border: none;
   cursor: pointer;
   transition: all var(--duration-normal) ease;
 }
 
 .surface-interactive:hover {
-  background: var(--color-interactive-hover);
-  border-color: var(--color-selection-border);
+  background: var(--color-surface-container-high);
 }
 
 /* --------
@@ -201,15 +252,15 @@
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
   line-height: var(--line-height-tight);
-  font-family: var(--font-family-serif-primary);
+  font-family: var(--font-family-ui);
 }
 
 .text-body {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-regular);
   color: var(--color-text-primary);
-  line-height: var(--line-height-serif);
-  font-family: var(--font-family-serif-primary);
+  line-height: var(--line-height-normal);
+  font-family: var(--font-family-ui);
 }
 
 .text-body-secondary {
@@ -231,29 +282,29 @@
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
   line-height: var(--line-height-tight);
-  font-family: var(--font-family-serif-primary);
-  letter-spacing: 0.01em;
+  font-family: var(--font-family-serif-display);
+  letter-spacing: var(--letter-spacing-tight);
 }
 
 .text-h1 {
   font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-extrabold);
+  font-weight: var(--font-weight-bold);
   font-family: var(--font-family-serif-display);
-  letter-spacing: 0.015em;
+  letter-spacing: var(--letter-spacing-tight);
 }
 
 .text-h2 {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
   font-family: var(--font-family-serif-display);
-  letter-spacing: 0.012em;
+  letter-spacing: var(--letter-spacing-tight);
 }
 
 .text-h3 {
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
   font-family: var(--font-family-serif-display);
-  letter-spacing: 0.01em;
+  letter-spacing: var(--letter-spacing-tight);
 }
 
 /* --------
@@ -263,25 +314,22 @@
 .input-field {
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md);
-  background: var(--color-input-bg-disabled);
-  border: 2px solid var(--color-input-border);
+  background: var(--color-surface-container-lowest);
+  border: none;
   color: var(--color-text-primary);
   font-size: var(--font-size-base);
   font-family: var(--font-family-ui);
   transition: var(--transition-all);
-  backdrop-filter: blur(4px);
 }
 
 .input-field:hover {
-  border-color: var(--color-input-border-focus);
-  background: rgba(26, 20, 16, 0.95);
+  background: var(--color-surface-container-low);
 }
 
 .input-field:focus {
   outline: none;
-  border-color: var(--color-brand-accent);
-  box-shadow: 0 0 0 3px var(--color-input-bg-focus), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  background: rgba(26, 20, 16, 0.95);
+  background: var(--color-surface-container);
+  box-shadow: inset 0 0 0 2px var(--color-primary)/20;
 }
 
 .input-field::placeholder {
@@ -296,14 +344,14 @@
 }
 
 .input-field option {
-  background: var(--color-surface-bg);
+  background: var(--color-surface-dim);
   color: var(--color-text-primary);
   padding: var(--space-2) var(--space-3);
 }
 
 .input-field option:hover,
 .input-field option:checked {
-  background: var(--color-brand-primary);
+  background: var(--color-primary);
   color: #ffffff;
 }
 
@@ -382,8 +430,8 @@
   align-items: flex-start;
   padding: var(--space-4);
   border-radius: var(--radius-md);
-  background: var(--color-surface-glass);
-  border: 1px solid var(--color-border-primary);
+  background: var(--color-surface-container-low);
+  border: none;
   cursor: pointer;
   transition: all var(--duration-normal) ease;
   text-align: left;
@@ -391,14 +439,13 @@
 }
 
 .export-format-card:hover {
-  background: var(--color-interactive-hover);
-  border-color: var(--color-selection-border);
+  background: var(--color-surface-container-high);
   box-shadow: var(--shadow-glow-accent);
   transform: translateY(-2px);
 }
 
 .export-format-card:focus-visible {
-  outline: var(--outline-focus-gold);
+  outline: var(--outline-focus);
   outline-offset: 2px;
 }
 
@@ -462,18 +509,17 @@
 .fav-card {
   padding: var(--space-4);
   border-radius: var(--radius-xl);
-  background: var(--color-surface-elevated);
-  border: 1px solid var(--color-border-primary);
+  background: var(--color-surface-container-low);
+  border: none;
   backdrop-filter: blur(16px) saturate(1.8);
   cursor: pointer;
   position: relative;
   transition: all var(--duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-ambient);
 }
 
 .fav-card:hover {
-  background: var(--color-interactive-active);
-  border-color: var(--color-selection-border);
+  background: var(--color-surface-container-high);
   box-shadow: var(--shadow-xl), var(--shadow-glow-accent);
   transform: translateY(-4px);
 }
@@ -489,8 +535,8 @@
    -------- */
 
 .fav-menu {
-  background: var(--color-surface-elevated);
-  border: 1px solid var(--color-border-primary);
+  background: var(--color-surface-container-high);
+  border: 1px solid var(--color-border-ghost);
   border-radius: var(--radius-lg);
   padding: var(--space-2);
   box-shadow: var(--shadow-xl);
@@ -512,25 +558,15 @@
 }
 
 .fav-menu-item:hover {
-  background: var(--color-surface-glass-light);
+  background: var(--color-surface-container-lowest);
   color: var(--color-text-inverse);
 }
 
 .fav-menu-item:focus-visible {
-  outline: var(--outline-focus-gold);
+  outline: var(--outline-focus);
   outline-offset: 2px;
 }
 
-@media (prefers-color-scheme: light) {
-  .fav-menu {
-    background: var(--color-surface-overlay);
-    border-color: var(--color-border-primary);
-  }
-  .fav-menu-item:hover {
-    background: rgba(15, 23, 42, 0.05);
-    color: var(--color-text-primary);
-  }
-}
 
 /* --------
    TAG CHIPS (filter pills)
@@ -541,27 +577,27 @@
   border-radius: var(--radius-full);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
-  border: 1px solid var(--color-border-primary);
+  border: 1px solid var(--color-border-ghost);
   cursor: pointer;
-  background: var(--color-surface-glass);
+  background: var(--color-surface-container-low);
   color: var(--color-text-secondary);
   transition: all var(--duration-fast) ease;
   font-family: var(--font-family-ui);
 }
 
 .tag-chip:hover {
-  background: var(--color-interactive-hover);
+  background: var(--color-surface-container-high);
   color: var(--color-text-primary);
-  border-color: var(--color-input-border-focus);
+  border-color: var(--color-primary);
 }
 
 .tag-chip:focus-visible {
-  outline: var(--outline-focus-gold);
+  outline: var(--outline-focus);
   outline-offset: 2px;
 }
 
 .tag-chip-active {
-  background: linear-gradient(135deg, var(--color-brand-primary) 0%, var(--color-brand-secondary) 100%);
+  background: var(--gradient-primary);
   color: white;
   border-color: transparent;
   box-shadow: var(--shadow-glow-primary);
@@ -569,7 +605,7 @@
 
 .tag-chip-active:hover {
   color: white;
-  background: linear-gradient(135deg, #b08a66 0%, #c57e3e 100%);
+  opacity: 0.9;
 }
 
 @media (prefers-color-scheme: light) {

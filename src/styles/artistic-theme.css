@@ -61,9 +61,9 @@
 .shimmer-gold {
   background: linear-gradient(
     90deg,
-    rgba(212, 175, 55, 0.1) 25%,
-    rgba(212, 175, 55, 0.3) 50%,
-    rgba(212, 175, 55, 0.1) 75%
+    rgba(255, 180, 164, 0.1) 25%,
+    rgba(255, 180, 164, 0.3) 50%,
+    rgba(255, 180, 164, 0.1) 75%
   );
   background-size: 1000px 100%;
   animation: shimmer-gold 2s infinite;
@@ -121,10 +121,10 @@
 /* Warm golden glow pulse animation */
 @keyframes pulse-glow-gold {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4);
+    box-shadow: 0 0 0 0 rgba(255, 180, 164, 0.4);
   }
   50% {
-    box-shadow: 0 0 0 8px rgba(212, 175, 55, 0);
+    box-shadow: 0 0 0 8px rgba(255, 180, 164, 0);
   }
 }
 
@@ -135,10 +135,10 @@
 /* Subtle pulse glow animation */
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4);
+    box-shadow: 0 0 0 0 rgba(255, 180, 164, 0.4);
   }
   50% {
-    box-shadow: 0 0 0 8px rgba(212, 175, 55, 0);
+    box-shadow: 0 0 0 8px rgba(255, 180, 164, 0);
   }
 }
 
@@ -183,13 +183,13 @@
 /* Toast color pulse on copy */
 @keyframes color-pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7);
+    box-shadow: 0 0 0 0 rgba(255, 180, 164, 0.7);
   }
   70% {
-    box-shadow: 0 0 0 12px rgba(212, 175, 55, 0);
+    box-shadow: 0 0 0 12px rgba(255, 180, 164, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
+    box-shadow: 0 0 0 0 rgba(255, 180, 164, 0);
   }
 }
 
@@ -475,7 +475,7 @@
 
 /* Glow text effect */
 .text-glow {
-  text-shadow: 0 0 20px rgba(212, 175, 55, 0.5), 0 0 40px rgba(184, 115, 51, 0.3);
+  text-shadow: 0 0 20px rgba(255, 180, 164, 0.5), 0 0 40px rgba(162, 73, 54, 0.3);
   letter-spacing: 0.05em;
 }
 
@@ -493,7 +493,7 @@
   right: 0;
   bottom: 0;
   background-image: 
-    radial-gradient(circle, rgba(212, 175, 55, 0.1) 1px, transparent 1px);
+    radial-gradient(circle, rgba(255, 180, 164, 0.1) 1px, transparent 1px);
   background-size: 20px 20px;
   pointer-events: none;
   z-index: 0;
@@ -506,14 +506,14 @@
 
 /* Soft gradient background overlay */
 .bg-gradient-soft {
-  background: linear-gradient(135deg, rgba(157, 126, 96, 0.08) 0%, rgba(184, 115, 51, 0.05) 50%, rgba(212, 175, 55, 0.03) 100%);
+  background: linear-gradient(135deg, rgba(255, 180, 164, 0.08) 0%, rgba(162, 73, 54, 0.05) 50%, rgba(255, 180, 164, 0.03) 100%);
 }
 
 /* Artistic card with layered depth */
 .card-artistic {
   position: relative;
-  background: var(--color-surface-glass);
-  border: 1px solid var(--color-border-primary);
+  background: var(--color-surface-container-low);
+  border: none;
   border-radius: var(--radius-lg);
   overflow: hidden;
 }
@@ -527,7 +527,7 @@
   height: 200%;
   background: linear-gradient(
     135deg,
-    rgba(212, 175, 55, 0.1) 0%,
+    rgba(255, 180, 164, 0.1) 0%,
     transparent 70%
   );
   pointer-events: none;

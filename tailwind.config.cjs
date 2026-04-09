@@ -6,14 +6,14 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'brand-primary': 'var(--color-brand-primary)',
-        'brand-secondary': 'var(--color-brand-secondary)',
-        'brand-accent': 'var(--color-brand-accent)',
-        'surface-bg': 'var(--color-surface-bg)',
-        'surface-elevated': 'var(--color-surface-elevated)',
+        'primary': 'var(--color-primary)',
+        'primary-container': 'var(--color-primary-container)',
+        'surface-dim': 'var(--color-surface-dim)',
+        'surface-container': 'var(--color-surface-container)',
+        'surface-container-low': 'var(--color-surface-container-low)',
+        'surface-container-high': 'var(--color-surface-container-high)',
         'surface-glass': 'var(--color-surface-glass)',
         'surface-overlay': 'var(--color-surface-overlay)',
-        'surface-card': 'var(--color-surface-card)',
         'text-primary': 'var(--color-text-primary)',
         'text-secondary': 'var(--color-text-secondary)',
         'text-tertiary': 'var(--color-text-tertiary)',

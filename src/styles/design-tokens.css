@@ -10,43 +10,40 @@
      COLORS - Dark Theme (Primary)
      -------- */
   
-  /* Brand & Accent Colors - Artistic Palette */
-  --color-brand-primary: #9d7e60;
-  --color-brand-secondary: #b87333;
-  --color-brand-accent: #d4af37;
-   --color-accent-cyan: #d4af37;
-   --color-accent-blue: #b87333;
-  --color-accent-pink: #ec4899;
-  --color-accent-orange: #f97316;
+  /* Primary Color - Midnight Gallery Burnt Sienna */
+  --color-primary: #ffb4a4;
+  --color-primary-container: #a24936;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #ffffff;
   
-  /* Warm Accent Colors */
-  --color-accent-gold: #d4af37;
-  --color-accent-copper: #b87333;
-  --color-accent-rose-gold: #d4927a;
-  --color-accent-warm-gray: #a39e8a;
+  /* Supporting Colors - Neutral Warm Palette */
+  --color-surface-variant: #55423e;
+  --color-on-surface-variant: #d9ccc8;
+  --color-outline: #9a8b89;
+  --color-outline-variant: #55423e;
   
-  /* Gradient Overlays */
-  --gradient-primary: linear-gradient(135deg, #9d7e60 0%, #b87333 50%, #d4af37 100%);
-  --gradient-hero: linear-gradient(135deg, rgba(157, 126, 96, 0.15) 0%, rgba(184, 115, 51, 0.1) 50%, rgba(212, 175, 55, 0.05) 100%);
-  --gradient-artistic: linear-gradient(135deg, #9d7e60 0%, #d4927a 50%, #d4af37 100%);
-  --gradient-artistic-warm: linear-gradient(135deg, #9d7e60 0%, #d4af37 50%, #d4927a 100%);
-  --gradient-accent-gold: linear-gradient(135deg, #d4af37 0%, #b87333 100%);
-  --gradient-soft: linear-gradient(180deg, rgba(157, 126, 96, 0.05) 0%, rgba(184, 115, 51, 0.08) 100%);
+  /* Gradient Overlays - Midnight Gallery */
+  --gradient-primary: linear-gradient(135deg, #ffb4a4 0%, #a24936 100%);
+  --gradient-hero: linear-gradient(135deg, rgba(255, 180, 164, 0.15) 0%, rgba(162, 73, 54, 0.1) 100%);
+  --gradient-soft: linear-gradient(180deg, rgba(255, 180, 164, 0.05) 0%, rgba(162, 73, 54, 0.08) 100%);
   
-  /* Surface Colors (Backgrounds) */
-  --color-surface-bg: #1a1410; /* Deep warm brown */
-  --color-surface-elevated: rgba(26, 20, 16, 0.8);
-  --color-surface-glass: rgba(26, 20, 16, 0.4);
-  --color-surface-glass-light: rgba(38, 28, 24, 0.4);
-  --color-surface-glass-lighter: rgba(50, 36, 30, 0.4);
-  --color-surface-overlay: rgba(26, 20, 16, 0.8);
-  --color-surface-card: rgba(26, 20, 16, 0.6);
-  --color-surface-nav: rgba(26, 20, 16, 0.9);
+  /* Surface Colors - Midnight Gallery Tonal Depth */
+  --color-surface-dim: #1a1110;  /* Darkest base */
+  --color-surface: #1a1110;       /* Main canvas */
+  --color-surface-low: #231918;   /* Secondary content */
+  --color-surface-container-low: #231918;
+  --color-surface-container: #271d1b;
+  --color-surface-container-high: #3d3230;
+  --color-surface-container-highest: #3d3230;
+  --color-surface-glass: rgba(26, 17, 16, 0.6);  /* For glassmorphism with 20px blur */
+  --color-surface-overlay: rgba(26, 17, 16, 0.8);
+  --color-on-surface: #ede0dc;
+  --color-on-surface-variant: #d9ccc8;
   
-  /* Border & Dividers */
-  --color-border-primary: rgba(255, 255, 255, 0.08);
+  /* Border & Dividers - Ghost Borders (No-Line Rule) */
+  --color-border-ghost: rgba(85, 66, 62, 0.15); /* outline-variant at 15% opacity */
+  --color-border-ghost-hover: rgba(85, 66, 62, 0.3); /* 30% on hover/focus */
   --color-border-subtle: rgba(255, 255, 255, 0.04);
-  --color-border-light: rgba(148, 163, 184, 0.08);
   
   /* Text Colors */
   --color-text-primary: #f8fafc;
@@ -69,43 +66,52 @@
   --color-text-on-copper: #1a1410;
   
   /* Input State Colors */
-  --color-input-border: rgba(255, 255, 255, 0.08);
-  --color-input-border-focus: rgba(212, 175, 55, 0.4);
+  --color-input-border: transparent;
+  --color-input-border-focus: #ffb4a4;
   --color-input-border-error: rgba(239, 68, 68, 0.4);
-  --color-input-bg-focus: rgba(212, 175, 55, 0.05);
+  --color-input-bg: var(--color-surface-container-low);
+  --color-input-bg-focus: var(--color-surface-container);
   --color-input-bg-error: rgba(239, 68, 68, 0.05);
-  --color-input-bg-disabled: rgba(26, 20, 16, 0.5);
+  --color-input-bg-disabled: rgba(26, 17, 16, 0.5);
   
   /* Interactive State Backgrounds */
-  --color-interactive-hover: rgba(184, 115, 51, 0.15);
-  --color-interactive-active: rgba(212, 175, 55, 0.2);
+  --color-interactive-hover: #3d3230;  /* surface-container-high */
+  --color-interactive-active: #3d3230;
   --color-interactive-disabled: rgba(255, 255, 255, 0.04);
   
   /* Selection & Checked States */
-  --color-selection-bg: rgba(212, 175, 55, 0.15);
-  --color-selection-border: rgba(212, 175, 55, 0.4);
-  --color-checked-bg: #b87333;
-  --color-checked-border: #d4af37;
+  --color-selection-bg: rgba(255, 180, 164, 0.15);
+  --color-selection-border: rgba(255, 180, 164, 0.4);
+  --color-checked-bg: #ffb4a4;
+  --color-checked-border: #ffb4a4;
   
   /* Error State Variants */
   --color-error-subtle: rgba(239, 68, 68, 0.1);
   --color-error-muted: rgba(239, 68, 68, 0.2);
   
-  /* Semantic Overlays for Glass Effect */
-  --color-glass-bg: rgba(255, 255, 255, 0.03);
-  --color-glass-border: rgba(255, 255, 255, 0.08);
-  --color-glass-border-bright: rgba(255, 255, 255, 0.12);
-  --color-glass-focus: rgba(212, 175, 55, 0.15);
-  --color-glass-glow: 0 0 20px rgba(212, 175, 55, 0.15);
+  /* Semantic Overlays for Glass Effect & Shadows */
+  --glass-blur: 20px;
+  --glass-opacity: 0.6;
+  --glass-saturate: 1.5;
+  --color-glass-bg: rgba(26, 17, 16, 0.6);
+  --color-glass-border: rgba(85, 66, 62, 0.15);
+  --color-glass-focus: rgba(255, 180, 164, 0.15);
+  /* Ambient Shadow - Tinted with background hue, 8% opacity */
+  --shadow-ambient: 0 0 40px rgba(20, 12, 11, 0.08);
   
   /* --------
      TYPOGRAPHY
      -------- */
   
-  --font-family-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-family-ui: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --font-family-mono: 'JetBrains Mono', 'Courier New', monospace;
-  --font-family-serif-primary: 'Crimson Text', Georgia, serif;
-  --font-family-serif-display: 'Playfair Display', Georgia, serif;
+  --font-family-serif-primary: 'Newsreader', Georgia, serif;  /* Body serif - editorial */
+  --font-family-serif-display: 'Newsreader', Georgia, serif;  /* Display headlines */
+  
+  /* Letter Spacing */
+  --letter-spacing-tight: -0.02em;    /* Tight for headlines */
+  --letter-spacing-normal: 0;          /* Default */
+  --letter-spacing-relaxed: 0.1rem;   /* Architectural feel for tertiary text */
   
   --font-weight-regular: 400;
   --font-weight-medium: 500;
@@ -146,25 +152,25 @@
      SHADOWS
      -------- */
   
-  --shadow-xs: 0 2px 4px rgba(0, 0, 0, 0.1);
-  --shadow-sm: 0 4px 8px rgba(0, 0, 0, 0.15);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.2);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
-  --shadow-xl: 0 12px 32px rgba(0, 0, 0, 0.25);
-  --shadow-2xl: 0 18px 40px rgba(2, 6, 23, 0.5);
+  --shadow-xs: 0 2px 4px rgba(20, 12, 11, 0.1);
+  --shadow-sm: 0 4px 8px rgba(20, 12, 11, 0.15);
+  --shadow-md: 0 4px 12px rgba(20, 12, 11, 0.2);
+  --shadow-lg: 0 8px 24px rgba(20, 12, 11, 0.2);
+  --shadow-xl: 0 12px 32px rgba(20, 12, 11, 0.25);
+  --shadow-2xl: 0 18px 40px rgba(20, 12, 11, 0.5);
   --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.1);
   
-  /* Accent Shadows (Glows) */
-  --shadow-glow-primary: 0 4px 16px rgba(212, 175, 55, 0.3);
-  --shadow-glow-primary-hover: 0 6px 20px rgba(212, 175, 55, 0.4);
+  /* Accent Shadows (Glows) - Burnt Sienna */
+  --shadow-glow-primary: 0 4px 16px rgba(255, 180, 164, 0.3);
+  --shadow-glow-primary-hover: 0 6px 20px rgba(255, 180, 164, 0.4);
   --shadow-glow-success: 0 4px 16px rgba(16, 185, 129, 0.3);
   --shadow-glow-success-hover: 0 6px 20px rgba(16, 185, 129, 0.4);
-  --shadow-glow-accent: 0 4px 12px rgba(184, 115, 51, 0.3);
+  --shadow-glow-accent: 0 4px 12px rgba(162, 73, 54, 0.3);
   
-  /* Focus Ring Shadows (warm-themed) */
-  --shadow-focus-ring: 0 0 0 3px rgba(26, 20, 16, 0.8), 0 0 0 5px rgba(212, 175, 55, 0.4);
-  --shadow-focus-ring-soft: 0 0 0 2px rgba(212, 175, 55, 0.3);
-  --outline-focus-gold: 2px solid rgba(212, 175, 55, 0.6);
+  /* Focus Ring Shadows - Updated to burnt sienna */
+  --shadow-focus-ring: 0 0 0 3px rgba(26, 17, 16, 0.8), 0 0 0 5px rgba(255, 180, 164, 0.4);
+  --shadow-focus-ring-soft: 0 0 0 2px rgba(255, 180, 164, 0.3);
+  --outline-focus: 2px solid rgba(255, 180, 164, 0.6);
   
   /* State-specific Glows */
   --shadow-glow-error: 0 4px 12px rgba(239, 68, 68, 0.25);
@@ -220,31 +226,31 @@
   /* Toggle/Switch States */
   --color-toggle-off-bg: rgba(255, 255, 255, 0.08);
   --color-toggle-off-dot: rgba(255, 255, 255, 0.4);
-  --color-toggle-on-bg: #b87333;
-  --color-toggle-on-dot: #f8fafc;
+  --color-toggle-on-bg: #ffb4a4;
+  --color-toggle-on-dot: #ffffff;
   --color-toggle-disabled-bg: rgba(255, 255, 255, 0.04);
   
   /* Link States */
-  --color-link-default: #d4af37;
-  --color-link-hover: #e8c547;
-  --color-link-visited: #b87333;
-  --color-link-active: #f8fafc;
+  --color-link-default: #ffb4a4;
+  --color-link-hover: #ffc7b8;
+  --color-link-visited: #a24936;
+  --color-link-active: #ffffff;
   
   /* Button Variants */
-  --color-button-primary-bg: #b87333;
-  --color-button-primary-bg-hover: #d4af37;
-  --color-button-secondary-bg: rgba(184, 115, 51, 0.1);
-  --color-button-secondary-bg-hover: rgba(184, 115, 51, 0.2);
+  --color-button-primary-bg: #ffb4a4;
+  --color-button-primary-bg-hover: #ffc7b8;
+  --color-button-secondary-bg: rgba(255, 180, 164, 0.1);
+  --color-button-secondary-bg-hover: rgba(255, 180, 164, 0.2);
   --color-button-tertiary-bg: transparent;
   --color-button-tertiary-border: rgba(255, 255, 255, 0.1);
-  --color-button-tertiary-border-hover: rgba(212, 175, 55, 0.3);
+  --color-button-tertiary-border-hover: rgba(255, 180, 164, 0.3);
   
   /* Tab States */
   --color-tab-inactive-text: #9a8b8a;
   --color-tab-inactive-border: rgba(255, 255, 255, 0.04);
-  --color-tab-active-text: #f8fafc;
-  --color-tab-active-border: #d4af37;
-  --color-tab-active-bg: rgba(212, 175, 55, 0.08);
+  --color-tab-active-text: #ffffff;
+  --color-tab-active-border: #ffb4a4;
+  --color-tab-active-bg: rgba(255, 180, 164, 0.08);
   
   /* --------
      TOUCH TARGETS
@@ -260,7 +266,7 @@
 /* Light mode overrides removed to preserve the premium artistic dark theme */
 
 body {
-  background-color: var(--color-surface-bg);
+  background-color: var(--color-surface-dim);
   color: var(--color-text-primary);
   font-family: var(--font-family-ui);
   -webkit-font-smoothing: antialiased;

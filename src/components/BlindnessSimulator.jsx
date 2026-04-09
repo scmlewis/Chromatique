@@ -14,8 +14,8 @@ export default function BlindnessSimulator({ palette }) {
 
   if (!palette || palette.length === 0) {
     return (
-      <div className="p-12 text-center bg-amber-950/20 rounded-3xl border border-dashed border-amber-900">
-        <p className="text-amber-500 font-medium">Generate a palette first to simulate vision deficiencies.</p>
+      <div className="p-12 text-center bg-[var(--color-surface-container-low)] rounded-3xl">
+        <p className="text-[var(--color-primary)]/70 font-medium">Generate a palette first to simulate vision deficiencies.</p>
       </div>
     )
   }
@@ -31,14 +31,14 @@ export default function BlindnessSimulator({ palette }) {
           <button
             key={d.id}
             onClick={() => setSelected(d.id)}
-            className={`p-4 rounded-2xl border text-left transition-all ${
+            className={`p-4 rounded-2xl text-left transition-all border ${
               selected === d.id 
-                ? 'bg-amber-600 border-amber-500 text-white shadow-lg shadow-amber-600/20' 
-                : 'bg-amber-950/25 border-amber-900/35 text-amber-300 hover:bg-amber-950/35 hover:text-amber-200'
+                ? 'bg-[var(--color-primary)] text-[var(--color-surface-dim)] shadow-lg shadow-[var(--color-primary)]/25 border-transparent' 
+                : 'bg-[var(--color-surface-container)] text-[var(--color-primary)] border-[var(--color-border-ghost)] hover:bg-[var(--color-surface-container-high)] hover:border-[var(--color-border-ghost-hover)] hover:shadow-md'
             }`}
           >
             <div className="font-bold mb-1">{d.label}</div>
-            <div className={`text-[10px] uppercase tracking-wider font-semibold opacity-70 ${selected === d.id ? 'text-white' : 'text-amber-500'}`}>
+            <div className={`text-[10px] uppercase tracking-wider font-semibold opacity-70 ${selected === d.id ? 'text-[var(--color-surface-dim)]' : 'text-[var(--color-primary)]'}`}>
               {d.desc}
             </div>
           </button>
@@ -46,13 +46,13 @@ export default function BlindnessSimulator({ palette }) {
       </div>
 
       {/* Info Card */}
-      <div className="p-6 bg-amber-500/5 border border-amber-500/20 rounded-2xl flex gap-4 items-center">
-        <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-300 shrink-0">
+      <div className="p-6 bg-[var(--color-surface-container-low)] rounded-2xl flex gap-4 items-center shadow-md">
+        <div className="w-12 h-12 rounded-xl bg-[var(--color-primary)]/20 flex items-center justify-center text-[var(--color-primary)] shrink-0">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
         </div>
         <div>
-          <h4 className="font-bold text-amber-200 text-sm mb-1">{activeDeficiency.label} Impact</h4>
-          <p className="text-sm text-amber-300 leading-relaxed">{activeDeficiency.impact}</p>
+          <h4 className="font-bold text-[var(--color-primary)]/90 text-sm mb-1">{activeDeficiency.label} Impact</h4>
+          <p className="text-sm text-[var(--color-primary)]/75 leading-relaxed">{activeDeficiency.impact}</p>
         </div>
       </div>
 
@@ -61,9 +61,9 @@ export default function BlindnessSimulator({ palette }) {
         {/* Original */}
         <div className="space-y-3">
           <div className="flex items-center justify-between px-2">
-            <span className="text-xs font-bold text-amber-500 uppercase tracking-widest">Normal Vision (Original)</span>
+            <span className="text-xs font-bold text-[var(--color-primary)] uppercase tracking-widest">Normal Vision (Original)</span>
           </div>
-          <div className="flex w-full h-24 rounded-2xl overflow-hidden shadow-xl border border-stone-900">
+          <div className="flex w-full h-24 rounded-2xl overflow-hidden shadow-lg">
             {palette.map((c, i) => (
               <div 
                 key={i} 
@@ -78,9 +78,9 @@ export default function BlindnessSimulator({ palette }) {
         {/* Simulated */}
         <div className="space-y-3">
           <div className="flex items-center justify-between px-2">
-            <span className="text-xs font-bold text-amber-300 uppercase tracking-widest italic">{activeDeficiency.label} Simulation</span>
+            <span className="text-xs font-bold text-[var(--color-primary)]/80 uppercase tracking-widest italic">{activeDeficiency.label} Simulation</span>
           </div>
-          <div className="flex w-full h-32 rounded-3xl overflow-hidden shadow-2xl border-4 border-stone-900 ring-1 ring-amber-500/30">
+          <div className="flex w-full h-32 rounded-3xl overflow-hidden shadow-2xl">
             {simulatedPalette.map((c, i) => (
               <div 
                 key={i} 
@@ -99,19 +99,19 @@ export default function BlindnessSimulator({ palette }) {
       {/* Comparison Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
         {palette.map((c, i) => (
-          <div key={i} className="p-4 bg-stone-950/30 rounded-2xl border border-stone-900/70 flex flex-col gap-3">
+          <div key={i} className="p-4 bg-[var(--color-surface-container-low)] rounded-2xl flex flex-col gap-3 shadow-md">
              <div className="flex items-center gap-2">
                <div className="w-8 h-8 rounded-lg" style={{ backgroundColor: c }} />
                <div className="flex flex-col">
-                 <span className="text-[10px] font-bold text-amber-500 uppercase">Original</span>
-                 <span className="text-xs font-mono text-amber-200">{c}</span>
+                 <span className="text-[10px] font-bold text-[var(--color-primary)] uppercase">Original</span>
+                 <span className="text-xs font-mono text-[var(--color-primary)]/70">{c}</span>
                </div>
              </div>
              <div className="flex items-center gap-2">
                <div className="w-8 h-8 rounded-lg" style={{ backgroundColor: simulatedPalette[i] }} />
                <div className="flex flex-col">
-                 <span className="text-[10px] font-bold text-amber-300 uppercase">Simulated</span>
-                 <span className="text-xs font-mono text-amber-200">{simulatedPalette[i]}</span>
+                 <span className="text-[10px] font-bold text-[var(--color-primary)]/80 uppercase">Simulated</span>
+                 <span className="text-xs font-mono text-[var(--color-primary)]/70">{simulatedPalette[i]}</span>
                </div>
              </div>
           </div>

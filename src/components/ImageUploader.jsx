@@ -102,7 +102,7 @@ export default function ImageUploader({ onExtract }) {
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
-        className={`mb-3 p-6 rounded-2xl border-2 transition-transform duration-200 ${dragging ? 'border-transparent bg-gradient-to-r from-amber-700 via-orange-700 to-amber-500 shadow-2xl transform scale-102' : 'border-dashed border-amber-900 bg-amber-950/25'} cursor-pointer`}
+        className={`mb-3 p-6 rounded-2xl border-2 transition-transform duration-200 ${dragging ? 'border-transparent bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary-container)] to-[var(--color-primary)] shadow-2xl transform scale-102' : 'border-dashed border-[var(--color-primary)]/30 bg-[var(--color-primary)]/10'} cursor-pointer`}
         style={{ minHeight: 160 }}
       >
         <input ref={inputRef} type="file" accept="image/*" onChange={handleFileInputChange} style={{ display: 'none' }} />
@@ -114,10 +114,10 @@ export default function ImageUploader({ onExtract }) {
             <line strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" x1="12" y1="15" x2="12" y2="3" />
           </svg>
           <div className="text-lg font-semibold text-white">{dragging ? 'Release to upload' : 'Drop an image here or click to choose'}</div>
-          <div id="image-upload-desc" className="text-sm text-amber-200/80">PNG · JPG · GIF — local files only</div>
+          <div id="image-upload-desc" className="text-sm text-[var(--color-primary)]/70">PNG · JPG · GIF — local files only</div>
 
           {fileInfo && (
-            <div className="mt-2 text-xs text-amber-100/80 flex items-center gap-3">
+            <div className="mt-2 text-xs text-[var(--color-primary)]/70 flex items-center gap-3">
               <div>{fileInfo.name}</div>
               <div>•</div>
               <div>{(fileInfo.size / 1024).toFixed(0)} KB</div>
@@ -130,9 +130,9 @@ export default function ImageUploader({ onExtract }) {
 
       {/* Controls separated from drop zone */}
       <div className="image-uploader-controls mb-3">
-        <label className="text-sm text-amber-200">Colors to extract</label>
+        <label className="text-sm text-[var(--color-primary)]/80">Colors to extract</label>
         <div className="flex items-center gap-3 mb-2">
-          <input type="number" min={1} max={10} value={count} onChange={e => setCount(e.target.value)} className="w-20 bg-amber-900/35 p-1 rounded text-amber-100" disabled={!file} />
+          <input type="number" min={1} max={10} value={count} onChange={e => setCount(e.target.value)} className="w-20 bg-[var(--color-surface-container-low)] p-1 rounded text-[var(--color-primary)]" disabled={!file} />
           <button className="btn btn-primary flex items-center disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none" onClick={handleExtract} disabled={busy || !file} aria-busy={busy}>
             {busy ? (
               <>
@@ -144,7 +144,7 @@ export default function ImageUploader({ onExtract }) {
             )}
           </button>
         </div>
-        {!file && <p className="text-xs text-amber-300">Upload a valid image to enable extraction</p>}
+        {!file && <p className="text-xs text-[var(--color-primary)]/70">Upload a valid image to enable extraction</p>}
       </div>
 
       {preview && (

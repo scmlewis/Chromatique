@@ -41,13 +41,13 @@ export default function GradientPanel({ palette, onApplyPalette, onCopyHex }) {
     <div className="flex flex-col lg:flex-row gap-3 lg:gap-8 animate-fade-in">
       {/* Left: Controls */}
       <div className="w-full lg:w-96 space-y-4 lg:space-y-6">
-        <div className="p-6 bg-amber-950/25 rounded-2xl border border-amber-900/35">
+        <div className="p-6 bg-[var(--color-surface-container-low)] rounded-2xl shadow-md">
           <div className="flex items-center justify-between mb-6">
-            <label className="text-xs font-semibold text-amber-500 uppercase tracking-wider">Gradient Stops</label>
+            <label className="text-xs font-semibold text-[var(--color-primary)] uppercase tracking-wider">Gradient Stops</label>
             <button 
               onClick={handleAddStop}
               disabled={stops.length >= 5}
-              className="text-xs font-bold text-amber-300 hover:text-amber-200 disabled:opacity-30 transition-colors"
+              className="text-xs font-bold text-[var(--color-primary)] hover:text-[var(--color-primary)]/80 disabled:opacity-30 transition-colors"
             >
               + Add Stop
             </button>
@@ -55,7 +55,7 @@ export default function GradientPanel({ palette, onApplyPalette, onCopyHex }) {
 
           <div className="space-y-4">
             {stops.map((stop, i) => (
-              <div key={i} className="flex items-center gap-3 bg-stone-950/30 p-3 rounded-xl border border-amber-900/25 group">
+              <div key={i} className="flex items-center gap-3 bg-[var(--color-surface-container)] p-3 rounded-xl shadow-sm group">
                 <input 
                   type="color" 
                   value={stop.color} 
@@ -69,14 +69,14 @@ export default function GradientPanel({ palette, onApplyPalette, onCopyHex }) {
                     max="100" 
                     value={stop.position} 
                     onChange={(e) => handleUpdateStop(i, { position: parseInt(e.target.value) })}
-                    className="w-full accent-amber-500"
+                    className="w-full accent-[var(--color-primary)]"
                   />
                 </div>
-                <span className="text-[10px] font-mono text-amber-500 w-8">{stop.position}%</span>
+                <span className="text-[10px] font-mono text-[var(--color-primary)] w-8">{stop.position}%</span>
                 {stops.length > 2 && (
                   <button 
                     onClick={() => handleRemoveStop(i)}
-                    className="p-1 text-amber-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all"
+                    className="p-1 text-[var(--color-primary)] hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all"
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                   </button>
@@ -86,10 +86,10 @@ export default function GradientPanel({ palette, onApplyPalette, onCopyHex }) {
           </div>
         </div>
 
-        <div className="p-6 bg-amber-950/25 rounded-2xl border border-amber-900/35">
+        <div className="p-6 bg-[var(--color-surface-container-low)]/95 rounded-2xl border border-[var(--color-border-ghost)] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
           <div className="flex items-center justify-between mb-4">
-            <label className="text-xs font-semibold text-amber-500 uppercase tracking-wider">Angle</label>
-            <span className="text-xs font-mono text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded">{angle}°</span>
+            <label className="text-xs font-semibold text-[var(--color-primary)] uppercase tracking-wider">Angle</label>
+            <span className="text-xs font-mono text-[var(--color-primary)] bg-[var(--color-primary)]/15 px-2 py-0.5 rounded">{angle}°</span>
           </div>
           <input 
             type="range" 
@@ -97,14 +97,14 @@ export default function GradientPanel({ palette, onApplyPalette, onCopyHex }) {
             max="360" 
             value={angle} 
             onChange={(e) => setAngle(parseInt(e.target.value))}
-            className="w-full accent-amber-500"
+            className="w-full accent-[var(--color-primary)]"
           />
           <div className="grid grid-cols-4 gap-2 mt-4">
             {[0, 45, 90, 135, 180, 225, 270, 315].map(a => (
               <button 
                 key={a}
                 onClick={() => setAngle(a)}
-                className={`text-[10px] font-bold py-1 rounded border transition-all ${angle === a ? 'bg-amber-600 border-amber-500 text-white' : 'bg-stone-950/40 border-amber-900 text-amber-500 hover:text-amber-200'}`}
+                className={`text-[10px] font-bold py-1 rounded border transition-all ${angle === a ? 'bg-[var(--color-primary)] border-transparent text-[var(--color-surface-dim)] shadow-[0_0_0_1px_rgba(255,180,164,0.12)]' : 'bg-[var(--color-surface-container-low)] border-[var(--color-border-ghost)] text-[var(--color-primary)] hover:bg-[var(--color-surface-container)] hover:border-[var(--color-border-ghost-hover)] hover:text-[var(--color-primary)]/80'}`}
               >
                 {a}°
               </button>
@@ -115,37 +115,37 @@ export default function GradientPanel({ palette, onApplyPalette, onCopyHex }) {
 
       {/* Right: Preview */}
       <div className="flex-1 space-y-6">
-        <div className="p-8 bg-stone-950/30 rounded-3xl border border-stone-900/70 shadow-xl overflow-hidden flex flex-col h-full">
+        <div className="p-8 bg-[var(--color-surface-container-low)] rounded-3xl shadow-lg overflow-hidden flex flex-col h-full">
            <h3 className="text-xl font-bold text-white mb-6">Preview</h3>
            
            <div 
-             className="flex-1 w-full min-h-[300px] rounded-2xl shadow-2xl border border-white/5 relative group"
+             className="flex-1 w-full min-h-[300px] rounded-2xl shadow-2xl relative group"
              style={{ background: gradientString }}
            >
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20 backdrop-blur-sm">
                 <button 
                   onClick={handleCopyCSS}
-                  className="bg-white text-stone-900 px-6 py-2 rounded-full font-bold shadow-xl hover:scale-105 transition-transform"
+                  className="bg-white text-[var(--color-surface-dim)] px-6 py-2 rounded-full font-bold shadow-xl hover:scale-105 transition-transform"
                 >
                   Copy CSS
                 </button>
               </div>
            </div>
 
-           <div className="mt-8 p-4 bg-stone-950/70 rounded-xl border border-stone-900 font-mono text-[11px] text-amber-200 overflow-x-auto whitespace-nowrap scrollbar-hide">
+           <div className="mt-8 p-4 bg-[var(--color-surface-container)] rounded-xl font-mono text-[11px] text-[var(--color-primary)]/75 overflow-x-auto whitespace-nowrap scrollbar-hide shadow-inner">
              {`background: ${gradientString};`}
            </div>
 
-           <div className="mt-8 flex flex-wrap gap-4 pt-8 border-t border-stone-900/70 mt-auto">
+           <div className="mt-8 flex flex-wrap gap-4 pt-8 border-t border-[var(--color-primary)]/15 mt-auto">
              <button 
                 onClick={() => onApplyPalette(stops.map(s => s.color))}
-                className="btn bg-amber-600 hover:bg-amber-500 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-amber-600/20"
+               className="btn btn-primary"
              >
                Apply Colors to Palette
              </button>
              <button 
                 onClick={() => setStops(palette.slice(0, 5).map((c, i) => ({ color: c, position: Math.round((i / (Math.min(palette.length, 5) - 1)) * 100) })))}
-                className="btn bg-amber-950 hover:bg-amber-900 text-amber-200 border border-amber-900 px-8 py-3 rounded-xl font-bold"
+                className="btn bg-[var(--color-primary)]/10 hover:bg-[var(--color-primary)]/15 text-[var(--color-primary)] border border-[var(--color-primary)]/20 px-8 py-3 rounded-xl font-bold"
              >
                Import From Palette
              </button>
