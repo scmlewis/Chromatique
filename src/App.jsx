@@ -261,7 +261,7 @@ export default function App() {
       {/* Sidebar Overlay (Mobile) */}
       {isMobileMenuOpen && (
         <div 
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden animate-fade-in" 
+          className="fixed inset-0 bg-black/60 z-40 lg:hidden animate-fade-in" 
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
@@ -278,7 +278,7 @@ export default function App() {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
-        <header className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 bg-[var(--color-surface-dim)]/80 backdrop-blur-md z-30 sticky top-0 h-16 sm:h-20">
+        <header className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 bg-[var(--color-surface-dim)] z-30 sticky top-0 h-16 sm:h-20 border-b border-[var(--color-border-ghost)]">
           <div className="flex items-center gap-3">
              {/* Mobile Menu Toggle */}
              <button 
@@ -290,8 +290,8 @@ export default function App() {
              </button>
 
             <div className="flex items-center gap-3">
-              <span className="font-bold text-lg hidden sm:block tracking-wide text-[var(--color-text-primary)]" style={{ fontFamily: "var(--font-family-serif-display)" }}>Chromatique</span>
-              <span className="text-xs font-bold text-[var(--color-primary)] uppercase tracking-widest bg-[var(--color-primary)]/10 px-3 py-1.5 rounded-full border border-[var(--color-primary)]/30">
+              <span className="font-bold text-lg hidden sm:block tracking-tight text-[var(--color-text-primary)]" style={{ fontFamily: "var(--font-family-ui)" }}>Chromatique</span>
+              <span className="text-[10px] font-bold text-[var(--color-text-secondary)] uppercase tracking-widest">
                 {currentTool?.replace(/([A-Z])/g, ' $1').trim() || 'Tool'}
               </span>
             </div>

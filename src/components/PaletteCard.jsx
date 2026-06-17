@@ -7,6 +7,7 @@ import { addRipple } from '../utils/ui'
 import ColorInfo from './ColorInfo'
 
 export default function PaletteCard({ color, locked, onToggleLock, onCopy, onColorChange, delay, settings = {}, onMoveUp, onMoveDown, isCompact }) {
+  if (!color || typeof color !== 'string') return null
   const textColor = readableTextColor(color)
   const [copiedType, setCopiedType] = useState(null)
   const [showPicker, setShowPicker] = useState(false)
@@ -108,7 +109,7 @@ export default function PaletteCard({ color, locked, onToggleLock, onCopy, onCol
               addRipple(e)
               onToggleLock && onToggleLock() 
             }}
-            className="flex items-center justify-center p-2 rounded-lg bg-black/30 backdrop-blur-md text-white/90 hover:bg-black/50 transition-all border border-white/10 hover:scale-110"
+            className="flex items-center justify-center p-2 rounded-lg bg-black/40 text-white/90 hover:bg-black/60 transition-all"
             title={locked ? 'Unlock' : 'Lock'}
           >
             {locked ? (
@@ -129,7 +130,7 @@ export default function PaletteCard({ color, locked, onToggleLock, onCopy, onCol
         <div className="absolute inset-0 flex items-center justify-center opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-300 transform translate-y-0 lg:translate-y-2 lg:group-hover:translate-y-0">
           <button
              onClick={(e) => { e.stopPropagation(); handleEditStart() }}
-             className="p-3 rounded-xl bg-black/40 backdrop-blur-lg text-white hover:bg-black/60 transition-all border border-white/20 shadow-xl"
+             className="p-3 rounded-xl bg-black/50 text-white hover:bg-black/70 transition-all"
              title="Edit Color"
           >
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -141,7 +142,7 @@ export default function PaletteCard({ color, locked, onToggleLock, onCopy, onCol
       </div>
 
       {/* 2. CARD FOOTER (INFO BAR) - Hide in compact mode unless hovered or on touch */}
-      <div className={`bg-[#0f1115] p-3 flex items-center justify-between border-t border-white/5 transition-all duration-300 ${isCompact ? 'opacity-100 lg:opacity-0 lg:group-hover:opacity-100 max-h-20 lg:max-h-0 lg:group-hover:max-h-20 overflow-hidden' : 'opacity-100'}`}>
+      <div className={`bg-[var(--color-surface-dim)] p-3 flex items-center justify-between border-t border-white/5 transition-all duration-300 ${isCompact ? 'opacity-100 lg:opacity-0 lg:group-hover:opacity-100 max-h-20 lg:max-h-0 lg:group-hover:max-h-20 overflow-hidden' : 'opacity-100'}`}>
         <div className="flex flex-col">
           <span className="text-[9px] uppercase tracking-widest text-[var(--color-primary)] font-bold">HEX</span>
           <span className="font-mono text-xs font-bold text-white tracking-widest leading-none">{color}</span>
@@ -156,7 +157,7 @@ export default function PaletteCard({ color, locked, onToggleLock, onCopy, onCol
                 setTimeout(() => setCopiedType(null), 1200);
              } catch(err){}
           }}
-          className="bg-[var(--color-primary)]/20 hover:bg-[var(--color-primary)]/30 text-[var(--color-primary)] text-[10px] font-bold px-2 py-1 rounded-md border border-[var(--color-primary)]/20 transition-colors uppercase tracking-tight"
+          className="bg-[var(--color-primary)]/20 hover:bg-[var(--color-primary)]/30 text-[var(--color-primary)] text-[10px] font-bold px-2 py-1 rounded-md transition-colors uppercase tracking-tight"
         >
           {copiedType === 'hex' ? 'COPIED!' : 'COPY'}
         </button>

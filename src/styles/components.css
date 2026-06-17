@@ -35,7 +35,7 @@
 }
 
 .btn:active {
-  transform: translateY(1px);
+  transform: scale(0.98);
   opacity: 0.9;
 }
 
@@ -47,9 +47,9 @@
 /* Button Variants */
 
 .btn-primary {
-  background: var(--gradient-primary);
+  background: var(--color-primary);
   color: var(--color-on-primary);
-  box-shadow: var(--shadow-glow-primary);
+  box-shadow: none;
   padding: var(--space-3) var(--space-8);
   border-radius: 9999px;
   border: none;
@@ -58,7 +58,8 @@
 }
 
 .btn-primary:hover {
-  box-shadow: var(--shadow-glow-primary-hover);
+  background: var(--color-button-primary-bg-hover);
+  box-shadow: 0 2px 8px rgba(255, 180, 164, 0.2);
   transform: translateY(-1px);
 }
 
@@ -76,7 +77,6 @@
 
 .btn-secondary:hover {
   background: var(--color-surface-container-high);
-  box-shadow: var(--shadow-glow-accent);
   transform: translateY(-1px);
 }
 
@@ -88,7 +88,6 @@
 
 .btn-ghost:hover {
   background: var(--color-surface-container);
-  box-shadow: var(--shadow-ambient);
   transform: translateY(-1px);
 }
 
@@ -113,18 +112,15 @@
 
 .btn-outline:hover {
   background: var(--color-surface-container-high);
-  box-shadow: var(--shadow-glow-accent);
   transform: translateY(-1px);
 }
 
 .btn-success {
   background: linear-gradient(135deg, var(--color-success) 0%, var(--color-success-dark) 100%);
   color: white;
-  box-shadow: var(--shadow-glow-success);
 }
 
 .btn-success:hover {
-  box-shadow: var(--shadow-glow-success-hover);
   transform: translateY(-1px);
 }
 
@@ -147,7 +143,6 @@
 
 .btn-icon:hover {
   background: var(--color-surface-container-high);
-  box-shadow: var(--shadow-glow-accent);
   transform: translateY(-1px);
 }
 
@@ -181,14 +176,12 @@
 
 .tab-active {
   color: var(--color-tab-active-text);
-  background: rgba(255, 180, 164, 0.18);
+  background: rgba(255, 180, 164, 0.12);
   border: 2px solid var(--color-tab-active-border);
-  box-shadow: inset 0 0 12px rgba(255, 180, 164, 0.2);
 }
 
 .tab-active:hover {
-  background: rgba(255, 180, 164, 0.24);
-  box-shadow: inset 0 0 16px rgba(255, 180, 164, 0.28);
+  background: rgba(255, 180, 164, 0.18);
 }
 
 .tab-inactive {
@@ -215,14 +208,13 @@
 
 .surface-card:hover {
   background: var(--color-surface-container);
-  transform: translateY(-2px);
 }
 
 .surface-glass {
   backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   background: var(--color-glass-bg);
   border: none;
-  box-shadow: var(--shadow-glow-subtle);
+  box-shadow: var(--shadow-ambient);
 }
 
 .surface-elevated {
@@ -440,8 +432,6 @@
 
 .export-format-card:hover {
   background: var(--color-surface-container-high);
-  box-shadow: var(--shadow-glow-accent);
-  transform: translateY(-2px);
 }
 
 .export-format-card:focus-visible {
@@ -488,12 +478,11 @@
    -------- */
 
 .card-hover {
-  transition: transform var(--duration-normal) ease, box-shadow var(--duration-normal) ease;
+  transition: transform var(--duration-normal) ease;
 }
 
 .card-hover:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-xl);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -511,17 +500,13 @@
   border-radius: var(--radius-xl);
   background: var(--color-surface-container-low);
   border: none;
-  backdrop-filter: blur(16px) saturate(1.8);
   cursor: pointer;
   position: relative;
   transition: all var(--duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: var(--shadow-ambient);
 }
 
 .fav-card:hover {
   background: var(--color-surface-container-high);
-  box-shadow: var(--shadow-xl), var(--shadow-glow-accent);
-  transform: translateY(-4px);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -597,10 +582,9 @@
 }
 
 .tag-chip-active {
-  background: var(--gradient-primary);
+  background: var(--color-primary);
   color: white;
   border-color: transparent;
-  box-shadow: var(--shadow-glow-primary);
 }
 
 .tag-chip-active:hover {

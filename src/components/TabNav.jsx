@@ -54,6 +54,7 @@ const TabIcons = {
  * - Smooth transitions and active state indicators
  */
 export default function TabNav({ tabs, current, onChange }) {
+  if (!tabs || !Array.isArray(tabs)) return null
   return (
     <>
       {/* ========== MOBILE NAV (< 640px) ========== */}

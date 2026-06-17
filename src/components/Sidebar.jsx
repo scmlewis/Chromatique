@@ -62,7 +62,7 @@ export default function Sidebar({ currentTool, onToolChange, isCollapsed, onTogg
       <div className="p-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--color-primary)] via-[var(--color-primary-container)] to-[var(--color-primary)] flex-shrink-0" />
-          {(!isCollapsed || isOpenMobile) && <span className="font-bold text-xl tracking-tight text-white" style={{ fontFamily: "var(--font-family-serif-display)" }}>Chromatique</span>}
+          {(!isCollapsed || isOpenMobile) && <span className="font-bold text-xl tracking-tight text-white" style={{ fontFamily: "var(--font-family-ui)" }}>Chromatique</span>}
         </div>
         
         {/* Mobile Close Button */}
@@ -83,15 +83,14 @@ export default function Sidebar({ currentTool, onToolChange, isCollapsed, onTogg
             onClick={() => onToolChange(tool.id)}
             className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group ${
               currentTool === tool.id 
-                ? 'bg-[var(--color-surface-container)] text-[var(--color-primary)] border border-[var(--color-border-ghost)] shadow-lg shadow-[var(--color-primary)]/5' 
-                : 'text-[var(--color-primary)]/60 border border-transparent hover:bg-[var(--color-primary)]/10 hover:text-[var(--color-primary)]/80'
+                ? 'bg-[var(--color-surface-container)] text-[var(--color-primary)]' 
+                : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-container-high)] hover:text-[var(--color-text-primary)]'
             }`}
           >
-            <span className={`${currentTool === tool.id ? 'text-[var(--color-primary)]' : 'text-[var(--color-primary)]/70 group-hover:text-[var(--color-primary)]/80'}`}>
+            <span className={`${currentTool === tool.id ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-secondary)] group-hover:text-[var(--color-text-primary)]'}`}>
               {tool.icon}
             </span>
             {(!isCollapsed || isOpenMobile) && <span className="font-medium truncate">{tool.label}</span>}
-            {currentTool === tool.id && (!isCollapsed || isOpenMobile) && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[var(--color-primary)] shadow-[0_0_8px_var(--shadow-glow-primary)]" />}
           </button>
         ))}
       </nav>
@@ -100,9 +99,9 @@ export default function Sidebar({ currentTool, onToolChange, isCollapsed, onTogg
       <div className="hidden lg:block p-3 border-t border-[var(--color-border-subtle)]">
         <button 
           onClick={onToggleCollapse}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl bg-[var(--color-surface-container)] border border-[var(--color-border-ghost)] text-[var(--color-primary)] shadow-lg shadow-black/10 hover:bg-[var(--color-surface-container-high)] hover:border-[var(--color-border-ghost-hover)] hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-[var(--color-surface-container)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-container-high)] hover:text-[var(--color-text-primary)] transition-all duration-200"
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-primary)]/15 text-[var(--color-primary)] shadow-inner">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--color-surface-container-high)] text-[var(--color-text-secondary)]">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`transition-transform duration-300 ${isCollapsed ? 'rotate-180' : ''}`}>
               <polyline points="11 17 6 12 11 7"/>
               <polyline points="18 17 13 12 18 7"/>

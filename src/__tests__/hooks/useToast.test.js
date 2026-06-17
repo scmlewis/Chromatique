@@ -2,6 +2,18 @@ import { renderHook, act, waitFor } from '@testing-library/react'
 import { useToast } from '../../hooks/useToast'
 import { TOAST_DURATION } from '../../constants'
 
+// Suppress act() warnings from fake timer state updates
+const originalError = console.error
+beforeAll(() => {
+  console.error = jest.fn((...args) => {
+    if (typeof args[0] === 'string' && args[0].includes('Not wrapped in act')) return
+    originalError(...args)
+  })
+})
+afterAll(() => {
+  console.error = originalError
+})
+
 describe('useToast Hook', () => {
   beforeEach(() => {
     jest.clearAllTimers()

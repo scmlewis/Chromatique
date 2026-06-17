@@ -5,6 +5,7 @@ import { getClosestColorName, getSimilarityDescription } from '../utils/colorNam
 
 export default function ColorInfo({ color, h, s, l, primary, showCMYK = true, showDetails = true, settings = {}, onMoveUp, onMoveDown }) {
   const [copied, setCopied] = useState(null)
+  if (!color || typeof color !== 'string') return null
   const hsl = (h !== undefined && s !== undefined && l !== undefined) ? { h, s, l } : hexToHsl(color)
   const rgb = rgbString(color)
   const cmyk = rgbToCmykFromHex(color)
