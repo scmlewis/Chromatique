@@ -278,12 +278,12 @@ export default function App() {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
-        <header className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 bg-[var(--color-surface-dim)] z-30 sticky top-0 h-16 sm:h-20 border-b border-[var(--color-border-ghost)]">
+        <header className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 bg-[var(--color-surface-base)] z-30 sticky top-0 h-16 sm:h-20 border-b border-[var(--color-border-ghost)]">
           <div className="flex items-center gap-3">
              {/* Mobile Menu Toggle */}
              <button 
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="lg:hidden p-2 -ml-2 text-[var(--color-primary)] hover:text-[var(--color-on-primary)] hover:bg-[var(--color-surface-container-high)] rounded-lg transition-colors"
+                className="lg:hidden icon-btn -ml-2"
                 aria-label="Open menu"
              >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -306,7 +306,7 @@ export default function App() {
               </svg>
             </button>
             <button 
-              className="btn-icon p-2 hover:bg-[var(--color-surface-container-high)] rounded-lg transition-colors" 
+              className="icon-btn" 
               onClick={() => setShowSettings(true)}
               aria-label="Settings"
               title="Settings"
@@ -317,7 +317,7 @@ export default function App() {
               </svg>
             </button>
             <button 
-              className="btn-icon p-2 hover:bg-[var(--color-surface-container-high)] rounded-lg transition-colors" 
+              className="icon-btn" 
               onClick={() => setShowHelp(true)}
               aria-label="Help"
               title="Help"

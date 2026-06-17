@@ -13,13 +13,13 @@ export default function HelpModal({ onClose, settings = {}, setSettings }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={onClose} />
-      <div className="relative z-60 w-full max-w-3xl glass rounded-2xl shadow-2xl text-[var(--color-primary)]/80 border border-white/10 overflow-hidden">
-        <div className="p-6 border-b border-white/10 bg-gradient-to-r from-[var(--color-primary)]/10 to-[var(--color-primary)]/5">
+      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
+      <div className="relative z-60 w-full max-w-3xl rounded-2xl shadow-2xl border border-[var(--color-border-ghost)] overflow-hidden" style={{ background: 'var(--color-surface-raised)' }}>
+        <div className="p-6 border-b border-[var(--color-border-ghost)]">
           <div className="flex items-start justify-between gap-4">
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-container)] bg-clip-text text-transparent">Help & Guide</h2>
+            <h2 className="text-3xl font-bold" style={{ color: 'var(--color-text-primary)' }}>Help & Guide</h2>
             <div className="flex items-center gap-3">
-              <label className="text-sm text-[var(--color-primary)]/80 flex items-center gap-2 cursor-pointer hover:text-[var(--color-primary)] transition-colors">
+              <label className="text-sm flex items-center gap-2 cursor-pointer transition-colors" style={{ color: 'var(--color-text-secondary)' }}>
                 <input 
                   type="checkbox" 
                   checked={dontShow} 
@@ -33,39 +33,39 @@ export default function HelpModal({ onClose, settings = {}, setSettings }) {
           </div>
         </div>
 
-        <div className="p-6 max-h-[70vh] overflow-y-auto space-y-6 text-sm text-[var(--color-primary)]/80">
-          <section className="bg-white/5 rounded-lg p-4 border border-white/10">
-            <h3 className="font-semibold text-lg text-[var(--color-primary)] mb-2">Overview</h3>
+        <div className="p-6 max-h-[70vh] overflow-y-auto space-y-6 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+          <section className="rounded-lg p-4 border border-[var(--color-border-ghost)]" style={{ background: 'var(--color-surface-overlay)' }}>
+            <h3 className="font-semibold text-lg mb-2" style={{ color: 'var(--color-text-primary)' }}>Overview</h3>
             <p className="mt-1 leading-relaxed">Chromatique helps you generate color palettes (HSL-based schemes and random swatches), lock colors, copy color values, save favorites, and export palettes for use in code or design tools.</p>
           </section>
 
-          <section className="bg-white/5 rounded-lg p-4 border border-white/10">
-            <h3 className="font-semibold text-lg text-[var(--color-primary)] mb-2">HSL & Generation</h3>
+          <section className="rounded-lg p-4 border border-[var(--color-border-ghost)]" style={{ background: 'var(--color-surface-overlay)' }}>
+            <h3 className="font-semibold text-lg mb-2" style={{ color: 'var(--color-text-primary)' }}>HSL & Generation</h3>
             <p className="mt-1 leading-relaxed">Use the HSL panel to adjust hue, saturation, and lightness rules and to choose scheme presets (analogous, complementary, triadic, etc.). The "Generate" action creates new colors according to the current settings. Locked swatches remain unchanged when generating.</p>
           </section>
 
-          <section className="bg-white/5 rounded-lg p-4 border border-white/10">
-            <h3 className="font-semibold text-lg text-[var(--color-primary)] mb-2">Palette / Swatches</h3>
+          <section className="rounded-lg p-4 border border-[var(--color-border-ghost)]" style={{ background: 'var(--color-surface-overlay)' }}>
+            <h3 className="font-semibold text-lg mb-2" style={{ color: 'var(--color-text-primary)' }}>Palette / Swatches</h3>
             <p className="mt-1 leading-relaxed">Click a swatch to copy the color (HEX / RGB / HSL depending on your settings). Click the lock icon to prevent that color from changing during generation. Use the small handle or drag to reorder in some views.</p>
           </section>
 
-          <section className="bg-white/5 rounded-lg p-4 border border-white/10">
-            <h3 className="font-semibold text-lg text-[var(--color-primary)] mb-2">Favorites & Exports</h3>
+          <section className="rounded-lg p-4 border border-[var(--color-border-ghost)]" style={{ background: 'var(--color-surface-overlay)' }}>
+            <h3 className="font-semibold text-lg mb-2" style={{ color: 'var(--color-text-primary)' }}>Favorites & Exports</h3>
             <p className="mt-1 leading-relaxed">Save palettes to your Favorites for quick reuse. From Favorites you can export a palette as JSON, CSS variables, SCSS map, Tailwind snippet, or download a PNG swatch image. Exports are done client-side and saved to your Downloads folder.</p>
           </section>
 
-          <section className="bg-white/5 rounded-lg p-4 border border-white/10">
-            <h3 className="font-semibold text-lg text-[var(--color-primary)] mb-2">Image Extraction</h3>
+          <section className="rounded-lg p-4 border border-[var(--color-border-ghost)]" style={{ background: 'var(--color-surface-overlay)' }}>
+            <h3 className="font-semibold text-lg mb-2" style={{ color: 'var(--color-text-primary)' }}>Image Extraction</h3>
             <p className="mt-1 leading-relaxed">Use the Image tab to upload an image and extract dominant colors. For best results, use photos without heavy compression. Remote images may be blocked by CORS and can't be read by the browser; use local files instead.</p>
           </section>
 
-          <section className="bg-white/5 rounded-lg p-4 border border-white/10">
-            <h3 className="font-semibold text-lg text-[var(--color-primary)] mb-2">Accessibility & WCAG</h3>
+          <section className="rounded-lg p-4 border border-[var(--color-border-ghost)]" style={{ background: 'var(--color-surface-overlay)' }}>
+            <h3 className="font-semibold text-lg mb-2" style={{ color: 'var(--color-text-primary)' }}>Accessibility & WCAG</h3>
             <p className="mt-1 leading-relaxed">Each swatch shows contrast information so you can evaluate foreground/background pairings. Aim for contrast ratios of at least 4.5:1 for normal text and 3:1 for large text. Use the Settings to enable any accessibility helpers.</p>
           </section>
 
-          <section className="bg-white/5 rounded-lg p-4 border border-white/10">
-            <h3 className="font-semibold text-lg text-[var(--color-primary)] mb-2">Tips & Shortcuts</h3>
+          <section className="rounded-lg p-4 border border-[var(--color-border-ghost)]" style={{ background: 'var(--color-surface-overlay)' }}>
+            <h3 className="font-semibold text-lg mb-2" style={{ color: 'var(--color-text-primary)' }}>Tips & Shortcuts</h3>
             <ul className="list-disc ml-5 mt-2 space-y-1 leading-relaxed">
               <li>Click a color to copy. Use Settings to change the default copy format (HEX / RGB / HSL).</li>
               <li>Use the Import feature to load palettes saved as JSON (an array of color strings or an object with a `colors` array).</li>
@@ -73,8 +73,8 @@ export default function HelpModal({ onClose, settings = {}, setSettings }) {
             </ul>
           </section>
 
-          <section className="bg-white/5 rounded-lg p-4 border border-white/10">
-            <h3 className="font-semibold text-lg text-[var(--color-primary)] mb-2">Troubleshooting</h3>
+          <section className="rounded-lg p-4 border border-[var(--color-border-ghost)]" style={{ background: 'var(--color-surface-overlay)' }}>
+            <h3 className="font-semibold text-lg mb-2" style={{ color: 'var(--color-text-primary)' }}>Troubleshooting</h3>
             <p className="mt-1 leading-relaxed">If image extraction doesn't work, try a smaller image or reduce the number of colors to extract. If the app behaves unexpectedly, try clearing local storage for the app keys (search for `palette:` keys) or reloading the page.</p>
           </section>
         </div>

@@ -32,7 +32,7 @@ export default function HarmonyPanel({ baseColor, onApplyPalette, onSaveFavorite
             className={`h-10 md:h-9 w-full min-w-0 text-center px-2 md:px-3 py-2 rounded-xl transition-all text-[9px] sm:text-[10px] md:text-[11px] leading-none whitespace-nowrap ${
               type === t.id 
                 ? 'bg-[var(--color-primary)] text-[var(--color-surface-dim)] shadow-lg shadow-[var(--color-primary)]/25 border border-transparent' 
-                : 'bg-transparent text-[var(--color-primary)] border border-transparent hover:bg-[var(--color-surface-container-high)] hover:text-[var(--color-primary)]/90'
+                : 'bg-transparent text-[var(--color-text-accent)] border border-transparent hover:bg-[var(--color-surface-container-high)] hover:text-[var(--color-text-accent-muted)]'
             }`}
           >
             <div className="font-bold uppercase tracking-wider">{t.label}</div>
@@ -64,7 +64,7 @@ export default function HarmonyPanel({ baseColor, onApplyPalette, onSaveFavorite
                 />
                 <button 
                   onClick={() => onCopyHex(color)}
-                  className="p-2 md:p-1.5 text-[var(--color-primary)] hover:text-white hover:bg-[var(--color-surface-container-high)] rounded-lg transition-colors border border-transparent hover:border-[var(--color-primary)]/50 flex-shrink-0"
+                  className="p-2 md:p-1.5 text-[var(--color-text-accent)] hover:text-white hover:bg-[var(--color-surface-container-high)] rounded-lg transition-colors border border-transparent hover:border-[var(--color-border-accent)] flex-shrink-0"
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                 </button>
@@ -73,13 +73,13 @@ export default function HarmonyPanel({ baseColor, onApplyPalette, onSaveFavorite
           </div>
 
           {/* Subtler Tip box moved here */}
-           <div className="p-4 bg-[var(--color-primary)]/15 rounded-2xl flex gap-3 items-start shadow-md">
-             <div className="text-[var(--color-primary)] mt-0.5">
+            <div className="p-4 rounded-2xl flex gap-3 items-start shadow-md" style={{ background: 'var(--color-surface-accent-strong)' }}>
+              <div className="text-[var(--color-text-accent)] mt-0.5">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
              </div>
              <div>
-                <h4 className="font-bold text-[var(--color-primary)]/80 text-[11px] uppercase tracking-wider mb-1">Tip</h4>
-                <p className="text-[11px] text-[var(--color-primary)]/70 leading-normal">
+                <h4 className="font-bold text-[11px] uppercase tracking-wider mb-1" style={{ color: 'var(--color-text-primary)' }}>Tip</h4>
+                <p className="text-[11px] text-[var(--color-text-accent-faint)] leading-normal">
                   {type === 'complementary' && 'Strong contrast for CTAs.'}
                   {type === 'analogous' && 'Natural and pleasing schemes.'}
                   {type === 'triadic' && 'Vibrant and balanced palettes.'}
@@ -95,7 +95,7 @@ export default function HarmonyPanel({ baseColor, onApplyPalette, onSaveFavorite
            <div>
               <div className="flex items-center justify-between mb-6">
                  <h3 className="text-lg font-bold text-white tracking-tight">Generated Results</h3>
-                 <span className="px-2.5 py-1 bg-[var(--color-primary)]/20 rounded-lg text-[9px] font-bold text-[var(--color-primary)] uppercase tracking-widest">
+                  <span className="px-2.5 py-1 rounded-lg text-[9px] font-bold text-[var(--color-text-accent)] uppercase tracking-widest" style={{ background: 'var(--color-surface-accent)' }}>
                     {type.replace('-', ' ')}
                  </span>
               </div>
@@ -109,24 +109,24 @@ export default function HarmonyPanel({ baseColor, onApplyPalette, onSaveFavorite
                       onClick={() => onCopyHex(h)}
                     />
                     <div className="mt-2 text-center">
-                      <span className="text-[10px] font-mono font-bold text-[var(--color-primary)] group-hover:text-[var(--color-primary)]/70 transition-colors uppercase tracking-tight">{h}</span>
+                       <span className="text-[10px] font-mono font-bold text-[var(--color-text-accent)] group-hover:text-[var(--color-text-accent-faint)] transition-colors uppercase tracking-tight">{h}</span>
                     </div>
                   </div>
                 ))}
               </div>
            </div>
 
-           <div className="mt-8 flex flex-wrap gap-3 pt-6 border-t border-[var(--color-primary)]/15">
-             <button 
-               onClick={() => onApplyPalette(harmonies)}
-               className="btn btn-primary text-xs active:scale-95"
-             >
+           <div className="mt-8 flex flex-wrap gap-3 pt-6 border-t border-[var(--color-border-primary)]">
+              <button 
+                onClick={() => onApplyPalette(harmonies)}
+                className="btn btn-primary"
+              >
                Apply to Palette
              </button>
-             <button 
-               onClick={() => onSaveFavorite(harmonies, `${type} harmony from ${color}`)}
-               className="btn bg-white/5 hover:bg-white/10 text-[var(--color-primary)]/80 border border-white/10 px-6 py-2 rounded-xl text-xs font-bold transition-all"
-             >
+              <button 
+                onClick={() => onSaveFavorite(harmonies, `${type} harmony from ${color}`)}
+                className="btn btn-outline"
+              >
                Save as Favorite
              </button>
            </div>

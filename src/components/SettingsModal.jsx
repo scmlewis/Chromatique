@@ -16,14 +16,14 @@ export default function SettingsModal({ isOpen, onClose, settings, onSettingsCha
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md animate-fade-in p-4" onClick={onClose}>
-      <div className="glass rounded-2xl shadow-2xl max-w-lg w-full mx-4 animate-pop overflow-hidden border border-white/10" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 animate-fade-in p-4" onClick={onClose}>
+      <div className="rounded-2xl shadow-2xl max-w-lg w-full mx-4 animate-pop overflow-hidden border border-[var(--color-border-ghost)]" style={{ background: 'var(--color-surface-raised)' }} onClick={(e) => e.stopPropagation()}>
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-white/10 bg-gradient-to-r from-[var(--color-primary)]/10 to-[var(--color-primary)]/5">
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-container)] bg-clip-text text-transparent">Settings</h2>
+        <div className="flex items-center justify-between p-6 border-b border-[var(--color-border-ghost)]">
+          <h2 className="text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>Settings</h2>
           <button
             onClick={onClose}
-            className="p-2 text-[var(--color-primary)] hover:text-[var(--color-primary)]/80 hover:bg-white/10 rounded-lg transition-all duration-200 cursor-pointer"
+            className="icon-btn"
             aria-label="Close settings"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -37,14 +37,13 @@ export default function SettingsModal({ isOpen, onClose, settings, onSettingsCha
           {/* CMYK Display Toggle */}
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-[var(--color-primary)]/90 font-medium">Show CMYK Values</h3>
-              <p className="text-[var(--color-primary)]/70 text-sm mt-1">Display CMYK color format in color info panels</p>
+              <h3 className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Show CMYK Values</h3>
+              <p className="text-sm mt-1" style={{ color: 'var(--color-text-secondary)' }}>Display CMYK color format in color info panels</p>
             </div>
             <button
               onClick={handleToggleCMYK}
-              className={`relative inline-flex h-7 w-12 items-center rounded-full transition-all duration-200 cursor-pointer shadow-inner ${
-                settings.showCMYK ? 'bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-container)]' : 'bg-[var(--color-primary)]/30'
-              }`}
+              className="relative inline-flex h-7 w-12 items-center rounded-full transition-all duration-200 cursor-pointer"
+              style={{ background: settings.showCMYK ? 'var(--gradient-primary)' : 'var(--color-surface-highlight)' }}
               role="switch"
               aria-checked={settings.showCMYK}
             >
@@ -58,18 +57,14 @@ export default function SettingsModal({ isOpen, onClose, settings, onSettingsCha
 
           {/* Default Copy Format */}
           <div>
-            <h3 className="text-[var(--color-primary)]/90 font-medium mb-3">Default Copy Format</h3>
-            <p className="text-[var(--color-primary)]/70 text-sm mb-3">Choose the format used when clicking color swatches</p>
+            <h3 className="font-medium mb-3" style={{ color: 'var(--color-text-primary)' }}>Default Copy Format</h3>
+            <p className="text-sm mb-3" style={{ color: 'var(--color-text-secondary)' }}>Choose the format used when clicking color swatches</p>
             <div className="flex gap-3">
               {['hex', 'rgb', 'hsl'].map((format) => (
                 <button
                   key={format}
                   onClick={() => handleCopyFormatChange(format)}
-                  className={`px-5 py-2.5 rounded-lg font-semibold transition-all duration-200 cursor-pointer ${
-                    settings.defaultCopy === format
-                      ? 'bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-container)] text-white shadow-lg transform scale-105'
-                      : 'bg-[var(--color-primary)]/20 text-[var(--color-primary)] hover:bg-[var(--color-primary)]/30 hover:scale-105'
-                  }`}
+                  className={`btn ${settings.defaultCopy === format ? 'btn-primary' : 'btn-outline'}`}
                 >
                   {format.toUpperCase()}
                 </button>
@@ -80,14 +75,13 @@ export default function SettingsModal({ isOpen, onClose, settings, onSettingsCha
           {/* Reduced Motion */}
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-[var(--color-primary)]/90 font-medium">Reduce Motion</h3>
-              <p className="text-[var(--color-primary)]/70 text-sm mt-1">Minimize animations for better accessibility</p>
+              <h3 className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Reduce Motion</h3>
+              <p className="text-sm mt-1" style={{ color: 'var(--color-text-secondary)' }}>Minimize animations for better accessibility</p>
             </div>
             <button
               onClick={handleToggleReducedMotion}
-              className={`relative inline-flex h-7 w-12 items-center rounded-full transition-all duration-200 cursor-pointer shadow-inner ${
-                settings.reducedMotion ? 'bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-container)]' : 'bg-[var(--color-primary)]/30'
-              }`}
+              className="relative inline-flex h-7 w-12 items-center rounded-full transition-all duration-200 cursor-pointer"
+              style={{ background: settings.reducedMotion ? 'var(--gradient-primary)' : 'var(--color-surface-highlight)' }}
               role="switch"
               aria-checked={settings.reducedMotion}
             >
@@ -101,10 +95,10 @@ export default function SettingsModal({ isOpen, onClose, settings, onSettingsCha
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end p-6 border-t border-[var(--color-primary)]/20">
+        <div className="flex justify-end p-6 border-t border-[var(--color-border-ghost)]">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/80 text-white rounded-md transition-colors"
+            className="btn btn-primary"
           >
             Done
           </button>

@@ -1,143 +1,149 @@
 /* ============================================================================
-   DESIGN TOKENS - Semantic Design System Variables
+   DESIGN TOKENS - Semantic Design System
    ============================================================================
-   All colors, spacing, typography, and effects are defined here.
-   Reference these variables throughout the codebase instead of hardcoded values.
+   Dark-only color tool. One accent, no glow shadows, clean elevation.
    ============================================================================ */
+
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/GeistMono-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+}
 
 :root {
   /* --------
-     COLORS - Dark Theme (Primary)
+     PRIMARY - Burnt Sienna
      -------- */
-  
-  /* Primary Color - Midnight Gallery Burnt Sienna */
   --color-primary: #ffb4a4;
   --color-primary-container: #a24936;
-  --color-on-primary: #ffffff;
+  --color-on-primary: #1a1110;
   --color-on-primary-container: #ffffff;
-  
-  /* Supporting Colors - Neutral Warm Palette */
-  --color-surface-variant: #55423e;
-  --color-on-surface-variant: #d9ccc8;
-  --color-outline: #9a8b89;
-  --color-outline-variant: #55423e;
-  
-  /* Gradient Overlays - Midnight Gallery */
-  --gradient-primary: linear-gradient(135deg, #ffb4a4 0%, #a24936 100%);
-  --gradient-hero: linear-gradient(135deg, rgba(255, 180, 164, 0.15) 0%, rgba(162, 73, 54, 0.1) 100%);
-  --gradient-soft: linear-gradient(180deg, rgba(255, 180, 164, 0.05) 0%, rgba(162, 73, 54, 0.08) 100%);
-  
-  /* Surface Colors - Midnight Gallery Tonal Depth */
-  --color-surface-dim: #1a1110;  /* Darkest base */
-  --color-surface: #1a1110;       /* Main canvas */
-  --color-surface-bg: #1a1110;    /* App background */
-  --color-surface-low: #231918;   /* Secondary content */
+
+  /* --------
+     SURFACES - Warm dark scale (5 levels)
+     -------- */
+  --color-surface-base: #1a1110;
+  --color-surface-raised: #211a18;
+  --color-surface-overlay: #2a211f;
+  --color-surface-elevated: #352c2a;
+  --color-surface-highlight: #443836;
+
+  /* Surface accent (subtle accent tint for backgrounds) */
+  --color-surface-accent: rgba(255, 180, 164, 0.10);
+  --color-surface-accent-strong: rgba(255, 180, 164, 0.15);
+
+  /* Aliases for backward compat */
+  --color-surface-dim: #1a1110;
+  --color-surface: #1a1110;
+  --color-surface-bg: #1a1110;
+  --color-surface-low: #211a18;
   --color-surface-container-lowest: #1a1110;
-  --color-surface-container-low: #231918;
-  --color-surface-container: #271d1b;
-  --color-surface-container-high: #3d3230;
-  --color-surface-container-highest: #3d3230;
-  --color-surface-glass: rgba(26, 17, 16, 0.6);  /* For glassmorphism with 20px blur */
-  --color-surface-overlay: rgba(26, 17, 16, 0.8);
+  --color-surface-container-low: #211a18;
+  --color-surface-container: #2a211f;
+  --color-surface-container-high: #352c2a;
+  --color-surface-container-highest: #443836;
+  --color-surface-overlay: rgba(26, 17, 16, 0.85);
   --color-on-surface: #ede0dc;
-  --color-on-surface-variant: #d9ccc8;
-  
-  /* Border & Dividers - Ghost Borders (No-Line Rule) */
-  --color-border-ghost: rgba(85, 66, 62, 0.15); /* outline-variant at 15% opacity */
-  --color-border-ghost-hover: rgba(85, 66, 62, 0.3); /* 30% on hover/focus */
-  --color-border-subtle: rgba(255, 255, 255, 0.04);
-  
-  /* Text Colors */
-  --color-text-primary: #f8fafc;
-  --color-text-secondary: #9a8b8a;
-  --color-text-tertiary: #64748b;
-  --color-text-inverse: #ffffff;
-  --color-text-subtle: #475569;
-  
-  /* State Colors */
-  --color-success: #10b981;
+  --color-on-surface-variant: #c4b5b3;
+
+  /* --------
+     TEXT
+     -------- */
+  --color-text-primary: #f0ebe9;
+  --color-text-secondary: #a09493;
+  --color-text-tertiary: #6e6261;
+  --color-text-inverse: #1a1110;
+  --color-text-subtle: #4a3f3e;
+  --color-text-muted: #6e6261;
+  --color-text-disabled: #3d3332;
+
+  /* Accent text (burnt sienna variants) */
+  --color-text-accent: #ffb4a4;
+  --color-text-accent-muted: rgba(255, 180, 164, 0.75);
+  --color-text-accent-faint: rgba(255, 180, 164, 0.5);
+
+  /* --------
+     BORDERS
+     -------- */
+  --color-border-ghost: rgba(255, 255, 255, 0.06);
+  --color-border-ghost-hover: rgba(255, 255, 255, 0.12);
+  --color-border-subtle: rgba(255, 255, 255, 0.03);
+  --color-border-primary: rgba(255, 180, 164, 0.2);
+  --color-border-accent: rgba(255, 180, 164, 0.3);
+
+  /* --------
+     STATE
+     -------- */
+  --color-success: #34d399;
   --color-success-dark: #059669;
-  --color-error: #ef4444;
-  --color-warning: #f59e0b;
-   --color-info: #ea8c55;
-  
-  /* Extended Text Hierarchy - Muted & Tertiary Tiers */
-  --color-text-muted: #667074;
-  --color-text-disabled: #475569;
-  --color-text-on-gold: #1a1410;
-  --color-text-on-copper: #1a1410;
-  
-  /* Input State Colors */
+  --color-error: #f87171;
+  --color-warning: #fbbf24;
+  --color-info: #fb923c;
+
+  /* --------
+     INPUTS
+     -------- */
+  --color-input-bg: #211a18;
+  --color-input-bg-focus: #2a211f;
   --color-input-border: transparent;
   --color-input-border-focus: #ffb4a4;
-  --color-input-border-error: rgba(239, 68, 68, 0.4);
-  --color-input-bg: var(--color-surface-container-low);
-  --color-input-bg-focus: var(--color-surface-container);
-  --color-input-bg-error: rgba(239, 68, 68, 0.05);
-  --color-input-bg-disabled: rgba(26, 17, 16, 0.5);
-  
-  /* Interactive State Backgrounds */
-  --color-interactive-hover: #3d3230;  /* surface-container-high */
-  --color-interactive-active: #3d3230;
+
+  /* --------
+     INTERACTIVE
+     -------- */
+  --color-interactive-hover: #352c2a;
+  --color-interactive-active: #443836;
   --color-interactive-disabled: rgba(255, 255, 255, 0.04);
-  
-  /* Selection & Checked States */
-  --color-selection-bg: rgba(255, 180, 164, 0.15);
-  --color-selection-border: rgba(255, 180, 164, 0.4);
-  --color-checked-bg: #ffb4a4;
-  --color-checked-border: #ffb4a4;
-  
-  /* Error State Variants */
-  --color-error-subtle: rgba(239, 68, 68, 0.1);
-  --color-error-muted: rgba(239, 68, 68, 0.2);
-  
-  /* Semantic Overlays for Glass Effect & Shadows */
-  --glass-blur: 20px;
-  --glass-opacity: 0.6;
-  --glass-saturate: 1.5;
-  --color-glass-bg: rgba(26, 17, 16, 0.6);
-  --color-glass-border: rgba(85, 66, 62, 0.15);
-  --color-glass-focus: rgba(255, 180, 164, 0.15);
-  /* Ambient Shadow - Tinted with background hue, 8% opacity */
-  --shadow-ambient: 0 0 40px rgba(20, 12, 11, 0.08);
-  
+
+  /* --------
+     SELECTION
+     -------- */
+  --color-selection-bg: rgba(255, 180, 164, 0.12);
+  --color-selection-border: rgba(255, 180, 164, 0.35);
+
+  /* --------
+     GRADIENTS
+     -------- */
+  --gradient-primary: linear-gradient(135deg, #ffb4a4 0%, #a24936 100%);
+
   /* --------
      TYPOGRAPHY
      -------- */
-  
-  --font-family-ui: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  --font-family-mono: 'JetBrains Mono', 'Courier New', monospace;
-  --font-family-serif-primary: 'Newsreader', Georgia, serif;  /* Body serif - editorial */
-  --font-family-serif-display: 'Newsreader', Georgia, serif;  /* Display headlines */
-  
-  /* Letter Spacing */
-  --letter-spacing-tight: -0.02em;    /* Tight for headlines */
-  --letter-spacing-normal: 0;          /* Default */
-  --letter-spacing-relaxed: 0.1rem;   /* Architectural feel for tertiary text */
-  
+  --font-family-ui: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-family-mono: 'Geist Mono', 'SF Mono', 'Fira Code', monospace;
+
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
-  --font-weight-extrabold: 800;
-  
-  --font-size-xs: 12px;
-  --font-size-sm: 14px;
-  --font-size-base: 16px;
-  --font-size-lg: 18px;
+
+  --font-size-xs: 11px;
+  --font-size-sm: 13px;
+  --font-size-base: 15px;
+  --font-size-lg: 17px;
   --font-size-xl: 20px;
   --font-size-2xl: 24px;
-  --font-size-3xl: 32px;
-  
-  --line-height-tight: 1.2;
+  --font-size-3xl: 30px;
+
+  --line-height-tight: 1.25;
   --line-height-normal: 1.5;
-  --line-height-relaxed: 1.75;
-  --line-height-serif: 1.6;
-  
+  --line-height-relaxed: 1.7;
+
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.06em;
+
   /* --------
-     SPACING SCALE (4px base)
+     SPACING (4px base)
      -------- */
-  
   --space-0: 0;
   --space-1: 4px;
   --space-2: 8px;
@@ -149,113 +155,62 @@
   --space-10: 40px;
   --space-12: 48px;
   --space-16: 64px;
-  
+
   /* --------
-     SHADOWS
+     SHADOWS - Subtle, no glow
      -------- */
-  
-  --shadow-xs: 0 2px 4px rgba(20, 12, 11, 0.1);
-  --shadow-sm: 0 4px 8px rgba(20, 12, 11, 0.15);
-  --shadow-md: 0 4px 12px rgba(20, 12, 11, 0.2);
-  --shadow-lg: 0 8px 24px rgba(20, 12, 11, 0.2);
-  --shadow-xl: 0 12px 32px rgba(20, 12, 11, 0.25);
-  --shadow-2xl: 0 18px 40px rgba(20, 12, 11, 0.5);
-  --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  
-  /* Focus Ring Shadows - Updated to burnt sienna */
-  --shadow-focus-ring: 0 0 0 3px rgba(26, 17, 16, 0.8), 0 0 0 5px rgba(255, 180, 164, 0.4);
-  --shadow-focus-ring-soft: 0 0 0 2px rgba(255, 180, 164, 0.3);
-  --outline-focus: 2px solid rgba(255, 180, 164, 0.6);
-  
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.35);
+  --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.4);
+  --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+  --shadow-focus-ring: 0 0 0 2px var(--color-surface-base), 0 0 0 4px rgba(255, 180, 164, 0.3);
+  --outline-focus: 2px solid rgba(255, 180, 164, 0.5);
+
+  /* --------
+     ELEVATION (surface layering)
+     -------- */
+  --shadow-ambient: 0 0 0 1px rgba(255, 255, 255, 0.03);
+
   /* --------
      BORDER RADIUS
      -------- */
-  
   --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-xl: 16px;
   --radius-full: 9999px;
-  
+
   /* --------
-     TRANSITIONS & ANIMATIONS
+     TRANSITIONS
      -------- */
-  
-  --duration-fast: 150ms;
-  --duration-normal: 300ms;
-  --duration-slow: 500ms;
-  --duration-slower: 800ms;
-  
-  --easing-ease-out: cubic-bezier(0.4, 0, 0.2, 1);
-  --easing-ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --duration-fast: 120ms;
+  --duration-normal: 200ms;
+  --duration-slow: 350ms;
+
+  --easing-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --easing-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
-  --easing-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-  
-  /* State Transition Shorthand */
-  --transition-color: color var(--duration-normal) var(--easing-ease-out);
-  --transition-bg: background-color var(--duration-normal) var(--easing-ease-out);
-  --transition-border: border-color var(--duration-normal) var(--easing-ease-out);
-  --transition-shadow: box-shadow var(--duration-normal) var(--easing-ease-out);
-  --transition-all: all var(--duration-normal) var(--easing-ease-out);
-  
+
   /* --------
-     Z-INDEX SCALE
+     Z-INDEX
      -------- */
-  
   --z-base: 0;
   --z-dropdown: 100;
   --z-modal: 200;
   --z-toast: 300;
   --z-tooltip: 400;
-  
-  /* --------
-     COMPONENT-SPECIFIC STATE TOKENS
-     -------- */
-  
-  /* Toggle/Switch States */
-  --color-toggle-off-bg: rgba(255, 255, 255, 0.08);
-  --color-toggle-off-dot: rgba(255, 255, 255, 0.4);
-  --color-toggle-on-bg: #ffb4a4;
-  --color-toggle-on-dot: #ffffff;
-  --color-toggle-disabled-bg: rgba(255, 255, 255, 0.04);
-  
-  /* Link States */
-  --color-link-default: #ffb4a4;
-  --color-link-hover: #ffc7b8;
-  --color-link-visited: #a24936;
-  --color-link-active: #ffffff;
-  
-  /* Button Variants */
-  --color-button-primary-bg: #ffb4a4;
-  --color-button-primary-bg-hover: #ffc7b8;
-  --color-button-secondary-bg: rgba(255, 180, 164, 0.1);
-  --color-button-secondary-bg-hover: rgba(255, 180, 164, 0.2);
-  --color-button-tertiary-bg: transparent;
-  --color-button-tertiary-border: rgba(255, 255, 255, 0.1);
-  --color-button-tertiary-border-hover: rgba(255, 180, 164, 0.3);
-  
-  /* Tab States */
-  --color-tab-inactive-text: #9a8b8a;
-  --color-tab-inactive-border: rgba(255, 255, 255, 0.04);
-  --color-tab-active-text: #ffffff;
-  --color-tab-active-border: #ffb4a4;
-  --color-tab-active-bg: rgba(255, 180, 164, 0.08);
-  
+
   /* --------
      TOUCH TARGETS
      -------- */
-  
   --touch-target-mobile: 44px;
-  --touch-target-desktop: 40px;
-  --icon-button-padding-mobile: 12px;
-  --icon-button-padding-desktop: 10px;
+  --touch-target-desktop: 36px;
 }
 
-/* DARK MODE ONLY - Tailor-made aesthetic */
-/* Light mode overrides removed to preserve the premium artistic dark theme */
-
 body {
-  background-color: var(--color-surface-dim);
+  background-color: var(--color-surface-base);
   color: var(--color-text-primary);
   font-family: var(--font-family-ui);
   -webkit-font-smoothing: antialiased;

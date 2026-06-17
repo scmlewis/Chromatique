@@ -157,7 +157,7 @@ export default function PaletteCard({ color, locked, onToggleLock, onCopy, onCol
                 setTimeout(() => setCopiedType(null), 1200);
              } catch(err){}
           }}
-          className="bg-[var(--color-primary)]/20 hover:bg-[var(--color-primary)]/30 text-[var(--color-primary)] text-[10px] font-bold px-2 py-1 rounded-md transition-colors uppercase tracking-tight"
+          className="bg-[var(--color-surface-accent)] hover:bg-[var(--color-surface-accent-strong)] text-[var(--color-text-accent)] text-[10px] font-bold px-2 py-1 rounded-md transition-colors uppercase tracking-tight"
         >
           {copiedType === 'hex' ? 'COPIED!' : 'COPY'}
         </button>
@@ -165,16 +165,16 @@ export default function PaletteCard({ color, locked, onToggleLock, onCopy, onCol
 
       {/* 3. COLOR PICKER PORTAL */}
       {showPicker && createPortal(
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/60 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/60 p-4">
           <div className="w-full max-w-[420px] bg-[var(--color-surface-dim)] border border-white/10 p-4 sm:p-6 rounded-2xl shadow-2xl animate-pop" onClick={e => e.stopPropagation()}>
             <HexColorPicker color={pickerColor} onChange={handlePickerChange} />
-            <div className="mt-4 bg-[var(--color-primary)]/10 p-3 rounded-xl border border-[var(--color-primary)]/20 space-y-3">
+            <div className="mt-4 p-3 rounded-xl border border-[var(--color-border-primary)] space-y-3" style={{ background: 'var(--color-surface-accent)' }}>
                <input
                  type="text"
                  value={pickerInput}
                  onChange={(e) => handlePickerInputChange(e.target.value)}
                  onKeyDown={handleKeyDown}
-                 className="w-full font-mono font-bold text-xl text-[var(--color-primary)]/90 uppercase bg-[var(--color-surface-container-low)] border border-[var(--color-primary)]/30 rounded-lg px-3 py-2 outline-none focus:border-[var(--color-primary)]"
+                  className="w-full font-mono font-bold text-xl uppercase rounded-lg px-3 py-2 outline-none" style={{ color: 'var(--color-text-accent)', background: 'var(--color-surface-container-low)', border: '1px solid var(--color-border-accent)' }}
                  inputMode="text"
                  pattern="^#?[0-9A-Fa-f]{6}$"
                  aria-label="Color hex input"

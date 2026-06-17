@@ -109,7 +109,7 @@ export default function HSLPanel({ onRequestSave, onRequestExport, onCopyHex, se
   return (
     <section className="mb-10">
       {/* ========== CONTROL PANEL ========== */}
-      <div className="surface-glass p-3 md:p-4 mb-4">
+      <div className="panel p-3 md:p-4 mb-4">
         <div className="grid gap-4 md:gap-6">
           {/* Scheme Selection */}
           <div>
@@ -226,7 +226,7 @@ export default function HSLPanel({ onRequestSave, onRequestExport, onCopyHex, se
                     // ignore
                   }
                 }}
-                className="btn btn-secondary"
+                className="btn btn-outline"
                 aria-label="Copy all color codes"
               >
                 {copied ? '✓ Copied' : 'Copy'}
@@ -239,7 +239,7 @@ export default function HSLPanel({ onRequestSave, onRequestExport, onCopyHex, se
                   setSaved(true)
                   setTimeout(() => setSaved(false), 1600)
                 }}
-                className="btn btn-success"
+                className="btn btn-primary"
                 aria-label="Save palette to favorites"
               >
                 {saved ? '✓ Saved' : 'Save'}

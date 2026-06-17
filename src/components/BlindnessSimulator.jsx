@@ -15,7 +15,7 @@ export default function BlindnessSimulator({ palette }) {
   if (!palette || palette.length === 0) {
     return (
       <div className="p-12 text-center bg-[var(--color-surface-container-low)] rounded-3xl">
-        <p className="text-[var(--color-primary)]/70 font-medium">Generate a palette first to simulate vision deficiencies.</p>
+        <p className="text-[var(--color-text-accent-faint)] font-medium">Generate a palette first to simulate vision deficiencies.</p>
       </div>
     )
   }
@@ -47,12 +47,12 @@ export default function BlindnessSimulator({ palette }) {
 
       {/* Info Card */}
       <div className="p-6 bg-[var(--color-surface-container-low)] rounded-2xl flex gap-4 items-center shadow-md">
-        <div className="w-12 h-12 rounded-xl bg-[var(--color-primary)]/20 flex items-center justify-center text-[var(--color-primary)] shrink-0">
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center text-[var(--color-text-accent)] shrink-0" style={{ background: 'var(--color-surface-accent)' }}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
         </div>
         <div>
-          <h4 className="font-bold text-[var(--color-primary)]/90 text-sm mb-1">{activeDeficiency.label} Impact</h4>
-          <p className="text-sm text-[var(--color-primary)]/75 leading-relaxed">{activeDeficiency.impact}</p>
+          <h4 className="font-bold text-sm mb-1" style={{ color: 'var(--color-text-primary)' }}>{activeDeficiency.label} Impact</h4>
+          <p className="text-sm text-[var(--color-text-accent-muted)] leading-relaxed">{activeDeficiency.impact}</p>
         </div>
       </div>
 
@@ -78,7 +78,7 @@ export default function BlindnessSimulator({ palette }) {
         {/* Simulated */}
         <div className="space-y-3">
           <div className="flex items-center justify-between px-2">
-            <span className="text-xs font-bold text-[var(--color-primary)]/80 uppercase tracking-widest italic">{activeDeficiency.label} Simulation</span>
+            <span className="text-xs font-bold text-[var(--color-text-accent-muted)] uppercase tracking-widest italic">{activeDeficiency.label} Simulation</span>
           </div>
           <div className="flex w-full h-32 rounded-3xl overflow-hidden shadow-2xl">
             {simulatedPalette.map((c, i) => (
@@ -87,7 +87,7 @@ export default function BlindnessSimulator({ palette }) {
                 className="flex-1 transition-all duration-500 group relative" 
                 style={{ backgroundColor: c }}
               >
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20 backdrop-blur-[2px]">
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20">
                    <span className="bg-black/60 text-white text-[10px] font-mono px-2 py-1 rounded-full border border-white/10">{c}</span>
                 </div>
               </div>
@@ -104,14 +104,14 @@ export default function BlindnessSimulator({ palette }) {
                <div className="w-8 h-8 rounded-lg" style={{ backgroundColor: c }} />
                <div className="flex flex-col">
                  <span className="text-[10px] font-bold text-[var(--color-primary)] uppercase">Original</span>
-                 <span className="text-xs font-mono text-[var(--color-primary)]/70">{c}</span>
+                  <span className="text-xs font-mono text-[var(--color-text-accent-faint)]">{c}</span>
                </div>
              </div>
              <div className="flex items-center gap-2">
                <div className="w-8 h-8 rounded-lg" style={{ backgroundColor: simulatedPalette[i] }} />
                <div className="flex flex-col">
-                 <span className="text-[10px] font-bold text-[var(--color-primary)]/80 uppercase">Simulated</span>
-                 <span className="text-xs font-mono text-[var(--color-primary)]/70">{simulatedPalette[i]}</span>
+                  <span className="text-[10px] font-bold text-[var(--color-text-accent-muted)] uppercase">Simulated</span>
+                  <span className="text-xs font-mono text-[var(--color-text-accent-faint)]">{simulatedPalette[i]}</span>
                </div>
              </div>
           </div>

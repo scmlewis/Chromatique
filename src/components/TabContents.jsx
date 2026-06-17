@@ -121,10 +121,10 @@ export default function TabContents(props) {
   return (
     <div className="animate-fade-in">
       {/* Tab header + description */}
-      <div className="mb-6 px-6 py-5 rounded-3xl bg-[var(--color-surface-container-low)] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg">
+      <div className="mb-6 px-6 py-5 rounded-3xl flex flex-col sm:flex-row sm:items-center justify-between gap-3" style={{ background: 'var(--color-surface-raised)', border: '1px solid var(--color-border-ghost)' }}>
         <div>
-          <h2 className="text-3xl font-bold text-white tracking-tight font-serif">{h.title}</h2>
-          <p className="text-sm text-[var(--color-text-secondary)] max-w-2xl mt-1.5 leading-relaxed">{h.desc}</p>
+          <h2 className="text-3xl font-bold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>{h.title}</h2>
+          <p className="text-sm max-w-2xl mt-1.5 leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{h.desc}</p>
         </div>
       </div>
 
@@ -136,10 +136,10 @@ export default function TabContents(props) {
 
       {tab === 'palette' && (
         <section id="panel-palette" role="tabpanel" className="mb-0">
-          <div className="mb-6 control-panel bg-[var(--color-surface-container)] p-4 rounded-2xl flex flex-wrap items-center justify-between gap-4 shadow-md">
+          <div className="mb-6 panel p-4 rounded-2xl flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <div className="flex flex-col gap-0.5">
-                <span className="text-[10px] font-semibold text-[var(--color-primary)]/85 uppercase tracking-widest px-0.5">Colors</span>
+                <span className="text-[10px] font-semibold text-[var(--color-text-accent-muted)] uppercase tracking-widest px-0.5">Colors</span>
                 <div className="flex items-center gap-3">
                    <input
                     aria-label="Number of colors"
@@ -150,14 +150,14 @@ export default function TabContents(props) {
                     onChange={e => setCount(Number(e.target.value))}
                     className="accent-[var(--color-primary)] w-28 h-1.5"
                   />
-                  <span className="font-mono text-[var(--color-primary)] bg-[var(--color-primary)]/20 px-3 py-1 rounded-lg text-xs font-bold">{count}</span>
+                   <span className="font-mono text-[var(--color-text-accent)] bg-[var(--color-surface-accent)] px-3 py-1 rounded-lg text-xs font-bold">{count}</span>
                 </div>
               </div>
 
-              <div className="h-6 w-[1px] bg-[var(--color-primary)]/25 mx-1 hidden md:block" />
+              <div className="h-6 w-[1px] bg-[var(--color-border-primary)] mx-1 hidden md:block" />
 
               <div className="flex flex-col gap-0.5">
-                <span className="text-[10px] font-semibold text-[var(--color-primary)]/85 uppercase tracking-widest px-0.5">Method</span>
+                <span className="text-[10px] font-semibold text-[var(--color-text-accent-muted)] uppercase tracking-widest px-0.5">Method</span>
                 <select 
                   value={genMode} 
                   onChange={(e) => setGenMode(e.target.value)}
@@ -182,12 +182,12 @@ export default function TabContents(props) {
               >
                 {isGenerating ? 'Generating...' : 'Generate New'}
               </button>
-              <button onClick={() => { setModalColors(palette); setModalName(''); setShowSaveModal(true) }} className="btn bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 px-4 py-1.5 rounded-xl text-xs font-bold transition-all">Save</button>
-              <button onClick={() => { setModalColors(palette); setShowExportModal(true) }} className="btn bg-[var(--color-primary)]/10 hover:bg-[var(--color-primary)]/15 text-[var(--color-primary)] border border-[var(--color-primary)]/20 px-4 py-1.5 rounded-xl text-xs font-bold transition-all">Export</button>
+              <button onClick={() => { setModalColors(palette); setModalName(''); setShowSaveModal(true) }} className="btn btn-outline">Save</button>
+              <button onClick={() => { setModalColors(palette); setShowExportModal(true) }} className="btn btn-outline">Export</button>
             </div>
           </div>
 
-          <div className="palette-container-interactive flex flex-col md:flex-row gap-3 md:gap-2 w-full h-auto md:h-[480px] min-h-0 border-decorative-gold pattern-accent p-4 rounded-xl">
+          <div className="flex flex-col md:flex-row gap-3 md:gap-2 w-full h-auto md:h-[480px] min-h-0 p-4 rounded-xl" style={{ background: 'var(--color-surface-raised)', border: '1px solid var(--color-border-ghost)' }}>
             {palette && palette.length > 0 ? (
               palette.map((c, i) => {
                 const isHighCount = palette.length > 6
@@ -213,7 +213,7 @@ export default function TabContents(props) {
                 );
               })
             ) : (
-              <div className="col-span-full py-20 text-center text-[var(--color-primary)]/70 w-full bg-[var(--color-surface-container-low)] rounded-3xl">
+              <div className="col-span-full py-20 text-center text-[var(--color-text-accent-faint)] w-full rounded-3xl" style={{ background: 'var(--color-surface-raised)' }}>
                 <div className="mb-4 text-4xl">🎨</div>
                 <p>No colors generated yet.</p>
               </div>
@@ -313,25 +313,25 @@ export default function TabContents(props) {
           <div className="absolute inset-0 bg-black/50" onClick={() => setShowExportModal(false)} />
           <div className="relative z-60 w-full max-w-2xl max-h-[90vh] overflow-y-auto p-4 sm:p-6 bg-[var(--color-surface-dim)] rounded-md shadow-lg text-[var(--color-on-surface-variant)]">
             <h3 className="text-2xl font-bold mb-2">Export Palette</h3>
-            <p className="text-sm text-[var(--color-primary)]/80 mb-6">Choose an export format for the current palette.</p>
+            <p className="text-sm text-[var(--color-text-accent-muted)] mb-6">Choose an export format for the current palette.</p>
             
             {/* Structured Data Section */}
             <div className="mb-6">
-              <h4 className="text-sm font-semibold text-[var(--color-primary)]/85 mb-3 uppercase tracking-wider">Structured Data</h4>
+              <h4 className="text-sm font-semibold text-[var(--color-text-accent-muted)] mb-3 uppercase tracking-wider">Structured Data</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <button 
                   className="export-format-card" 
                   onClick={() => { onExportJSON && onExportJSON(modalColors); setShowExportModal(false) }}
                 >
                   <div className="font-semibold text-white">JSON File</div>
-                  <p className="text-xs text-[var(--color-primary)]/75 mt-1">Download as a JSON file</p>
+                  <p className="text-xs text-[var(--color-text-accent-faint)] mt-1">Download as a JSON file</p>
                 </button>
                 <button 
                   className="export-format-card" 
                   onClick={() => { const cssVars = modalColors.map((c, i) => `--color-${i+1}: ${c};`).join('\n'); navigator.clipboard.writeText(cssVars); setShowExportModal(false) }}
                 >
                   <div className="font-semibold text-white">CSS Variables</div>
-                  <p className="text-xs text-[var(--color-primary)]/75 mt-1">Copy to clipboard</p>
+                  <p className="text-xs text-[var(--color-text-accent-faint)] mt-1">Copy to clipboard</p>
                 </button>
                 <button 
                   className="export-format-card" 
@@ -341,7 +341,7 @@ export default function TabContents(props) {
                   }}
                 >
                   <div className="font-semibold text-white">SCSS Map</div>
-                  <p className="text-xs text-[var(--color-primary)]/75 mt-1">Copy to clipboard</p>
+                  <p className="text-xs text-[var(--color-text-accent-faint)] mt-1">Copy to clipboard</p>
                 </button>
                 <button 
                   className="export-format-card" 
@@ -351,26 +351,26 @@ export default function TabContents(props) {
                   }}
                 >
                   <div className="font-semibold text-white">Tailwind Config</div>
-                  <p className="text-xs text-[var(--color-primary)]/75 mt-1">Copy to clipboard</p>
+                  <p className="text-xs text-[var(--color-text-accent-faint)] mt-1">Copy to clipboard</p>
                 </button>
               </div>
             </div>
             
             {/* Quick Copy Section */}
             <div className="mb-6">
-              <h4 className="text-sm font-semibold text-[var(--color-primary)]/85 mb-3 uppercase tracking-wider">Quick Copy</h4>
+              <h4 className="text-sm font-semibold text-[var(--color-text-accent-muted)] mb-3 uppercase tracking-wider">Quick Copy</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <button 
                   className="export-format-card" 
                   onClick={() => { navigator.clipboard.writeText(modalColors.join('\n')); setShowExportModal(false) }}
                 >
                   <div className="font-semibold text-white">HEX List</div>
-                  <p className="text-xs text-[var(--color-primary)]/75 mt-1">Copy to clipboard</p>
+                  <p className="text-xs text-[var(--color-text-accent-faint)] mt-1">Copy to clipboard</p>
                 </button>
               </div>
             </div>
             
-            <div className="flex justify-end mt-6 pt-4 border-t border-[var(--color-primary)]/25">
+            <div className="flex justify-end mt-6 pt-4 border-t border-[var(--color-border-primary)]">
               <button className="btn btn-ghost" onClick={() => setShowExportModal(false)}>Close</button>
             </div>
           </div>
@@ -397,13 +397,13 @@ export default function TabContents(props) {
                   placeholder="Search palettes by name or color..."
                   className="input-field w-full pl-10"
                 />
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 absolute left-3 top-2.5 text-[var(--color-primary)]/75" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 absolute left-3 top-2.5 text-[var(--color-text-accent-faint)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-3 top-2.5 text-[var(--color-primary)]/75 hover:text-[var(--color-primary)]"
+                    className="absolute right-3 top-2.5 text-[var(--color-text-accent-faint)] hover:text-[var(--color-text-accent)]"
                     aria-label="Clear search"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -424,7 +424,7 @@ export default function TabContents(props) {
                   <option value="oldest">Oldest First</option>
                   <option value="name">Name (A-Z)</option>
                 </select>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 absolute right-3 top-2.5 text-[var(--color-primary)]/75 pointer-events-none" viewBox="0 0 20 20" fill="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 absolute right-3 top-2.5 text-[var(--color-text-accent-faint)] pointer-events-none" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
               </div>
@@ -434,7 +434,7 @@ export default function TabContents(props) {
           {/* Tag filters */}
           {allTags.length > 0 && (
             <div className="mb-4 flex flex-wrap gap-2 items-center">
-              <span className="text-sm text-[var(--color-primary)]/75">Filter by tag:</span>
+              <span className="text-sm text-[var(--color-text-accent-faint)]">Filter by tag:</span>
               <button
                 onClick={() => setFilterTag('')}
                 className={`tag-chip ${!filterTag ? 'tag-chip-active' : ''}`}
@@ -455,14 +455,14 @@ export default function TabContents(props) {
 
           {/* No results message */}
           {filteredFavorites.length === 0 && searchQuery && (
-            <div className="text-center py-8 text-[var(--color-primary)]/70">
+            <div className="text-center py-8 text-[var(--color-text-accent-faint)]">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto mb-3 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
               <p>No palettes found matching "{searchQuery}"</p>
               <button
                 onClick={() => setSearchQuery('')}
-                className="mt-2 text-[var(--color-primary)]/75 hover:text-[var(--color-primary)] text-sm"
+                className="mt-2 text-[var(--color-text-accent-faint)] hover:text-[var(--color-text-accent)] text-sm"
               >
                 Clear search
               </button>
@@ -477,7 +477,7 @@ export default function TabContents(props) {
                   <button
                     onClick={(e) => { e.stopPropagation(); setRenamingId(f.id); setRenamingText(f.name || ''); setOpenMenuFav(null) }}
                     title="Rename palette"
-                    className="icon-btn hover:bg-[var(--color-primary)]/50"
+                    className="icon-btn hover:bg-[var(--color-surface-accent-strong)]"
                     aria-label="Rename palette"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -513,7 +513,7 @@ export default function TabContents(props) {
                             setRenamingId(null)
                           }
                         }}
-                        className="bg-[var(--color-surface-dim)] border border-[var(--color-primary)]/30 text-white text-sm px-2 py-1 rounded flex-1 outline-none focus:border-[var(--color-primary)]"
+                        className="bg-[var(--color-surface-dim)] border border-[var(--color-border-accent)] text-white text-sm px-2 py-1 rounded flex-1 outline-none focus:border-[var(--color-primary)]"
                         autoFocus
                       />
                       <button
@@ -566,7 +566,7 @@ export default function TabContents(props) {
                 </div>
               </div>
             )) : (
-              <div className="text-[var(--color-primary)]/70">No saved palettes yet</div>
+              <div className="text-[var(--color-text-accent-faint)]">No saved palettes yet</div>
             )}
           </div>
         </section>
@@ -582,28 +582,28 @@ export default function TabContents(props) {
                 onClick={() => { onExportJSON && onExportJSON(palette) }}
               >
                 <div className="font-semibold text-white">JSON File</div>
-                <p className="text-xs text-[var(--color-primary)]/75 mt-1">Download palette as a JSON file</p>
+                <p className="text-xs text-[var(--color-text-accent-faint)] mt-1">Download palette as a JSON file</p>
               </button>
               <button
                 className="export-format-card"
                 onClick={async () => { const cssVars = palette.map((c, i) => `--color-${i+1}: ${c};`).join('\n'); await navigator.clipboard.writeText(cssVars) }}
               >
                 <div className="font-semibold text-white">CSS Variables</div>
-                <p className="text-xs text-[var(--color-primary)]/75 mt-1">Copy to clipboard</p>
+                <p className="text-xs text-[var(--color-text-accent-faint)] mt-1">Copy to clipboard</p>
               </button>
               <button
                 className="export-format-card"
                 onClick={async () => { const scss = `$palette: (\n${palette.map((c,i)=>`  "color-${i+1}": ${c}`).join(',\n')}\n);`; await navigator.clipboard.writeText(scss) }}
               >
                 <div className="font-semibold text-white">SCSS Map</div>
-                <p className="text-xs text-[var(--color-primary)]/75 mt-1">Copy to clipboard</p>
+                <p className="text-xs text-[var(--color-text-accent-faint)] mt-1">Copy to clipboard</p>
               </button>
               <button
                 className="export-format-card"
                 onClick={async () => { const tw = `module.exports = {\n  theme: {\n    extend: {\n      colors: {\n${palette.map((c,i)=>`        'palette-${i+1}': '${c}',`).join('\n')}\n      }\n    }\n  }\n}`; await navigator.clipboard.writeText(tw) }}
               >
                 <div className="font-semibold text-white">Tailwind Config</div>
-                <p className="text-xs text-[var(--color-primary)]/75 mt-1">Copy to clipboard</p>
+                <p className="text-xs text-[var(--color-text-accent-faint)] mt-1">Copy to clipboard</p>
               </button>
             </div>
           </div>
@@ -615,14 +615,14 @@ export default function TabContents(props) {
                 onClick={async () => { await navigator.clipboard.writeText(palette.join('\n')) }}
               >
                 <div className="font-semibold text-white">HEX List</div>
-                <p className="text-xs text-[var(--color-primary)]/75 mt-1">Copy to clipboard</p>
+                <p className="text-xs text-[var(--color-text-accent-faint)] mt-1">Copy to clipboard</p>
               </button>
               <button
                 className="export-format-card"
                 onClick={() => downloadPalettePNG(palette, 'palette')}
               >
                 <div className="font-semibold text-white">Download PNG</div>
-                <p className="text-xs text-[var(--color-primary)]/75 mt-1">Save palette as image</p>
+                <p className="text-xs text-[var(--color-text-accent-faint)] mt-1">Save palette as image</p>
               </button>
             </div>
           </div>
@@ -640,21 +640,21 @@ export default function TabContents(props) {
       {/* Load Confirmation Modal */}
       {showLoadConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center animate-fade-in">
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowLoadConfirm(null)} />
-          <div className="relative z-60 w-full max-w-lg p-6 bg-[var(--color-surface-dim)] rounded-lg shadow-xl text-[var(--color-on-surface-variant)] animate-pop">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setShowLoadConfirm(null)} />
+          <div className="relative z-60 w-full max-w-lg p-6 rounded-lg shadow-xl animate-pop" style={{ background: 'var(--color-surface-raised)', color: 'var(--color-text-primary)' }}>
             <h3 className="text-xl font-semibold mb-3">Load Palette?</h3>
-            <p className="text-sm text-[var(--color-primary)]/75 mb-4">
-              This will replace your current palette with <strong className="text-[var(--color-primary)]">{showLoadConfirm.name}</strong>
+            <p className="text-sm text-[var(--color-text-accent-faint)] mb-4">
+              This will replace your current palette with <strong className="text-[var(--color-text-accent)]">{showLoadConfirm.name}</strong>
             </p>
             
             {/* Palette Preview */}
             <div className="mb-4 p-3 bg-[var(--color-surface-container-low)] rounded-md">
-              <div className="text-xs text-[var(--color-primary)]/75 mb-2 uppercase tracking-wide">Preview ({showLoadConfirm.colors.length} colors)</div>
+              <div className="text-xs text-[var(--color-text-accent-faint)] mb-2 uppercase tracking-wide">Preview ({showLoadConfirm.colors.length} colors)</div>
               <div className="grid grid-cols-5 gap-2">
                 {showLoadConfirm.colors.map((col, idx) => (
-                  <div key={idx} className="aspect-square rounded-md shadow-md border border-[var(--color-primary)]/25" style={{ background: col }}>
+                  <div key={idx} className="aspect-square rounded-md shadow-md border border-[var(--color-border-primary)]" style={{ background: col }}>
                     <div className="flex items-end justify-center h-full p-1">
-                      <span className="text-xs font-mono bg-black/40 backdrop-blur-sm px-1 rounded" style={{ color: '#fff' }}>
+                      <span className="text-xs font-mono bg-black/40 px-1 rounded" style={{ color: '#fff' }}>
                         {col}
                       </span>
                     </div>

@@ -119,7 +119,7 @@ describe('HSLPanel Mobile & Responsive Layout', () => {
       const { container } = render(<HSLPanel {...defaultProps} />)
 
       // Check for responsive gap classes
-      const controlPanel = container.querySelector('[class*="surface-glass"]')
+      const controlPanel = container.querySelector('[class*="panel"]')
       expect(controlPanel).toBeInTheDocument()
 
       // Should have responsive padding
