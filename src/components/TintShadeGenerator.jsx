@@ -1,6 +1,10 @@
 import React, { useState, useMemo } from 'react'
-import { generateTintsShades, hexToHsl, hslToHex } from '../utils/colors'
+import { generateTintsShades, hexToHsl, hslToHex, relativeLuminance } from '../utils/colors'
 import { getColorName } from '../utils/colorNames'
+
+function getTextColor(hex) {
+  return relativeLuminance(hex) > 0.179 ? '#1a1a1a' : '#ffffff'
+}
 
 const SCALE_LABELS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
 
@@ -104,17 +108,17 @@ export default function TintShadeGenerator({ palette, onCopyHex, onSaveFavorite 
               onClick={() => onCopyHex?.(step.hex)}
             >
               <div className="w-20 text-right pr-3 py-3">
-                <span className="text-sm font-bold" style={{ color: step.hex === baseColor ? '#fff' : 'var(--color-text-primary)' }}>
+                <span className="text-sm font-bold" style={{ color: getTextColor(step.hex) }}>
                   {step.label}
                 </span>
               </div>
               <div className="flex-1 py-3">
-                <span className="text-sm font-mono opacity-80" style={{ color: 'inherit', filter: 'brightness(0.8)' }}>
+                <span className="text-sm font-mono" style={{ color: getTextColor(step.hex), opacity: 0.8 }}>
                   {step.hex}
                 </span>
               </div>
               <div className="pr-4 py-3">
-                <span className="text-[10px] opacity-0 group-hover:opacity-100 transition-opacity uppercase tracking-wider" style={{ color: 'inherit', filter: 'brightness(0.7)' }}>
+                <span className="text-[10px] opacity-0 group-hover:opacity-100 transition-opacity uppercase tracking-wider" style={{ color: getTextColor(step.hex), opacity: 0.7 }}>
                   Click to copy
                 </span>
               </div>
