@@ -6,8 +6,12 @@ import HarmonyPanel from './HarmonyPanel'
 import BlindnessSimulator from './BlindnessSimulator'
 import GradientPanel from './GradientPanel'
 import ImageUploader from './ImageUploader'
+import ContrastChecker from './ContrastChecker'
+import TintShadeGenerator from './TintShadeGenerator'
+import ColorBlender from './ColorBlender'
 import PaletteCard from './PaletteCard'
 import Toast from './Toast'
+import { getColorName } from '../utils/colorNames'
 import { PALETTE_CARD_ANIMATION_DELAY_MS } from '../constants'
 
 export default function TabContents(props) {
@@ -110,6 +114,21 @@ export default function TabContents(props) {
         return {
           title: 'Image Extractor',
           desc: 'Upload an image and we\'ll extract the most prominent colors for you.'
+        }
+      case 'contrast':
+        return {
+          title: 'Contrast Checker',
+          desc: 'Check WCAG contrast ratios between foreground and background colors.'
+        }
+      case 'tints':
+        return {
+          title: 'Tints & Shades',
+          desc: 'Generate a full tonal scale from any base color.'
+        }
+      case 'blender':
+        return {
+          title: 'Color Blender',
+          desc: 'Mix two colors together and generate smooth blend ramps.'
         }
       default:
         return { title: 'Tool', desc: 'Description' }
@@ -275,6 +294,24 @@ export default function TabContents(props) {
         </section>
       )}
 
+      {tab === 'contrast' && (
+        <section id="panel-contrast" role="tabpanel">
+          <ContrastChecker palette={palette} onCopyHex={onCopy} />
+        </section>
+      )}
+
+      {tab === 'tints' && (
+        <section id="panel-tints" role="tabpanel">
+          <TintShadeGenerator palette={palette} onCopyHex={onCopy} onSaveFavorite={onSaveFavorite} />
+        </section>
+      )}
+
+      {tab === 'blender' && (
+        <section id="panel-blender" role="tabpanel">
+          <ColorBlender palette={palette} onCopyHex={onCopy} onSaveFavorite={onSaveFavorite} />
+        </section>
+      )}
+
       {/* Save Modal */}
       {showSaveModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -366,6 +403,26 @@ export default function TabContents(props) {
                 >
                   <div className="font-semibold text-white">HEX List</div>
                   <p className="text-xs text-[var(--color-text-accent-faint)] mt-1">Copy to clipboard</p>
+                </button>
+                <button 
+                  className="export-format-card" 
+                  onClick={() => {
+                    const swatchW = 120, swatchH = 120, pad = 16
+                    const totalW = modalColors.length * swatchW + pad * 2
+                    const totalH = swatchH + pad * 2 + 32
+                    let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${totalW}" height="${totalH}" viewBox="0 0 ${totalW} ${totalH}">\n`
+                    svg += `  <rect width="${totalW}" height="${totalH}" fill="#1a1110" rx="12"/>\n`
+                    modalColors.forEach((c, i) => {
+                      const x = pad + i * swatchW
+                      svg += `  <rect x="${x}" y="${pad}" width="${swatchW - 4}" height="${swatchH}" fill="${c}" rx="8"/>\n`
+                      svg += `  <text x="${x + (swatchW - 4) / 2}" y="${pad + swatchH + 18}" text-anchor="middle" fill="#a09493" font-family="monospace" font-size="10">${c}</text>\n`
+                    })
+                    svg += `</svg>`
+                    navigator.clipboard.writeText(svg); setShowExportModal(false)
+                  }}
+                >
+                  <div className="font-semibold text-white">SVG Swatch</div>
+                  <p className="text-xs text-[var(--color-text-accent-faint)] mt-1">Copy SVG to clipboard</p>
                 </button>
               </div>
             </div>

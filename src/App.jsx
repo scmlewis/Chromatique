@@ -50,6 +50,79 @@ export default function App() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useLocalStorage('palette:sidebar-collapsed', false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
+  // Undo/Redo state
+  const [history, setHistory] = useState([])
+  const [historyIndex, setHistoryIndex] = useState(-1)
+
+  function pushHistory(newPalette) {
+    setHistory(prev => {
+      const trimmed = prev.slice(0, historyIndex + 1)
+      return [...trimmed, newPalette]
+    })
+    setHistoryIndex(prev => prev + 1)
+  }
+
+  function undo() {
+    if (historyIndex > 0) {
+      setHistoryIndex(prev => prev - 1)
+      setPalette(history[historyIndex - 1])
+    }
+  }
+
+  function redo() {
+    if (historyIndex < history.length - 1) {
+      setHistoryIndex(prev => prev + 1)
+      setPalette(history[historyIndex + 1])
+    }
+  }
+
+  // Load palette from URL hash on mount
+  useEffect(() => {
+    try {
+      const hash = window.location.hash.slice(1)
+      if (hash) {
+        const decoded = decodeURIComponent(hash)
+        const colors = decoded.split(',').filter(c => /^#[0-9A-Fa-f]{6}$/i.test(c))
+        if (colors.length >= 2) {
+          setPalette(colors)
+          setLocks(Array.from({ length: colors.length }, () => false))
+          showToast(`Loaded ${colors.length} colors from shared link`, 'info')
+        }
+      }
+    } catch (e) { /* ignore invalid hash */ }
+  }, [])
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    function handleKeyDown(e) {
+      // Ignore if typing in an input
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return
+
+      if (e.key === ' ' && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault()
+        generatePalette()
+      } else if (e.key === 'l' || e.key === 'L') {
+        if (!e.ctrlKey && !e.metaKey) {
+          // Lock/unlock all
+          setLocks(prev => {
+            const anyUnlocked = prev && prev.some(l => !l)
+            return Array.from({ length: palette.length }, () => anyUnlocked)
+          })
+        }
+      } else if (e.key === 'z' && (e.ctrlKey || e.metaKey) && !e.shiftKey) {
+        e.preventDefault()
+        undo()
+      } else if ((e.key === 'y' && (e.ctrlKey || e.metaKey)) || (e.key === 'z' && (e.ctrlKey || e.metaKey) && e.shiftKey)) {
+        e.preventDefault()
+        redo()
+      } else if (e.key === 's' && !e.ctrlKey && !e.metaKey) {
+        sharePalette()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [palette, history, historyIndex])
+
   useEffect(() => {
     if (!palette || palette.length === 0) {
       generatePalette()
@@ -99,6 +172,7 @@ export default function App() {
       }
 
       setPalette(next)
+      pushHistory(next)
       setLocks(l => {
         const nextLocks = Array.from({ length: n }, (_, i) => !!(l && l[i]))
         return nextLocks
@@ -191,6 +265,23 @@ export default function App() {
       toastTimerRef.current = null 
     }
     setToast(null)
+  }
+
+  function showToast(message, type = 'info') {
+    if (toastTimerRef.current) { clearTimeout(toastTimerRef.current); toastTimerRef.current = null }
+    setToast({ message, type })
+    toastTimerRef.current = setTimeout(() => { setToast(null); toastTimerRef.current = null }, TOAST_DURATION)
+  }
+
+  function sharePalette() {
+    if (!palette || palette.length === 0) return
+    const hash = palette.map(c => c.replace('#', '')).join(',')
+    const url = `${window.location.origin}${window.location.pathname}#${hash}`
+    navigator.clipboard.writeText(url).then(() => {
+      showToast('Share link copied to clipboard', 'success')
+    }).catch(() => {
+      showToast('Failed to copy link', 'error')
+    })
   }
 
   function loadFavorite(colors) {
@@ -305,6 +396,13 @@ export default function App() {
                 <path d="M3 18h18" />
               </svg>
             </button>
+            <button className="btn btn-ghost" onClick={sharePalette} title="Share palette (S)">
+              <span className="hidden sm:inline mr-2">Share</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+              </svg>
+            </button>
             <button 
               className="icon-btn" 
               onClick={() => setShowSettings(true)}
@@ -359,6 +457,7 @@ export default function App() {
             onLoadFavorite={loadFavorite}
             onRemoveFavorite={removeFavorite}
             onRenameFavorite={renameFavorite}
+            onSharePalette={sharePalette}
             onCloseToast={closeToast}
             onUndoSave={handleUndoSave}
             settings={settings}

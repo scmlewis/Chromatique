@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import PropTypes from 'prop-types'
 import { HexColorPicker } from 'react-colorful'
 import { readableTextColor, hexToHsl, rgbString } from '../utils/colors'
+import { getColorName } from '../utils/colorNames'
 import { addRipple } from '../utils/ui'
 import ColorInfo from './ColorInfo'
 
@@ -146,6 +147,7 @@ export default function PaletteCard({ color, locked, onToggleLock, onCopy, onCol
         <div className="flex flex-col">
           <span className="text-[9px] uppercase tracking-widest text-[var(--color-primary)] font-bold">HEX</span>
           <span className="font-mono text-xs font-bold text-white tracking-widest leading-none">{color}</span>
+          <span className="text-[8px] text-white/50 mt-0.5 truncate max-w-[80px]">{getColorName(color)}</span>
         </div>
         
         <button 
