@@ -133,25 +133,23 @@ export default function Sidebar({ currentTool, onToolChange, isCollapsed, onTogg
 
   return (
     <>
-      {/* ===== MOBILE: fixed overlay ===== */}
-      {isOpenMobile && (
-        <>
-          <div className="fixed inset-0 bg-black/60 z-40 lg:hidden" onClick={onCloseMobile} />
-          <aside
-            className="fixed top-0 left-0 z-50 h-full w-60 flex flex-col border-r border-[var(--color-border-ghost)] lg:hidden"
-            style={{ background: 'var(--color-surface-raised)' }}
-          >
-            {/* Brand */}
-            <div className="h-16 flex items-center px-5 gap-3 border-b border-[var(--color-border-ghost)] shrink-0">
-              <div className="w-7 h-7 rounded-lg flex-shrink-0" style={{ background: 'var(--gradient-primary)' }} />
-              <span className="font-bold text-[15px] tracking-tight text-[var(--color-text-primary)] whitespace-nowrap" style={{ fontFamily: "var(--font-family-ui)" }}>
-                Chromatique
-              </span>
-            </div>
-            <NavContent currentTool={currentTool} onToolChange={onToolChange} expanded={true} />
-          </aside>
-        </>
-      )}
+      {/* ===== MOBILE: fixed overlay with slide transition ===== */}
+      <div
+        className={`fixed inset-0 bg-black/60 z-40 lg:hidden transition-opacity duration-300 ${isOpenMobile ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+        onClick={onCloseMobile}
+      />
+      <aside
+        className={`fixed top-0 left-0 z-50 h-full w-60 flex flex-col border-r border-[var(--color-border-ghost)] transition-transform duration-300 ease-out lg:hidden ${isOpenMobile ? 'translate-x-0' : '-translate-x-full'}`}
+        style={{ background: 'var(--color-surface-raised)' }}
+      >
+        <div className="h-16 flex items-center px-5 gap-3 border-b border-[var(--color-border-ghost)] shrink-0">
+          <div className="w-7 h-7 rounded-lg flex-shrink-0" style={{ background: 'var(--gradient-primary)' }} />
+          <span className="font-bold text-[15px] tracking-tight text-[var(--color-text-primary)] whitespace-nowrap" style={{ fontFamily: "var(--font-family-ui)" }}>
+            Chromatique
+          </span>
+        </div>
+        <NavContent currentTool={currentTool} onToolChange={onToolChange} expanded={true} />
+      </aside>
 
       {/* ===== DESKTOP: static flex child ===== */}
       <aside
