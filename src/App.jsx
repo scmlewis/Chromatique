@@ -437,6 +437,7 @@ export default function App() {
         </header>
 
         <main className="flex-1 overflow-y-auto p-6 lg:p-10">
+          <div className="max-w-6xl mx-auto">
           <TabContents
             tab={currentTool}
             onToolChange={setCurrentTool}
@@ -466,6 +467,7 @@ export default function App() {
             onApplyAndLock={(colors) => { setPalette(colors); setLocks(Array.from({ length: colors.length }, () => false)) }}
             isGenerating={isGenerating}
           />
+          </div>
         </main>
       </div>
 
