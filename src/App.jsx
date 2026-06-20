@@ -349,14 +349,6 @@ export default function App() {
 
   return (
     <div className="flex min-h-screen bg-[var(--color-surface-bg)] text-[var(--color-text-primary)]">
-      {/* Sidebar Overlay (Mobile) */}
-      {isMobileMenuOpen && (
-        <div 
-          className="fixed inset-0 bg-black/60 z-40 lg:hidden animate-fade-in" 
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
-      )}
-
       {/* Sidebar Tool Navigation */}
       <Sidebar 
         currentTool={currentTool} 
