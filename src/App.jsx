@@ -381,7 +381,6 @@ export default function App() {
              </button>
 
             <div className="flex items-center gap-3">
-              <span className="font-bold text-lg hidden sm:block tracking-tight text-[var(--color-text-primary)]" style={{ fontFamily: "var(--font-family-ui)" }}>Chromatique</span>
               <span className="text-[10px] font-bold text-[var(--color-text-secondary)] uppercase tracking-widest">
                 {currentTool?.replace(/([A-Z])/g, ' $1').trim() || 'Tool'}
               </span>
