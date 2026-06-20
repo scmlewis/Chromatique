@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { HexColorPicker } from 'react-colorful'
 import { readableTextColor, hexToHsl, rgbString } from '../utils/colors'
 import { getColorName } from '../utils/colorNames'
+import { getColorPsychology } from '../utils/colorPsychology'
 import { addRipple } from '../utils/ui'
 import ColorInfo from './ColorInfo'
 
@@ -148,6 +149,9 @@ export default function PaletteCard({ color, locked, onToggleLock, onCopy, onCol
           <span className="text-[9px] uppercase tracking-widest text-[var(--color-primary)] font-bold">HEX</span>
           <span className="font-mono text-xs font-bold text-white tracking-widest leading-none">{color}</span>
           <span className="text-[8px] text-white/50 mt-0.5 truncate max-w-[80px]">{getColorName(color)}</span>
+          <span className="text-[8px] text-white/40 mt-0.5 truncate max-w-[120px] italic" title={getColorPsychology(color).meaning}>
+            {getColorPsychology(color).mood.split(',')[0]}
+          </span>
         </div>
         
         <button 

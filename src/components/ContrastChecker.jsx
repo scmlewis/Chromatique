@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { wcagLevel, readableTextColor } from '../utils/colors'
+import { wcagLevel, readableTextColor, contrastRatio } from '../utils/colors'
 import { getColorName } from '../utils/colorNames'
 
 export default function ContrastChecker({ palette, onCopyHex }) {
@@ -122,6 +122,71 @@ export default function ContrastChecker({ palette, onCopyHex }) {
               <div className="text-[10px] text-[var(--color-text-tertiary)]">{item.desc}</div>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* UI Component Contrast (WCAG 2.1 non-text) */}
+      <div className="panel p-6">
+        <h3 className="text-xs font-bold text-[var(--color-text-accent-muted)] uppercase tracking-widest mb-4">UI Component Contrast</h3>
+        <p className="text-xs text-[var(--color-text-secondary)] mb-4">
+          WCAG 2.1 requires 3:1 contrast for non-text UI components (buttons, inputs, icons, focus rings).
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {[
+            {
+              label: 'Button',
+              render: (fg, bg) => (
+                <div className="rounded-lg px-4 py-2 text-sm font-semibold text-center" style={{ background: fg, color: bg, border: `2px solid ${fg}` }}>
+                  Button
+                </div>
+              ),
+            },
+            {
+              label: 'Input Border',
+              render: (fg, bg) => (
+                <div className="rounded-lg px-4 py-2 text-sm text-center" style={{ background: bg, color: fg, border: `2px solid ${fg}` }}>
+                  Input field
+                </div>
+              ),
+            },
+            {
+              label: 'Icon / Focus',
+              render: (fg, bg) => (
+                <div className="flex items-center justify-center gap-2 rounded-lg px-4 py-2" style={{ background: bg }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={fg} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 16v-4M12 8h.01"/>
+                  </svg>
+                  <span className="text-sm font-medium" style={{ color: fg }}>Icon</span>
+                </div>
+              ),
+            },
+          ].map((item) => {
+            const ratio = contrastRatio(fg, bg)
+            const pass = ratio >= 3
+            return (
+              <div key={item.label} className="rounded-xl overflow-hidden" style={{ border: `1px solid ${pass ? 'var(--color-border-accent)' : 'var(--color-border-ghost)'}` }}>
+                <div className="p-4" style={{ background: bg }}>
+                  {item.render(fg, bg)}
+                </div>
+                <div className="p-3 flex items-center justify-between" style={{ background: 'var(--color-surface-overlay)' }}>
+                  <span className="text-xs font-semibold" style={{ color: 'var(--color-text-primary)' }}>{item.label}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-mono" style={{ color: 'var(--color-text-secondary)' }}>{ratio.toFixed(2)}:1</span>
+                    <span
+                      className="text-[10px] font-bold px-2 py-0.5 rounded-full"
+                      style={{
+                        background: pass ? 'var(--color-success)' : 'var(--color-error)',
+                        color: pass ? '#1a1110' : '#ffffff',
+                      }}
+                    >
+                      {pass ? 'PASS' : 'FAIL'} {pass ? '≥3:1' : '<3:1'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
         </div>
       </div>
 

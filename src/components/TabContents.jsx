@@ -9,6 +9,7 @@ import ImageUploader from './ImageUploader'
 import ContrastChecker from './ContrastChecker'
 import TintShadeGenerator from './TintShadeGenerator'
 import ColorBlender from './ColorBlender'
+import PresetPalettes from './PresetPalettes'
 import PaletteCard from './PaletteCard'
 import Toast from './Toast'
 import { getColorName } from '../utils/colorNames'
@@ -129,6 +130,11 @@ export default function TabContents(props) {
         return {
           title: 'Color Blender',
           desc: 'Mix two colors together and generate smooth blend ramps.'
+        }
+      case 'presets':
+        return {
+          title: 'Industry Presets',
+          desc: 'Ready-made palettes curated for SaaS, healthcare, finance, e-commerce, creative, and gaming.'
         }
       default:
         return { title: 'Tool', desc: 'Description' }
@@ -312,6 +318,12 @@ export default function TabContents(props) {
         </section>
       )}
 
+      {tab === 'presets' && (
+        <section id="panel-presets" role="tabpanel">
+          <PresetPalettes onApplyPalette={onApplyPalette} onCopyHex={onCopy} />
+        </section>
+      )}
+
       {/* Save Modal */}
       {showSaveModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -389,6 +401,18 @@ export default function TabContents(props) {
                 >
                   <div className="font-semibold text-white">Tailwind Config</div>
                   <p className="text-xs text-[var(--color-text-accent-faint)] mt-1">Copy to clipboard</p>
+                </button>
+                <button 
+                  className="export-format-card" 
+                  onClick={() => {
+                    const roles = ['primary', 'secondary', 'accent', 'neutral', 'surface', 'text', 'success', 'warning', 'error']
+                    const tokens = modalColors.map((c, i) => `  --color-${roles[i] || `extra-${i + 1}`}: ${c};`).join('\n')
+                    const css = `:root {\n${tokens}\n}`
+                    navigator.clipboard.writeText(css); setShowExportModal(false)
+                  }}
+                >
+                  <div className="font-semibold text-white">Semantic Tokens</div>
+                  <p className="text-xs text-[var(--color-text-accent-faint)] mt-1">CSS variables with role names</p>
                 </button>
               </div>
             </div>
@@ -616,6 +640,7 @@ export default function TabContents(props) {
                       <button className="fav-menu-item" onClick={async (e) => { e.stopPropagation(); await navigator.clipboard.writeText(f.colors.join('\n')); setCopiedFav({ id: f.id, type: 'HEX' }); setTimeout(()=>setCopiedFav(null),1200); setOpenMenuFav(null) }}>Copy HEX list</button>
                       <button className="fav-menu-item" onClick={async (e) => { e.stopPropagation(); const scss = `$palette: (\n${f.colors.map((c,i)=>`  "color-${i+1}": ${c}`).join(',\n')}\n);`; await navigator.clipboard.writeText(scss); setCopiedFav({ id: f.id, type: 'SCSS' }); setTimeout(()=>setCopiedFav(null),1200); setOpenMenuFav(null) }}>Copy SCSS map</button>
                       <button className="fav-menu-item" onClick={async (e) => { e.stopPropagation(); const tailwind = `module.exports = {\n  theme: {\n    extend: {\n      colors: {\n${f.colors.map((c,i)=>`        'palette-${i+1}': '${c}',`).join('\n')}\n      }\n    }\n  }\n}`; await navigator.clipboard.writeText(tailwind); setCopiedFav({ id: f.id, type: 'Tailwind' }); setTimeout(()=>setCopiedFav(null),1200); setOpenMenuFav(null) }}>Copy Tailwind config</button>
+                      <button className="fav-menu-item" onClick={async (e) => { e.stopPropagation(); const roles = ['primary', 'secondary', 'accent', 'neutral', 'surface', 'text', 'success', 'warning', 'error']; const tokens = f.colors.map((c, i) => `  --color-${roles[i] || `extra-${i + 1}`}: ${c};`).join('\n'); const css = `:root {\n${tokens}\n}`; await navigator.clipboard.writeText(css); setCopiedFav({ id: f.id, type: 'Tokens' }); setTimeout(()=>setCopiedFav(null),1200); setOpenMenuFav(null) }}>Copy Semantic Tokens</button>
                       <button className="fav-menu-item" onClick={(e) => { e.stopPropagation(); downloadPalettePNG(f.colors, f.name || `palette-${f.id}`); setOpenMenuFav(null) }}>Download PNG</button>
                     </div>
                   )}
@@ -661,6 +686,13 @@ export default function TabContents(props) {
               >
                 <div className="font-semibold text-white">Tailwind Config</div>
                 <p className="text-xs text-[var(--color-text-accent-faint)] mt-1">Copy to clipboard</p>
+              </button>
+              <button
+                className="export-format-card"
+                onClick={async () => { const roles = ['primary', 'secondary', 'accent', 'neutral', 'surface', 'text', 'success', 'warning', 'error']; const tokens = palette.map((c, i) => `  --color-${roles[i] || `extra-${i + 1}`}: ${c};`).join('\n'); const css = `:root {\n${tokens}\n}`; await navigator.clipboard.writeText(css) }}
+              >
+                <div className="font-semibold text-white">Semantic Tokens</div>
+                <p className="text-xs text-[var(--color-text-accent-faint)] mt-1">CSS variables with role names</p>
               </button>
             </div>
           </div>
