@@ -10,6 +10,7 @@ import ContrastChecker from './ContrastChecker'
 import TintShadeGenerator from './TintShadeGenerator'
 import ColorBlender from './ColorBlender'
 import PresetPalettes from './PresetPalettes'
+import AboutPanel from './AboutPanel'
 import PaletteCard from './PaletteCard'
 import Toast from './Toast'
 import { getColorName } from '../utils/colorNames'
@@ -135,6 +136,11 @@ export default function TabContents(props) {
         return {
           title: 'Industry Presets',
           desc: 'Ready-made palettes curated for SaaS, healthcare, finance, e-commerce, creative, and gaming.'
+        }
+      case 'about':
+        return {
+          title: 'About',
+          desc: 'Learn about Chromatique and its creator.'
         }
       default:
         return { title: 'Tool', desc: 'Description' }
@@ -322,6 +328,10 @@ export default function TabContents(props) {
         <section id="panel-presets" role="tabpanel">
           <PresetPalettes onApplyPalette={onApplyPalette} onCopyHex={onCopy} />
         </section>
+      )}
+
+      {tab === 'about' && (
+        <AboutPanel />
       )}
 
       {/* Save Modal */}
