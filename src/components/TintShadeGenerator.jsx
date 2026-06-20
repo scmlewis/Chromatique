@@ -44,7 +44,7 @@ export default function TintShadeGenerator({ palette, onCopyHex, onSaveFavorite 
                 type="color"
                 value={baseColor}
                 onChange={(e) => setBaseColor(e.target.value.toUpperCase())}
-                className="w-12 h-12 rounded-lg border border-[var(--color-border-ghost)] cursor-pointer"
+                className="w-12 h-12 rounded-lg cursor-pointer"
               />
               <input
                 type="text"

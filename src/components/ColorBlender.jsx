@@ -24,7 +24,7 @@ export default function ColorBlender({ palette, onCopyHex, onSaveFavorite }) {
                 type="color"
                 value={color1}
                 onChange={(e) => setColor1(e.target.value.toUpperCase())}
-                className="w-12 h-12 rounded-lg border border-[var(--color-border-ghost)] cursor-pointer"
+                className="w-12 h-12 rounded-lg cursor-pointer"
               />
               <input
                 type="text"
@@ -59,7 +59,7 @@ export default function ColorBlender({ palette, onCopyHex, onSaveFavorite }) {
                 type="color"
                 value={color2}
                 onChange={(e) => setColor2(e.target.value.toUpperCase())}
-                className="w-12 h-12 rounded-lg border border-[var(--color-border-ghost)] cursor-pointer"
+                className="w-12 h-12 rounded-lg cursor-pointer"
               />
               <input
                 type="text"

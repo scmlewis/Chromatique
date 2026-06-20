@@ -38,7 +38,7 @@ export default function ContrastChecker({ palette, onCopyHex }) {
                 type="color"
                 value={fg}
                 onChange={(e) => setFg(e.target.value.toUpperCase())}
-                className="w-12 h-12 rounded-lg border border-[var(--color-border-ghost)] cursor-pointer"
+                className="w-12 h-12 rounded-lg cursor-pointer"
               />
               <input
                 type="text"
@@ -61,7 +61,7 @@ export default function ContrastChecker({ palette, onCopyHex }) {
                 type="color"
                 value={bg}
                 onChange={(e) => setBg(e.target.value.toUpperCase())}
-                className="w-12 h-12 rounded-lg border border-[var(--color-border-ghost)] cursor-pointer"
+                className="w-12 h-12 rounded-lg cursor-pointer"
               />
               <input
                 type="text"

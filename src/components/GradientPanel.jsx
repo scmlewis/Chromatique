@@ -60,7 +60,7 @@ export default function GradientPanel({ palette, onApplyPalette, onCopyHex }) {
                   type="color" 
                   value={stop.color} 
                   onChange={(e) => handleUpdateStop(i, { color: e.target.value })}
-                  className="w-10 h-10 rounded-lg bg-transparent border-none cursor-pointer overflow-hidden p-0"
+                  className="w-10 h-10 rounded-lg cursor-pointer"
                 />
                 <div className="flex-1">
                   <input 
