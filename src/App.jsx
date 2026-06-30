@@ -49,6 +49,8 @@ export default function App() {
   const [genMode, setGenMode] = useLocalStorage('palette:gen-mode', 'random') // 'random', 'monochromatic', 'analogous', 'triadic'
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useLocalStorage('palette:sidebar-collapsed', false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const mainRef = useRef(null)
+  const scrollPositions = useRef({})
 
   // Undo/Redo state
   const [history, setHistory] = useState([])
@@ -347,12 +349,27 @@ export default function App() {
     }
   }
 
+  const handleToolChange = (toolId) => {
+    if (mainRef.current) {
+      scrollPositions.current[currentTool] = mainRef.current.scrollTop
+    }
+    setCurrentTool(toolId)
+  }
+
+  useEffect(() => {
+    if (!mainRef.current) return
+    const pos = scrollPositions.current[currentTool]
+    requestAnimationFrame(() => {
+      mainRef.current.scrollTo(0, pos ?? 0)
+    })
+  }, [currentTool])
+
   return (
     <div className="flex min-h-screen bg-[var(--color-surface-bg)] text-[var(--color-text-primary)]">
       {/* Sidebar Tool Navigation */}
       <Sidebar 
         currentTool={currentTool} 
-        onToolChange={(toolId) => { setCurrentTool(toolId); setIsMobileMenuOpen(false) }} 
+        onToolChange={(toolId) => { handleToolChange(toolId); setIsMobileMenuOpen(false) }} 
         isCollapsed={isSidebarCollapsed}
         onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
         isOpenMobile={isMobileMenuOpen}
@@ -427,11 +444,11 @@ export default function App() {
           />
         </header>
 
-        <main className="flex-1 overflow-y-auto p-6 lg:p-10">
+        <main ref={mainRef} className="flex-1 overflow-y-auto p-6 lg:p-10">
           <div className="max-w-6xl mx-auto">
           <TabContents
             tab={currentTool}
-            onToolChange={setCurrentTool}
+            onToolChange={handleToolChange}
             palette={palette}
             locks={locks}
             favorites={favorites}
